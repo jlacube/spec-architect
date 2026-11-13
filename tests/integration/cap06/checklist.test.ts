@@ -681,3 +681,50 @@ test("C002-TC-618 (C002-T-084): the template's A-3 row is refuted with its reaso
   assert.ok(/\| refuted \(defect D-056/.test(a3) && /Registered before the install/.test(a3), a3);
   assert.ok(!/retake/i.test(TEMPLATE), "no targeted-retake placeholder (P-01's answer to Q-t050-retake-03)");
 });
+
+// --- C002-T-085 (defect D-058): VSC-20's free-text half while a phase of the toy change is open; the
+// cause outside-narrowed-step in the checklist and the record template ----
+
+test("C002-TC-617 (C002-T-085): VSC-20's free-text half runs while a phase of the toy change is open, never after an approval; its Record names the open phase and the cause outside-narrowed-step", () => {
+  const v20 = stepText("VSC-20");
+  const doText = (/- \*\*Do:\*\* (.*?) - \*\*Expect:\*\*/.exec(v20)?.[1] ?? "");
+  for (const status of ["draft", "in-review", "in-revision"]) assert.ok(doText.includes(`\`${status}\``), `${status}: ${doText}`);
+  assert.ok(/VSC-30 rework/.test(doText) && /inside VSC-31/.test(doText) && /Never after an approval/.test(doText), doText);
+  assert.ok(!/during or after/.test(v20), "no 'during or after the VSC-30 rework'");
+  assert.ok(/D-058/.test(v20) && /CHG-001 D-034/.test(v20), "the history note and the tracking defect");
+  const record = (/- \*\*Record:\*\* (.*)$/.exec(v20)?.[1] ?? "");
+  assert.ok(/open phase/.test(record) && /`00-ideation in-revision`/.test(record), record);
+  assert.ok(/`outside-narrowed-step`/.test(record) && /`defect`/.test(record) && /`tracked_by`/.test(record) && /\(a\) … \(e\)/.test(record), record);
+  assert.ok(!/during or after the VSC-30 rework/.test(CHECKLIST), "gone from the whole checklist");
+});
+
+test("C002-TC-617 (C002-T-085): the rerun rule and How to run and record name the cause outside-narrowed-step beside the three rerun causes; VSC-07's Record names it", () => {
+  const rule = (/\*\*Rerun rule\.\*\*([\s\S]*?)\n\n/.exec(CHECKLIST)?.[1] ?? "").replace(/\s+/g, " ");
+  for (const cause of ["hooks-source-changed", "ran-before-hooks-state", "outside-narrowed-step", "repeated"]) assert.ok(rule.includes(`\`${cause}\``), `${cause}: ${rule}`);
+  assert.ok(/`defect`/.test(rule) && /`tracked_by`/.test(rule), rule);
+  const how = (/## How to run and record\n([\s\S]*?)\n## /.exec(CHECKLIST)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/`outside-narrowed-step`/.test(how) && /`defect`/.test(how) && /`tracked_by`/.test(how) && /\(a\) … \(e\)/.test(how), how);
+  assert.ok(/a `repeated` one included/.test(how), "repeated stays binding");
+  assert.ok(/VSC-30, with the free-text half of VSC-20 typed during its rework/.test(how) && /inside VSC-31/.test(how), "the batch order of Who runs the steps");
+  assert.ok(/`outside-narrowed-step`/.test(stepText("VSC-07")), stepText("VSC-07"));
+});
+
+test("C002-TC-618 (C002-T-085 template check): the cause outside-narrowed-step with defect, tracked_by and the note evidence (a) … (e); free_text_half has open_phase", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const recorded = doc.data!["steps"] as Record<string, unknown>[];
+  const entry = (id: string) => recorded.find((s) => s["id"] === id)!;
+  const example = (entry("VSC-07")["earlier_results"] as { cause: string }[])[0]!;
+  assert.ok(example.cause.includes("outside-narrowed-step"), example.cause);
+  const half = entry("VSC-20")["free_text_half"] as Record<string, string>;
+  assert.ok(/draft, in-review or in-revision/.test(half["open_phase"] ?? "") && /00-ideation in-revision/.test(half["open_phase"] ?? ""), half["open_phase"]);
+  assert.ok(/round/.test(half["questions_log"] ?? ""), half["questions_log"]);
+  const guidance = TEMPLATE.replace(/\s+/g, " ");
+  assert.ok(/- `outside-narrowed-step` \(C002-IF-009 §4 Earlier runs, Tries outside a narrowed step/.test(guidance), "the cause's guidance item");
+  assert.ok(/`defect`/.test(guidance) && /`D-<NNN>`/.test(guidance) && /`D-058`/.test(guidance), "defect");
+  assert.ok(/`tracked_by`/.test(guidance) && /`CHG-<NNN> D-<NNN>`/.test(guidance) && /`CHG-001 D-034`/.test(guidance), "tracked_by");
+  for (const c of ["(a)", "(b)", "(c)", "(d)", "(e)"]) assert.ok(guidance.includes(c), c);
+  assert.ok(/goes under `repeated`, which stays binding/.test(guidance));
+  assert.ok(/tries outside a narrowed step \(cause outside-narrowed-step\)/.test(TEMPLATE), "the Notes placeholder");
+  assert.ok(!/retake/i.test(TEMPLATE));
+});

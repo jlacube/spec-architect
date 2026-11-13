@@ -37,8 +37,18 @@ C002-TC-516, C002-TC-617, C002-TC-619 and C002-TC-621 · record
 > the candidate. **Run 4 starts again from step 0 after C002-T-084 is done, on its candidate, in the fresh
 > run folder `C:\Sandbox\runs\t050f`** (no earlier package or toy repository in it); the twin of VSC-01
 > goes under `C:\Sandbox\runs\t050f\twin`.
+> **Run 4 (2026-11-13, started 05:58, `C:\Sandbox\runs\t050f`, candidate 7b8414a) passed every step but
+> the free-text half of VSC-20 at its first try.** That try was typed after gate G1 of the toy change was
+> approved, when no phase was open, and the conductor logged the answer in no questions log (defect
+> D-058; the conductor gap CHG-001 D-034). P-01's answers: Q-t050-vsc20-01, "Retype in VSC-31
+> (Recommended)": the half was retyped inside VSC-31 after the revise (Round 8, Q-export-01 of the toy
+> ideation's questions log), then VSC-54 passed and P-01's settings were restored (`FF55715DE862`);
+> Q-t050-vsc20-02, "Revision for VSC-20 (Recommended)"; then Q-t050-vsc20-03, "Listed cause + known gap
+> (Recommended)". No new run: the record of run 4 is rewritten after C002-T-085 is done (C002-T-050
+> step 0.5), with the first try in VSC-20's `earlier_results` under the cause `outside-narrowed-step`
+> (step 11).
 
-The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local** (method below). It stops after VSC-29 and hands you one batch, in this order: **VSC-30** (send `/architect:gate <NNN>`, choose Revise, type a short reason, then Approve), the **free-text half of VSC-20** (critic CR-157: with `chat.autoReply` false, during or after the VSC-30 rework, ask the conductor for one round, for example "ask me one question about the export scope", then type `Keep the CSV export out of v1` in the dialog's free-text field without selecting an option, and submit), **VSC-12** (type `/` in the chat input and read the list, type a bare `/init` and read which entry the list offers for it without sending it, then choose `/architect:doctor`) and the **slash-list half of VSC-01** on a twin: the conductor has unpacked a second package and made a second toy repository in VSC-01's pre-install state, opened in a separate VS Code profile `t050-twin` whose only plugin location is that second package (both under `C:\Sandbox\runs\t050f\twin`); type `/` there and say what the list shows. Then the conductor runs VSC-31 and VSC-54, completes the record and runs the dry run. If an interview question needs a typed answer during the conductor's steps, it picks the recommended option, or calls you for that one turn. Where the steps below say "you", read "the executor", except the sign-off and `executed_by` (step 11 and Pass), which stay yours; the conductor records the sign-off under your standing waiver of 2026-10-19. This sheet's order overrides the checklist's run order (`vscode-copilot.md`, Run order) for VSC-01's slash-list half, VSC-12 and VSC-20; move their entries in the record to the position of their last half (VSC-20 passes only when both halves pass). `executed_by`: `"<your name>; conductor for P-01 (P-01 ran VSC-30, VSC-20 free-text half, VSC-12, VSC-01 slash list)"` (C002-IF-009 §4). The install in VSC-02 runs in the conductor's own shell, not through a chat agent.
+The conductor runs this sheet for you (P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"), driving VS Code with `code chat` and clicks, with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings so that its chats start on **Local** (method below). It stops after VSC-29 and hands you one batch, in this order: **VSC-30** with the **free-text half of VSC-20** in its rework (send `/architect:gate <NNN>`, choose Revise and type a short reason; during the rework, while the toy ideation is `draft` and before gate G1 is presented again, do the free-text half (critic CR-157, CR-208: with `chat.autoReply` false, ask the conductor for one round, for example "ask me one question about the export scope", then type `Keep the CSV export out of v1` in the dialog's free-text field without selecting an option, and submit); then Approve), **VSC-12** (type `/` in the chat input and read the list, type a bare `/init` and read which entry the list offers for it without sending it, then choose `/architect:doctor`) and the **slash-list half of VSC-01** on a twin: the conductor has unpacked a second package and made a second toy repository in VSC-01's pre-install state, opened in a separate VS Code profile `t050-twin` whose only plugin location is that second package (both under `C:\Sandbox\runs\t050f\twin`); type `/` there and say what the list shows. If the free-text half has not passed by then, it runs inside VSC-31, after the revise (`in-revision`) and before gate G1 is decided (critic CR-213); never after an approval, when no phase of the toy change is open (D-058). Then the conductor runs VSC-31 and VSC-54, completes the record and runs the dry run. If an interview question needs a typed answer during the conductor's steps, it picks the recommended option, or calls you for that one turn. Where the steps below say "you", read "the executor", except the sign-off and `executed_by` (step 11 and Pass), which stay yours; the conductor records the sign-off under your standing waiver of 2026-10-19. This sheet's order overrides the checklist's run order (`vscode-copilot.md`, Run order) for VSC-01's slash-list half, VSC-12 and VSC-20; move their entries in the record to the position of their last half (VSC-20 passes only when both halves pass). `executed_by`: `"<your name>; conductor for P-01 (P-01 ran VSC-30, VSC-20 free-text half, VSC-12, VSC-01 slash list)"` (C002-IF-009 §4). The install in VSC-02 runs in the conductor's own shell, not through a chat agent.
 
 ### The conductor's method (defect D-053, digest fact 11)
 
@@ -206,7 +216,7 @@ sdd install copilot --package C:\Sandbox\runs\t050f\architect-copilot-0.1.0
    - **Group 2, hooks off:** VSC-03 (`chat.useHooks` false), then VSC-04 (restricted mode), then
      VSC-07 (restore).
    - **Group 3:** VSC-08, then **directly** VSC-10 (the hooks state, from the three sources).
-   - **Group 4:** VSC-11, VSC-13 to VSC-24 (VSC-20's `chat.autoReply` half only), VSC-27 to VSC-29 (conductor); then your batch VSC-30, VSC-20's free-text half, VSC-12 and VSC-01's slash-list half on the twin; then VSC-31 and VSC-54 (conductor). Before D-050: VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-11 is completed after the first step that uses Serena. VSC-27 and VSC-28 are the
+   - **Group 4:** VSC-11, VSC-13 to VSC-24 (VSC-20's `chat.autoReply` half only), VSC-27 to VSC-29 (conductor); then your batch VSC-30 with VSC-20's free-text half typed during its rework (`draft`, before G1 is presented again), then Approve, VSC-12 and VSC-01's slash-list half on the twin; then VSC-31 (with the free-text half after its revise, `in-revision`, if it has not passed yet) and VSC-54 (conductor). Before D-050: VSC-11 to VSC-24, then VSC-27 to VSC-31, then VSC-54. VSC-11 is completed after the first step that uses Serena. VSC-27 and VSC-28 are the
      delegated edit with `fixtures/toy-planted-line.md`: the conductor's refusal, then the
      default-agent probe (`-m agent`, `runSubagent` starting `general-purpose`); where the probe's
      PreToolUse input in the hooks log has no `agent_type` (VS Code 1.145.2), record
@@ -242,7 +252,11 @@ sdd install copilot --package C:\Sandbox\runs\t050f\architect-copilot-0.1.0
 
    In each case, run VSC-07 again, then VSC-08, VSC-10 and all of group 4 again. Each step stays
    listed once, at its last run. Earlier runs go in `earlier_results` with a `cause`
-   (`hooks-source-changed`, `ran-before-hooks-state` or `repeated`), never in a note.
+   (`hooks-source-changed`, `ran-before-hooks-state` or `repeated`), never in a note. A fourth cause,
+   `outside-narrowed-step`, records a try outside a step's Do as narrowed by an approved revision of
+   this change, with the keys `defect` (e.g. `D-058`) and `tracked_by` (e.g. `CHG-001 D-034`) and a
+   `note` with the evidence for the conditions (a) … (e) of C002-IF-009 §4; it is no rerun of this
+   rule and needs no run of VSC-07 (revised for defect D-058).
 
 10. **Failures stay binding.** If a step fails, stop and tell the conductor, who reopens the owning
     task. Repeating just that step (`repeated`) does not make the record releasable. After the fix,
@@ -256,7 +270,21 @@ sdd install copilot --package C:\Sandbox\runs\t050f\architect-copilot-0.1.0
 
 11. In the record's Notes, state: "Binding run of C002-T-050 (run 4), started <time>, after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design), run 3 of 2026-11-12 (VSC-01 twin half, D-056; VSC-12, D-057; no record) and after C002-T-084 was done (<commit>)."
     C002-T-050 fills `<commit>` before the run starts with C002-T-084's done commit (the commit that
-    records `sdd task set C002-T-084 --status done`). Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
+    records `sdd task set C002-T-084 --status done`).
+    VSC-20's first try of the free-text half (typed after the G1 approval, D-058) is recorded in
+    VSC-20's `earlier_results`, not in the Notes: `result: failed`, `cause: outside-narrowed-step`,
+    `defect: D-058`, `tracked_by: CHG-001 D-034`, and a `note` that names the evidence for the
+    conditions (a) … (e) of C002-IF-009 §4 and the candidate 7b8414a: (a) the try's timestamp from the
+    run's chat session file or hooks log, and the commit time of the commit that recorded the approval
+    of the revision for D-058, the try being the earlier; (b) the candidate 7b8414a as the candidate of
+    the try and of the record, the narrowed Given of C002-TS-317 and the narrowed Do of the VSC-20
+    free-text half; (c) the try's only failing expectation fails because of the circumstance that the
+    revision excludes: "the questions log records the text verbatim" failed because no phase of the
+    toy change was open; (d) the retyped half inside VSC-31 (Round 8, Q-export-01), whose result is
+    VSC-20's `result`; (e) the open defect CHG-001 D-034 tracking the behaviour. VSC-20's
+    `free_text_half` records that retyped half with its `open_phase` (`00-ideation in-revision`). The
+    review entry (C002-TC-618, C002-TC-937) and the sign-off are dated after the G2 and G3 approvals
+    of the revision for D-058. Sign off at the bottom of the record (`Signed off: <name>, <date>`). Then run the dry run. Expect
     no `ERR-REL-003`, `ERR-REL-004`, `ERR-REL-009 … checklist` or `ERR-REL-010` line.
 
 ```powershell

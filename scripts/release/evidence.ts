@@ -156,15 +156,24 @@ export function recordSteps(fm: Data): RecordStep[] | null {
   return steps as RecordStep[];
 }
 
-/** Causes of a re-run that the rerun rule gives (§4 Earlier runs); `repeated` is none of them. */
+/** Causes of a re-run that the rerun rule gives (§4 Earlier runs); `repeated` and `outside-narrowed-step` are none of them. */
 const RERUN_CAUSES = new Set(["hooks-source-changed", "ran-before-hooks-state"]);
+
+/**
+ * The keys of a try outside a narrowed step (§4 Earlier runs, Tries outside a narrowed step; defect
+ * D-058, critic CR-219): `defect` a defect ID of this change (`D-<NNN>`), `tracked_by` a
+ * change-qualified defect ID (`CHG-<NNN> D-<NNN>`). The check does not verify that the defects exist.
+ */
+const DEFECT_ID = /^D-\d{3}$/;
+const TRACKED_BY_ID = /^CHG-\d{3} D-\d{3}$/;
 
 /**
  * The step check of C002-IF-009 §5 (critic CR-52, CR-55; Q-checklist-rerun-01): one `<result>` of
  * ERR-REL-004 per listed step ID, in record order, for the first of rules 1 … 6 that applies; then
  * `not recorded` for each step of the package's mode, the injection steps excepted, that the record
  * does not list, in index order. With an unreadable index (`index` null) only rules 1, 3 and 6 apply,
- * and rule 6 excuses no earlier `failed` run.
+ * and rule 6 excuses no earlier `failed` run by the rerun rule; a try outside a narrowed step with
+ * both keys stays excused.
  */
 export function stepCheck(list: readonly RecordStep[], index: readonly ChecklistStep[] | null, mode: string): { id: string; result: string }[] {
   const out: { id: string; result: string }[] = [];
@@ -223,6 +232,15 @@ export function stepCheck(list: readonly RecordStep[], index: readonly Checklist
       if (run["result"] === "passed") continue;
       if (run["result"] === "failed") {
         const cause = run["cause"];
+        // A try outside a narrowed step: excused with both keys, with or without a step index, and
+        // with no restore re-run; otherwise its own line (§5 rule 6, revised for defect D-058).
+        if (cause === "outside-narrowed-step") {
+          const defect = run["defect"];
+          const trackedBy = run["tracked_by"];
+          if (typeof defect === "string" && DEFECT_ID.test(defect) && typeof trackedBy === "string" && TRACKED_BY_ID.test(trackedBy)) continue;
+          line("failed in an earlier run outside a narrowed step without defect and tracked_by");
+          break;
+        }
         const byRule =
           step !== undefined &&
           restore !== undefined &&

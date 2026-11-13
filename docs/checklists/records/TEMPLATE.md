@@ -29,10 +29,13 @@ steps:
     note: "VS Code refused: <text as VS Code showed it>"   # only when VS Code itself refused the chat or the doctor prompt (result passed); else, when the row differs, the row as shown (result failed)
   - id: VSC-07   # both
     result: <passed | failed | not-applicable>
-    # earlier_results: only for a step run more than once (rerun rule); one entry per earlier run,
-    # oldest first, with the cause of the run that followed it; remove the key for a step run once.
+    # earlier_results: only for a step run more than once (rerun rule) or tried outside its Do as
+    # narrowed by an approved revision; one entry per earlier run or try, oldest first, with the cause
+    # of the run that followed it; remove the key for a step run once. With the cause
+    # outside-narrowed-step add defect: "<D-NNN>" and tracked_by: "<CHG-NNN D-NNN>", and give the
+    # evidence for the conditions (a) … (e) in note (field guidance below).
     earlier_results:
-      - { result: <passed | failed>, cause: <hooks-source-changed | ran-before-hooks-state | repeated>, note: "<what happened in that run>" }
+      - { result: <passed | failed>, cause: <hooks-source-changed | ran-before-hooks-state | outside-narrowed-step | repeated>, note: "<what happened in that run>" }
   - id: VSC-08   # sdd-mcp-server
     result: <passed | failed | not-applicable>
   - id: VSC-09   # copilot-hooks
@@ -72,10 +75,11 @@ steps:
     observed: "<what the conductor said for each half>"
     auto_reply_result: '<result askQuestions returned with chat.autoReply true, e.g. { selected: [], freeText: "The user is not available to respond …", skipped: false }>'
     auto_reply_off: "<chat.autoReply set back to false: yes>"
-    free_text_half:   # P-01's end batch, chat.autoReply false
+    free_text_half:   # P-01's end batch, chat.autoReply false, while a phase of the toy change is open
       result: <passed | failed>
+      open_phase: "<phase of the toy change open when P-01 typed the answer, and its status: draft, in-review or in-revision, e.g. 00-ideation in-revision>"
       askquestions_result: '{ selected: [], freeText: "<the text P-01 typed: Keep the CSV export out of v1>", skipped: false }'
-      questions_log: "<the questions-log line holding the text verbatim as the answer>"
+      questions_log: "<file and round of that phase's questions log, e.g. 00-ideation/questions-log.md Round 8, and the line holding the text verbatim as the answer>"
   - id: VSC-21   # both
     result: <passed | failed | not-applicable>
     observed: "<SessionStart output line of the GitHub Copilot Chat Hooks log (JSON hookSpecificOutput.additionalContext)>"
@@ -236,10 +240,26 @@ field counts as not recorded.
   runs here, oldest first, one mapping per run: `result` (`passed` or `failed`), `cause` (why the
   step ran again after that run: `hooks-source-changed` when `chat.useHooks`, Workspace Trust or an
   organisation policy changed after VSC-10, or VSC-10 read a source off and you put it right;
-  `ran-before-hooks-state` when a group-4 step ran before VSC-10; `repeated` for any other rerun)
-  and an optional `note`. Never name an earlier run in a free-text `note` instead. The VSC-07 entry
-  above shows the shape; remove the key from every step that ran once. An earlier `failed` run that
-  the rerun rule did not repeat refuses the release (C002-IF-009 §4, §5).
+  `ran-before-hooks-state` when a group-4 step ran before VSC-10; `outside-narrowed-step` when the
+  run was a try outside the step's Do as narrowed by an approved revision of this change, and the
+  step ran again within the narrowed Do; `repeated` for any other rerun) and an optional `note`.
+  Never name an earlier run in a free-text `note` instead. The VSC-07 entry above shows the shape;
+  remove the key from every step that ran once. An earlier `failed` run that the rerun rule did not
+  repeat refuses the release (C002-IF-009 §4, §5), unless it is a try outside a narrowed step with
+  both keys below.
+- `outside-narrowed-step` (C002-IF-009 §4 Earlier runs, Tries outside a narrowed step; defect
+  D-058): the entry also has `defect`, the defect of this change whose revision narrowed the step
+  (form `D-<NNN>`, e.g. `D-058`), and `tracked_by`, the open defect that tracks the behaviour the try
+  showed, change-qualified (form `CHG-<NNN> D-<NNN>`, e.g. `CHG-001 D-034`); both are required for a
+  `failed` try, and the release check refuses the record when either is missing, empty or of another
+  form. Its `note` names the evidence for the conditions (a) … (e) of C002-IF-009 §4: (a) the try's
+  timestamp (from the run's chat session file or hooks log) and the commit time of the commit that
+  recorded the approval of the revision (the Gate log holds the date only), the try being the
+  earlier; (b) the candidate commit of the try and of the record (the same), and the narrowed Given
+  and the narrowed Do; (c) the failing expectation and the circumstance that the revision excludes,
+  the try's only failing expectation failing because of it; (d) the later run of the same run within
+  the narrowed Do, whose result is the step's `result`; (e) the open defect that tracks the
+  behaviour (`tracked_by`). A try that does not meet them goes under `repeated`, which stays binding.
 - VSC-04 and VSC-06 (restricted mode): when VS Code itself refused the chat or the doctor prompt and no
   tool call of the package ran, the step is `passed` with `note: "VS Code refused: <text as VS Code
   showed it>"`; when VS Code ran the prompt, `passed` only with the row `ok`, the caveat Version text
@@ -252,8 +272,13 @@ field counts as not recorded.
   `askQuestions` returned with `chat.autoReply` true, as returned (`selected`, `freeText`,
   `skipped`): the host's auto-reply text is no answer and no decision; `auto_reply_off` that the
   setting is false again. VSC-20's `free_text_half` is P-01's end-batch half: with `chat.autoReply`
-  false, its `askQuestions` result (`selected: []`, P-01's `freeText`) and the questions-log line;
-  VSC-20 is `passed` only when both halves pass, and is listed at the position of its last half.
+  false and while a phase of the toy change is open (`draft`, `in-review` or `in-revision`: during
+  the VSC-30 rework, or inside VSC-31 after its revise, never after an approval), its `open_phase`
+  (the phase and its status, e.g. `00-ideation in-revision`), its `askQuestions` result
+  (`selected: []`, P-01's `freeText`) and in `questions_log` the file and round of that phase's
+  questions log with the line holding the answer; a try outside that window goes into VSC-20's
+  `earlier_results` under `outside-narrowed-step` (above). VSC-20 is `passed` only when both halves
+  pass, and is listed at the position of its last half.
   VSC-18 and VSC-19 use the same form where an answer is free text only.
 - VSC-27 and VSC-28 (revision D-052; critic CR-154, CR-155): `conductor_refusal` keeps the
   conductor's reply to the planted delegation; `probe` keeps the default-agent probe: `agent_type`
@@ -282,6 +307,6 @@ One row per assumption of the checklist's "Assumption steps" table.
 
 ## Notes
 
-<Anything the frontmatter does not hold: refuted assumptions raised as spec defects (A-5 excepted, accepted above, and A-3, refuted by defect D-056 above). Earlier runs belong in earlier_results, not here.>
+<Anything the frontmatter does not hold: refuted assumptions raised as spec defects (A-5 excepted, accepted above, and A-3, refuted by defect D-056 above). Earlier runs belong in earlier_results, not here, tries outside a narrowed step (cause outside-narrowed-step) among them.>
 
 Signed off: <P-01 name>, <YYYY-MM-DD>

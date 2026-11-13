@@ -69,11 +69,17 @@ it, in both Copilot enforcement modes (C002-REQ-629).
   in `result`. When a step runs again (the rerun rule below), move its earlier run into the step's
   `earlier_results` list, oldest first: `{ result: passed | failed, cause: <cause>, note: "<what
   happened>" }`, with the `cause` of the run that followed it (`hooks-source-changed`,
-  `ran-before-hooks-state` or `repeated`; C002-IF-009 §4 Earlier runs). Never record an earlier run
+  `ran-before-hooks-state` or `repeated`; C002-IF-009 §4 Earlier runs). A try outside a step's Do
+  as narrowed by an approved revision of this change goes there too, under the cause
+  `outside-narrowed-step`, with the keys `defect` (the defect whose revision narrowed the step, e.g.
+  `D-058`) and `tracked_by` (the open defect that tracks the behaviour the try showed, e.g.
+  `CHG-001 D-034`), and a `note` with the evidence for the conditions (a) … (e) of C002-IF-009 §4
+  (revised for defect D-058). Never record an earlier run
   in a `note` only. An earlier `failed` run is excused only when the rerun rule repeated the step
   (cause `hooks-source-changed` or `ran-before-hooks-state`, with a new restore step VSC-07 for each
-  such rerun); any other earlier `failed` run stays binding, and the release needs a new run of the
-  checklist under a later date.
+  such rerun), or when it is a try outside a narrowed step with both `defect` and `tracked_by`, after
+  the record review (no restore step is needed for it); any other earlier `failed` run stays binding,
+  a `repeated` one included, and the release needs a new run of the checklist under a later date.
 - A step whose assumption is refuted (an assumption step, see the table below) is recorded `failed`
   with what was seen; it is raised as a spec defect (C002-T-050), never passed.
 - Hooks must stay enabled from the restore step VSC-07 on: `chat.useHooks` on, the toy workspace
@@ -82,8 +88,10 @@ it, in both Copilot enforcement modes (C002-REQ-629).
 - **Who runs the steps** (C002-IF-009 §4 Executor, defect D-050): the conductor may run the steps for
   P-01 with the method of the run sheet `docs/runsheets/T-050-vscode-checklist.md` (`code chat`
   with the prompt file attached, since `code chat` sends `/<name>` as plain text). P-01 runs the
-  steps that need typing as one batch after VSC-29: VSC-30, VSC-12, the free-text half of VSC-20 and
-  the slash-list half of VSC-01 on a twin.
+  steps that need typing as one batch after VSC-29: VSC-30, with the free-text half of VSC-20 typed
+  during its rework; VSC-12; and the slash-list half of VSC-01 on a twin. The batch may continue
+  inside VSC-31 for the free-text half, after the revise and before gate G1 is decided (C002-IF-009
+  §4 Executor; critic CR-213).
 - **Where to read results:** a tool call's input and result in the chat (expand the call) or in the
   workspace's chat session files; hook input and output in the Output panel's "GitHub Copilot Chat
   Hooks" log (the hooks log). `chat.autoReply` stays `false` except inside VSC-20 and VSC-29.
@@ -120,10 +128,14 @@ The record lists the steps in run order: each step once, at the position of its 
 result of that run in `result`; each earlier run goes into the step's `earlier_results`, oldest first, with its `result`
 and the `cause` of the run that followed it: `hooks-source-changed` (a source changed after VSC-10,
 or VSC-10 read one off and P-01 put it right), `ran-before-hooks-state` (a group-4 step ran before
-VSC-10) or `repeated` (any other rerun), never in a `note`. The release check reads the recorded
-results, the earlier runs and the hooks state (an earlier `failed` run that the rerun rule did not
-repeat refuses the release, C002-IF-009 §5); it does not check the order, which P-01's sign-off of
-the record covers.
+VSC-10) or `repeated` (any other rerun), never in a `note`. A try outside a step's Do as narrowed
+by an approved revision of this change goes there as well, under the fourth cause
+`outside-narrowed-step`, with `defect` and `tracked_by` (How to run and record, above; revised for
+defect D-058); it is no rerun of this rule and needs no restore step. The release check reads the
+recorded results, the earlier runs and the hooks state (an earlier `failed` run that the rerun rule
+did not repeat refuses the release, unless it is a try outside a narrowed step with both `defect`
+and `tracked_by`, which is excused only after the record review, C002-IF-009 §4 and §5); it does not
+check the order, which P-01's sign-off of the record covers.
 
 ## Step index
 
@@ -343,7 +355,9 @@ copy, or copies, that the run's conductor sessions used.
 - **Record:** `passed`. On a rerun (rerun rule) the earlier run of VSC-07 goes into its
   `earlier_results`, with `cause` `hooks-source-changed` (a source changed after VSC-10, or VSC-10
   read one off and P-01 put it right) or `ran-before-hooks-state` (a group-4 step ran before VSC-10);
-  VSC-07 then has as many earlier runs as the reruns it started.
+  VSC-07 then has as many earlier runs as the reruns it started. A try of another step under the
+  cause `outside-narrowed-step` (with `defect` and `tracked_by`; excused only with both, after the
+  record review) starts no rerun and needs no run of VSC-07.
 
 ### VSC-08 — Copilot hooks row, `chat.useHooks` true and workspace trusted (sdd MCP server enforcement)
 
@@ -523,17 +537,28 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 
 The two rows of C002-TS-317, run in two halves. The `chat.autoReply` half runs here; the free-text
 half needs typing, so P-01 runs it in the end batch after VSC-29 (with VSC-30, VSC-12 and the twin
-half of VSC-01), as the slash-list half of VSC-01 is run. VSC-20 is `passed` only when both halves
-pass, and the record lists it at the position of its last half.
+half of VSC-01), as the slash-list half of VSC-01 is run, **while a phase of the toy change is
+open**: its status in the toy change's `change.md` is `draft`, `in-review` or `in-revision`
+(C002-IF-009 §4; critic CR-208). VSC-20 is `passed` only when both halves pass, and the record lists
+it at the position of its last half.
+
+History (defect D-058): in run 4 of C002-T-050 (2026-11-13) the first try of the free-text half was
+typed after gate G1 was approved, when no phase of the toy change was open; the 0.1.0 conductor then
+logs the answer in no questions log (CHG-001 defect D-034). The half was narrowed to an open phase,
+and that try is recorded under the cause `outside-narrowed-step`.
 
 - **Do:**
   - **`chat.autoReply` half:** set `chat.autoReply` to true in the Settings editor (global tool
     auto-approve no longer answers questions on VS Code 1.145.2: it approves tools only); let the
     conductor ask an interview round of the toy change; then set `chat.autoReply` to false again.
-  - **Free-text half (P-01's end batch):** with `chat.autoReply` false, during or after the VSC-30
-    rework, ask the conductor for one round (for example "ask me one question about the export
-    scope"); in the dialog, type `Keep the CSV export out of v1` in the free-text field without
-    selecting an option, and submit.
+  - **Free-text half (P-01's end batch):** with `chat.autoReply` false, while a phase of the toy
+    change is open (`draft`, `in-review` or `in-revision`): during the VSC-30 rework (`draft`),
+    before gate G1 is presented and decided again, or, if the half has not passed by then, inside
+    VSC-31, after its revise (`in-revision`) and before gate G1 is decided (critic CR-213). Never
+    after an approval and before the next phase starts: then no phase is open, and the 0.1.0
+    conductor logs the answer in no questions log (CHG-001 D-034). Ask the conductor for one round
+    (for example "ask me one question about the export scope"); in the dialog, type
+    `Keep the CSV export out of v1` in the free-text field without selecting an option, and submit.
 - **Expect:**
   - `chat.autoReply` half: `askQuestions` returns `{ selected: [], freeText: "The user is not
     available to respond and will review your work later. Work autonomously and make good
@@ -546,8 +571,12 @@ pass, and the record lists it at the position of its last half.
     (critic CR-157).
 - **Record:** as `observed` and in the template's fields: the result that `askQuestions` returned
   with `chat.autoReply` true (`auto_reply_result`), that `chat.autoReply` is false again
-  (`auto_reply_off`), and for the free-text half its result (`selected: []`, P-01's `freeText`) and
-  the questions-log line (`free_text_half`).
+  (`auto_reply_off`), and for the free-text half its result (`selected: []`, P-01's `freeText`), the
+  questions-log line, the open phase it ran in (phase and status, e.g. `00-ideation in-revision`)
+  and the questions-log file and round that hold the answer (`free_text_half`). A try of the half
+  outside the narrowed Do (for example after an approval, when no phase is open) goes into VSC-20's
+  `earlier_results` under the cause `outside-narrowed-step`, with `defect`, `tracked_by` and the
+  evidence for the conditions (a) … (e) in its `note` (C002-IF-009 §4 Earlier runs).
 
 ### VSC-21 — Status brief from the session-start hook
 

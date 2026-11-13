@@ -29,7 +29,7 @@ import { zipDir } from "../../../scripts/package.mjs";
 import type { Target } from "../../../scripts/generate/tables.ts";
 import { MECHANISMS_OF_MODE } from "../../../scripts/release/check.ts";
 import { REL_CATALOGUE } from "../../../scripts/release/errors.ts";
-import { readChecklistSteps } from "../../../scripts/release/evidence.ts";
+import { readChecklistSteps, stepCheck, type ChecklistStep } from "../../../scripts/release/evidence.ts";
 import { main } from "../../../scripts/release/main.ts";
 import { checkReport, loadCorpora, parseReport, type Corpus } from "../../../scripts/release/replay.ts";
 import type { Mechanism } from "../../replay/expect.ts";
@@ -607,12 +607,15 @@ function recordText(mode: string, tested: Record<string, string>, steps: Entry[]
 }
 
 const passed = (id: string, extra: Entry = {}): Entry => ({ id, result: "passed", ...extra });
-const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{ result, cause }] });
+const earlier = (result: string, cause: string, keys: Entry = {}): Entry => ({ earlier_results: [{ result, cause, ...keys }] });
+/** An earlier try outside a narrowed step (C002-IF-009 §4 Earlier runs, Tries outside a narrowed step; defect D-058). */
+const outside = (keys: Entry): Entry => earlier("failed", "outside-narrowed-step", keys);
 
 {
   const S = "sdd-mcp-server" as const;
   const H = "copilot-hooks" as const;
   const line = (id: string, result: string) => `ERR-REL-004: copilot: checklist step ${id} is ${result}`;
+  const OUTSIDE = "failed in an earlier run outside a narrowed step without defect and tracked_by";
   type Row = { mode: typeof S | typeof H; restore?: Entry; steps: Entry[]; err: string[] | "ERR-REL-011" };
   const rows: Row[] = [
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02")], err: [] },
@@ -637,12 +640,15 @@ const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("failed", "hooks-source-changed"))], err: [line("VSC-02", "failed in an earlier run not repeated under the rerun rule")] },
     { mode: S, restore: earlier("passed", "hooks-source-changed"), steps: [passed("VSC-01", earlier("failed", "hooks-source-changed")), passed("VSC-02")], err: [line("VSC-01", "failed in an earlier run not repeated under the rerun rule")] },
     { mode: S, steps: [passed("VSC-01"), passed("VSC-02", earlier("skipped", "repeated"))], err: [line("VSC-02", "skipped in an earlier run")] },
+    // Defect D-058 (C002-T-085): a try outside a narrowed step, excused with both keys, refused without tracked_by.
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02", outside({ defect: "D-058", tracked_by: "CHG-001 D-034" }))], err: [] },
+    { mode: S, steps: [passed("VSC-01"), passed("VSC-02", outside({ defect: "D-058" }))], err: [line("VSC-02", OUTSIDE)] },
     { mode: H, steps: [passed("VSC-01"), passed("VSC-03")], err: [] },
     { mode: H, steps: [passed("VSC-01"), { id: "VSC-02", result: "not-applicable" }], err: [line("VSC-03", "not recorded")] },
     { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), passed("VSC-02")], err: [line("VSC-02", "passed, but its mode is sdd-mcp-server")] },
     { mode: H, steps: [passed("VSC-01"), passed("VSC-03"), { id: "VSC-11", result: "not-applicable", injection_case: "INJ-01" }], err: "ERR-REL-011" },
   ];
-  assert.equal(rows.length, 24);
+  assert.equal(rows.length, 26);
   for (const [i, row] of rows.entries())
   test(`C002-TS-668 row ${i + 1} (${row.mode}): restore ${JSON.stringify(row.restore ?? {})}, steps ${JSON.stringify(row.steps)} → ${row.err === "ERR-REL-011" ? "ERR-REL-011" : row.err.length === 0 ? "allowed" : row.err.join("; ")}`, () => {
     const variant = row.mode === S ? CP_SDD : CP_HOOKS;
@@ -665,6 +671,47 @@ const earlier = (result: string, cause: string): Entry => ({ earlier_results: [{
       assert.deepEqual(r.err, row.err, what);
     }
     assert.equal(r.err.filter((l) => l.startsWith("ERR-REL-004")).length, row.err.length, `${what}: exactly the row's ERR-REL-004 lines`);
+  });
+}
+
+{
+  // C002-T-085 (defect D-058): supporting rows of C002-TS-668 outside its Examples, on the step check of
+  // C002-IF-009 §5 rule 6 directly: the keys of a try outside a narrowed step must be defect IDs of the
+  // forms D-<NNN> and CHG-<NNN> D-<NNN>; with both, the try needs no step index and no restore re-run and
+  // does not count toward the restore step's earlier runs.
+  const OUTSIDE = "failed in an earlier run outside a narrowed step without defect and tracked_by";
+  const index: ChecklistStep[] = TS668_INDEX.map(([id, group, mode, kind]) => ({ id, group, mode, kind, injectionCase: null }));
+  const base = (vsc02: Entry, restore: Entry = {}): { id: string; result?: unknown; earlier_results?: unknown }[] => [
+    passed("VSC-01"),
+    passed("VSC-04", restore),
+    passed("VSC-05"),
+    passed("VSC-02", vsc02),
+  ] as { id: string }[];
+  const keys = { defect: "D-058", tracked_by: "CHG-001 D-034" };
+  for (const [what, vsc02, want] of [
+    ["an empty tracked_by", outside({ defect: "D-058", tracked_by: "" }), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["an empty defect", outside({ defect: "", tracked_by: "CHG-001 D-034" }), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["no defect and no tracked_by", outside({}), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["a defect not of the form D-<NNN> (D-58)", outside({ defect: "D-58", tracked_by: "CHG-001 D-034" }), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["a tracked_by that is not change-qualified (D-034)", outside({ defect: "D-058", tracked_by: "D-034" }), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["a defect that is not text", outside({ defect: 58, tracked_by: "CHG-001 D-034" }), [{ id: "VSC-02", result: OUTSIDE }]],
+    ["a passed try with no keys", earlier("passed", "outside-narrowed-step"), []],
+    ["a failed try with both keys, then a failed run under repeated", { earlier_results: [{ result: "failed", cause: "outside-narrowed-step", ...keys }, { result: "failed", cause: "repeated" }] }, [{ id: "VSC-02", result: "failed in an earlier run not repeated under the rerun rule" }]],
+  ] as [string, Entry, { id: string; result: string }[]][])
+    test(`C002-TS-668 supporting row (sdd-mcp-server): VSC-02 passed with ${what} → ${want.length === 0 ? "no line" : want[0]!.result}`, () => {
+      assert.deepEqual(stepCheck(base(vsc02), index, "sdd-mcp-server"), want);
+    });
+
+  test("C002-TS-668 supporting row: a try outside a narrowed step with both keys stays excused with an unreadable step index; a rerun-rule run does not", () => {
+    assert.deepEqual(stepCheck(base(outside(keys)), null, "sdd-mcp-server"), []);
+    assert.deepEqual(stepCheck(base(earlier("failed", "hooks-source-changed"), earlier("passed", "hooks-source-changed")), null, "sdd-mcp-server"), [
+      { id: "VSC-02", result: "failed in an earlier run not repeated under the rerun rule" },
+    ]);
+  });
+
+  test("C002-TS-668 supporting row: a try outside a narrowed step does not count toward the restore step's earlier runs", () => {
+    const two = { earlier_results: [{ result: "failed", cause: "outside-narrowed-step", ...keys }, { result: "failed", cause: "hooks-source-changed" }] };
+    assert.deepEqual(stepCheck(base(two, earlier("passed", "hooks-source-changed")), index, "sdd-mcp-server"), []);
   });
 }
 
