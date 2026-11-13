@@ -145,8 +145,8 @@ their dependencies allow.
 | 62 | C001-T-070 | Constitution for this repository via /architect:init | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-070-repo-constitution.md` |
 | 63 | C001-T-071 | Archify architecture outputs for CHG-001 — **dropped** 2026-10-10 (spike S-03, waiver) | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-071-archify-chg001.md` |
 | 64 | C001-T-072 | Release gate v0.1.0 — its close waits for the G3 approval of revision D-028 (C001-M-4 toy change narrowed to cfg-full, cfg-bare deferred to the follow-up change "Cost and token efficiency") | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-072-release-gate.md` |
-| 65 | C001-T-073 | Dogfood: greenfield change CHG-003 through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
-| 66 | C001-T-074 | Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
+| 65 | C001-T-073 | Dogfood: greenfield change in its own repository through G1–G3 | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-073-dogfood-greenfield.md` |
+| 66 | C001-T-074 | Dogfood: brownfield change CHG-002 and Superpowers execution in the greenfield dogfood repository | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-074-dogfood-brownfield.md` |
 | 67 | C001-T-075 | Archive CHG-001 into living specs | `.sdd/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md` |
 
 ## Defects (manual)

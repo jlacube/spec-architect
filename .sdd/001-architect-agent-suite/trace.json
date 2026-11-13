@@ -1,6 +1,6 @@
 {
   "change": "CHG-001",
-  "generated_at": "2026-11-12T05:53:41.232Z",
+  "generated_at": "2026-11-13T22:05:39.016Z",
   "nodes": [
     {
       "id": "C001-AC-101.1",
@@ -5658,8 +5658,8 @@
       "type": "T",
       "file": "20-plan/50-tasks/T-073-dogfood-greenfield.md",
       "line": 1,
-      "title": "Dogfood: greenfield change CHG-003 through G1–G3",
-      "content_hash": "sha256:dd006ef15c5dacd7dc3ced82d16cad53265355b7269bb7601a3dba50ac07edb8",
+      "title": "Dogfood: greenfield change in its own repository through G1–G3",
+      "content_hash": "sha256:1669bff909051c5831c5c58615bc3da9b53b65c1b3f433253f9227fccd8ff622",
       "status": "todo"
     },
     {
@@ -5667,8 +5667,8 @@
       "type": "T",
       "file": "20-plan/50-tasks/T-074-dogfood-brownfield.md",
       "line": 1,
-      "title": "Dogfood: brownfield change CHG-002 (multi-platform targets) and Superpowers execution",
-      "content_hash": "sha256:81be4d22017ac370368f9235ad81eeceb476e5c6191d772a9bdb710600df5a07",
+      "title": "Dogfood: brownfield change CHG-002 and Superpowers execution in the greenfield dogfood repository",
+      "content_hash": "sha256:c73c0da101365dc477bcd9fe33e04705f98bf6d10c6b9b00778e88068a35ea19",
       "status": "todo"
     },
     {
@@ -24908,6 +24908,11 @@
     },
     {
       "from": "C001-T-073",
+      "to": "C001-NFR-106",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-073",
       "to": "C001-NFR-701",
       "relation": "references"
     },
@@ -24949,6 +24954,11 @@
     {
       "from": "C001-T-073",
       "to": "C001-T-072",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-073",
+      "to": "C001-T-075",
       "relation": "references"
     },
     {
@@ -25008,6 +25018,16 @@
     },
     {
       "from": "C001-T-074",
+      "to": "C001-NFR-106",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
+      "to": "C001-NFR-304",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
       "to": "C001-RISK-003",
       "relation": "mitigates"
     },
@@ -25018,12 +25038,22 @@
     },
     {
       "from": "C001-T-074",
+      "to": "C001-RISK-013",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
       "to": "C001-SC-01",
       "relation": "references"
     },
     {
       "from": "C001-T-074",
       "to": "C001-SC-04",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
+      "to": "C001-SC-06",
       "relation": "references"
     },
     {
@@ -25049,6 +25079,21 @@
     {
       "from": "C001-T-074",
       "to": "C001-T-072",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
+      "to": "C001-T-073",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C001-T-074",
+      "to": "C001-T-073",
+      "relation": "references"
+    },
+    {
+      "from": "C001-T-074",
+      "to": "C001-T-075",
       "relation": "references"
     },
     {

@@ -74,3 +74,32 @@ with 20 changes, 500 files and 2,000 IDs):
 
 **M-2 exit criterion** — `sdd lint` exits 0 on this repository; G1/G2 hashes reproduce (golden
 tests); prototypes retired; all M-2 test cases pass (`npm run check`: 368 tests).
+
+## 2026-11-13 — CHG-002 token estimate, taken for C001-T-074 (brownfield half)
+
+CHG-002 ("Multi-platform targets") is the brownfield dogfood of C001-SC-01 and C001-SC-07 (P-01,
+2026-10-13; kept 2026-11-13, CHG-001 `20-plan/questions-log.md` Q-t074-brownfield-01). Its Gate log
+Usage cells read "unavailable", so its tokens are estimated from the kept conductor session transcripts
+(P-01, Q-t074-usage-01). The estimate is taken now, before Claude Code's 30-day transcript cleanup
+removes the October subagent files; C001-T-074 cites it.
+
+- **Method:** assistant-message usage (deduplicated by message ID) in the main conductor session
+  transcript and its subagent transcripts, between CHG-002's creation (`9dde137`, 2026-10-13 23:29:56
+  +02:00) and its first G1, G2 and G3 approvals (2026-10-14 05:26:18, 2026-10-15 22:48:20,
+  2026-10-16 15:04:01, +02:00). The 40 subagent transcripts of that window (with their `.meta.json`)
+  are copied, outside the repository, to `C:\Sandbox\runs\chg002-usage-transcripts` on P-01's machine;
+  keep them until C001-T-075 is done.
+- **Upper bound:** CHG-001 work ran in the same session during that window, so the figures are an
+  upper bound for CHG-002.
+
+| Phase | Input | Cache creation | Cache read | Output | Messages |
+|---|---:|---:|---:|---:|---:|
+| 00-ideation | 416 | 4,417,006 | 51,273,845 | 53,866 | 204 |
+| 10-spec | 2,862 | 6,462,272 | 261,925,979 | 143,149 | 1,428 |
+| 20-plan | 1,492 | 4,040,125 | 128,722,078 | 82,196 | 745 |
+| **Total** | **4,770** | **14,919,403** | **441,921,902** | **279,211** | **2,377** |
+
+- **Input + output** (input, cache creation and output; cache reads excluded): 15,203,384 tokens.
+  With cache reads: 457,125,286.
+- **C001-NFR-106 does not apply:** CHG-002 had 121 REQs at its first G3, above the medium-feature range
+  (5–40 REQs) of C001-NFR-106 and C001-SC-08, so the figures serve cost visibility (C001-SC-06) only.
