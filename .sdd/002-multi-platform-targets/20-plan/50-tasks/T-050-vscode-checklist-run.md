@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082, C002-T-083, C002-T-084, C002-T-085]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-504.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-358, C002-TS-508, C002-TS-516, C002-TS-617, C002-TS-618, C
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031, C002-RISK-032, C002-RISK-041, C002-RISK-043, C002-RISK-044, C002-RISK-045]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: a01c28b, completed_at: 2026-11-13, notes: null }
 ---
 
 # C002-T-050 — Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-13T10:02:24Z",
+  "generated_at": "2026-11-13T10:03:41Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -465,7 +465,7 @@
         "status": "in-progress",
         "tasks": {
           "total": 82,
-          "done": 79,
+          "done": 80,
           "blocked": 0,
           "in_progress": 0
         },
@@ -1008,9 +1008,9 @@
           "summary": "D-051 assumption refuted in the C002-T-050 binding run (2026-11-11, VSC-14): on VS Code 1.145.2 the tools entry askQuestions does not grant vscode_askQuestions (the model's call to askQuestions got 'The tool \"askQuestions\" does not exist', no question tool in the session, every round fell back to plain text); a scratch test with vscode/askQuestions in the conductor's tools showed the dialog. Fix per the assumption's own fallback: the Copilot mapping adds vscode/askQuestions.",
           "reporter": "jerome.lacube",
           "date": "2026-11-11",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fix C002-T-082 (vscode/askQuestions); VSC-18 passed with dialogs from vscode_askQuestions; closed by C002-T-050 run 4 (record docs/checklists/records/vscode-2026-11-13-0.1.0.md, commit a01c28b; dry run released at 2026-11-13)",
+          "closed_at": "2026-11-13"
         },
         {
           "id": "D-055",
@@ -1018,9 +1018,9 @@
           "summary": "C002-T-050 run of 2026-11-12 (t050d, e89dae8) stopped at VSC-15: the plain-request form of C002-TS-319 (added at D-054) tests behaviour no requirement asks for (C001-REQ-116 binds only /architect:new; conductor behaviour is CHG-001 D-032), and the S-08 same-name assumption of C002-IF-005 §3 (prompt files bind to the workspace sdd-conductor) was not borne out: code chat -m sdd-conductor ran the plugin copy. Resolution: P-01 Q-t050-vsc15-01 'Fix test, finish findings pass' and Q-copilot-agentcopy-01 'Keep both, record copy'; close when this revision is approved, C002-T-083 is done and VSC-15 passes in the C002-T-050 record.",
           "reporter": "jerome.lacube",
           "date": "2026-11-12",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fix C002-T-083 (VSC-15 prompt-file form, conductor copy); VSC-15 passed in the prompt-file form; closed by C002-T-050 run 4 (record docs/checklists/records/vscode-2026-11-13-0.1.0.md, commit a01c28b; dry run released at 2026-11-13)",
+          "closed_at": "2026-11-13"
         },
         {
           "id": "D-056",
@@ -1028,9 +1028,9 @@
           "summary": "C002-T-050 run of 2026-11-12 (t050e, e89dae8), VSC-01 twin half (P-01): the S-08 assumption of C002-IF-005 §3 (VS Code adds no agent, prompt file or skill from a registered package folder without plugin.json; checklist A-3) was refuted on VS Code 1.145.2: the t050-twin window (package unpacked, not installed, only chat.pluginLocations entry) offered the Architect slash commands and sdd-conductor; the VS Code bundle loads a folder without a manifest as plugin format 0 (only format 3 requires its manifest), without hooks before the install writes hooks.json. Resolution: P-01 Q-t050-a3-01 'Docs and spec fix (Recommended)', confirmed 'Keep docs and spec fix (Recommended)' (the spec's install/ fallback is not applied: on 1.145.2 the guard cannot stop host built-in subagents anyway, D-052); close when the revision is approved, its task is done and VSC-01 passes in the C002-T-050 record.",
           "reporter": "jerome.lacube",
           "date": "2026-11-12",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fix C002-T-084 (install notes warning, checklist A-3 refuted); VSC-01 passed with the Architect entries shown before the install on the main run and on the twin; closed by C002-T-050 run 4 (record docs/checklists/records/vscode-2026-11-13-0.1.0.md, commit a01c28b; dry run released at 2026-11-13)",
+          "closed_at": "2026-11-13"
         },
         {
           "id": "D-057",
@@ -1038,9 +1038,9 @@
           "summary": "C002-T-050 run of 2026-11-12 (t050e, e89dae8), VSC-12 (P-01): the doctor reported Context7 and DeepWiki 'unreachable' with the fix 'check network' while both servers ran: its probe step dispatches sdd-cartographer, which has neither server's tools on any target (Claude Code included: this repository's toolchain.md shows 'no (this session)'), so no probe call is made. Resolution: P-01 Q-t050-doctor-01 'Fix in 0.1.0 (Recommended)', then 'Fix shared source (Recommended)': the doctor's probe step has sdd-researcher make the two small probe calls and passes the result to the cartographer; close when the revision is approved, its task is done and VSC-12/VSC-13 pass in the C002-T-050 record with Context7 and DeepWiki ok.",
           "reporter": "jerome.lacube",
           "date": "2026-11-12",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Fix C002-T-084 (researcher probe; candidate 7b8414a); VSC-12 and VSC-13 passed with Context7 and DeepWiki ok and an empty Fix; closed by C002-T-050 run 4 (record docs/checklists/records/vscode-2026-11-13-0.1.0.md, commit a01c28b; dry run released at 2026-11-13)",
+          "closed_at": "2026-11-13"
         },
         {
           "id": "D-058",
@@ -1048,9 +1048,9 @@
           "summary": "The checklist and run sheet let VSC-20's free-text half run after gate G1 is approved, when no phase of the toy change is open; TS-317 asks for an interview round, and the conductor then logs the answer nowhere (run 4, 2026-11-13). The record has no place for a try outside a narrowed step.",
           "reporter": "jerome.lacube",
           "date": "2026-11-13",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "P-01: Q-t050-vsc20-01 'Retype in VSC-31 (Recommended)', -02 'Revision for VSC-20 (Recommended)', -03 'Listed cause + known gap (Recommended)'. Revision approved (G2 1684837, G3 a9af392; correction 830b38e, ba1b310), C002-T-085 done (383ade1); the record lists VSC-20's first try under outside-narrowed-step (defect D-058, tracked_by CHG-001 D-034) and the dry run accepts it; closed by C002-T-050 run 4 (record docs/checklists/records/vscode-2026-11-13-0.1.0.md, commit a01c28b; dry run released at 2026-11-13)",
+          "closed_at": "2026-11-13"
         }
       ],
       "waivers": [
