@@ -6,7 +6,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:8e70677254ad4df16d565e311d5518e4c1d08c73550b6a2fd3a6f7f9d51cc0a6", approved_at: 2026-10-11, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:cd47de21d54e20cb3c4d7b141e86d86f043c9df9f1881e8dd7a1d3bbf62fba52", approved_at: 2026-11-10, approved_by: jerome.lacube }
-  20-plan: { status: in-revision, approved_hash: "sha256:229e9eb73deeb44df5e00ac3446c5d7593b552ed3ea20125eca3896c0fa2619d", approved_at: 2026-11-10, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:812c81e2c9630298aafcaf829c665eecec00ddb7ad4c7a239e179bb81a18e195", approved_at: 2026-11-13, approved_by: "Jerome LACUBE" }
 implementation: { status: not-started, tasks_total: 58 }
 owners: [jerome.lacube]
 defects:
@@ -142,3 +142,4 @@ waivers:
 | 2026-11-10 | G3 (plan) | **Revise** | "Record the follow-up change number at C001-T-072's close: 'Cost and token efficiency' is CHG-004 (CHG-003 being the OpenCode release of CHG-002 Q-opencode-scope-01, created first)" | none | unavailable |
 | 2026-11-10 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
 | 2026-11-13 | G3 (plan) | **Revise** | "Plan revision (P-01, 2026-11-13: dogfoods kept apart from Architect's own SDD artifacts, 'You gave my go for actions'): C001-T-073 and C001-T-074 each run in their own git repository outside the Architect repository with its own .sdd/; Architect keeps only the summary entry in docs/dogfood.md; stale change numbers (CHG-003, CHG-002) dropped from the dogfood task titles" | none | unavailable |
+| 2026-11-13 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise" | none | unavailable |
