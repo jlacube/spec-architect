@@ -210,11 +210,14 @@ Run only the first row, at the task steps of `10-strategy.md` §3a: its three fi
 and C002-T-048 step 4, and only `evals/cap11/doctor-no-ripwire.eval.mjs` at C002-T-038 step 4. Run the
 rest only if the plan edits a source agent, command or skill (it should not, C002-CON-10). **Revision
 D-057** edits two source commands, one skill item and one agent line (§4.7): C002-T-084 step 8 runs
-`doctor-no-ripwire.eval.mjs` and the `deepwiki-down` row of `TS-1112.eval.mjs` with the changed
-CHG-002 doctor rows; the cartographer cases of row 3 and the injection cases of row 4 are not rerun,
+row 1 (`doctor-no-ripwire.eval.mjs`) and row 2 (the three rows of `TS-1112.eval.mjs` and
+`TS-1124.eval.mjs`, plan critic CR-200) with the changed CHG-002 doctor rows and the unchanged Claude
+Code rows of C002-TC-509 (`node 18`) and C002-TC-510; row 5 (the other evals that mention Bash or
+guards) is not rerun, since none of them runs the doctor or the init command; the cartographer cases
+of row 3 and the injection cases of row 4 are not rerun either,
 since the cartographer's change is its toolchain-record item, which none of them asks for, and the
-researcher's is a line that applies only to a doctor or init probe brief (the comparison of
-C002-T-084 step 7 bounds both files to those changes).
+researcher's is a line that applies only to a doctor or init probe brief (the line comparison of
+C002-T-084 step 7 holds every changed line to those regions).
 
 ## Evidence
 

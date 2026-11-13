@@ -363,7 +363,7 @@ with the Copilot release.
 **The D-056, D-057 plan update lengthens it by 2** (P-01 answers of 2026-11-12, round "2026-11-12 —
 C002-T-050 run 3 end batch"). C002-T-084 (M, the researcher probe in the shared doctor and init, the
 pre-install warning, both candidates rebuilt) waits for C002-T-082 (57) and C002-T-083 (58) and
-finishes at 60; C002-T-050 (S, the targeted retake after run 3) then finishes at 61, C002-T-075 at 62
+finishes at 60; C002-T-050 (S, the full run 4 after run 3 (P-01's answer to Q-t050-retake-03)) then finishes at 61, C002-T-075 at 62
 and C002-T-055 at 63. C002-T-038, C002-T-079 and C002-T-080, also dependencies of C002-T-084, are done
 and finish earlier. Before it, the chain weighed 61.
 
@@ -473,8 +473,8 @@ no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055
 
 **Overall (to C002-T-055, weight 63, from the D-056, D-057 revision):** as the list below up to
 C002-T-083 (58), then C002-T-084 — the researcher's Context7 and DeepWiki probe, the pre-install
-warning and both 0.1.0 candidates rebuilt (M, 60), C002-T-050 — checklist record of run 3 with the
-targeted retake (S, 61), C002-T-075 — P-01 npm publication after a `released` dry run (S, 62) and
+warning and both 0.1.0 candidates rebuilt (M, 60), C002-T-050 — checklist record of the full run 4
+(S, 61), C002-T-075 — P-01 npm publication after a `released` dry run (S, 62) and
 C002-T-055 — P-01 Copilot release (S, 63).
 
 **Overall (to C002-T-055, weight 61, from the revision after the C002-T-050 run of 2026-11-12):** items 1 … 14

@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-12T23:57:02Z",
+  "generated_at": "2026-11-13T00:56:23Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -360,6 +360,16 @@
           "status": "open",
           "resolution": null,
           "closed_at": null
+        },
+        {
+          "id": "D-033",
+          "ref": "C001-REQ-1110",
+          "summary": "CHG-002 defect D-057 (doctor probe of Context7/DeepWiki ran on the cartographer, which lacks their tools; P-01 2026-11-12 'Fix shared source (Recommended)') is fixed by C002-T-084 in plugins/architect/ (commands/doctor.md, commands/init.md, skills/code-discovery/SKILL.md, agents/sdd-researcher.md, README.md), which moves the local v0.1.0 tag for both hosts. CHG-001's release record docs/release-0.1.0-evidence.md:16-17 then states a false fact (plugins/architect/ unchanged since 9eb56c0, CHG-002 condition CR-123 holds). Close when the record names the C002-T-084 commit and cites the Claude Code doctor/init rows retaken by C002-T-084 step 8, before C001-T-075 archives CHG-001 (CHG-002 critic CR-201).",
+          "reporter": "jerome.lacube",
+          "date": "2026-11-13",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": [
@@ -420,7 +430,7 @@
       "kind": "brownfield",
       "profile": "full",
       "status": "active",
-      "phase": "10-spec",
+      "phase": "20-plan",
       "phases": {
         "00-ideation": {
           "status": "approved",
@@ -435,9 +445,9 @@
           "approved_by": "jerome.lacube"
         },
         "20-plan": {
-          "status": "stale",
-          "approved_hash": "sha256:ce1a1726c788014be77aa70430d6a72d8678904518a8a79e458c372ac0c23cb7",
-          "approved_at": "2026-11-12",
+          "status": "approved",
+          "approved_hash": "sha256:5ad66278f84b66dab693a26ac590e595e3b1e89a72fe27e3e7dfe5099bd57455",
+          "approved_at": "2026-11-13",
           "approved_by": "jerome.lacube"
         }
       },

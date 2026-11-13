@@ -20,7 +20,7 @@ report: { commit: null, completed_at: null, notes: null }
 
 ## Intent
 
-**Run 3 of 2026-11-12 and the targeted retake (defects D-056, D-057).** Run 3 (started 2026-11-12
+**Run 3 of 2026-11-12 and run 4 (defects D-056, D-057).** Run 3 (started 2026-11-12
 07:19 in `C:\Sandbox\runs\t050e`, on e89dae8, after C002-T-083) passed every step except two findings
 of P-01's end batch: the twin half of VSC-01 showed the Architect slash commands and `sdd-conductor`
 in a window whose package folder had no `plugin.json` (assumption A-3 refuted; defect D-056), and in
@@ -28,14 +28,14 @@ VSC-12 the doctor showed Context7 and DeepWiki `unreachable`, its probe having r
 cartographer, which lacks their tools (defect D-057). Passed in run 3: VSC-02 … VSC-11, VSC-13 …
 VSC-31 and VSC-54 of the mode in use (VSC-15 and VSC-18 included, VSC-20 in both halves, VSC-22 and
 VSC-54 with the default-agent fallback), and the conductor half of VSC-01. Run 3 wrote no record
-(run sheet step 10). By P-01's answer to Q-t050-retake-01 ("Targeted retake (Recommended)",
-`../questions-log.md` round "2026-11-12 — C002-T-050 run 3 end batch"; the full run of about 2–3 h
-rejected) **run 3 stays the record for every step except the retaken ones**, which run again on
-C002-T-084's candidate in the fresh run folder `C:\Sandbox\runs\t050f`, after a comparison of the
-packages, and one record cites run 3 for the rest (step 0 below). The rules are those of C002-IF-009
-§4 "Targeted retake after a revision" and §5 "Record of a targeted retake" (the conductor's decision
-on Q-t050-record-01; C002-REQ-615, C002-REQ-618 as narrowed). Wherever the paragraphs below name
-`t050e` for a retaken step, `t050f` applies; for every other step, run 3 in `t050e` is the evidence.
+(run sheet step 10). P-01 first chose a targeted retake (Q-t050-retake-01), then, after the plan
+critic showed it had grown to twelve steps plus a usage audit of run 3 that the release check cannot
+verify, answered Q-t050-retake-03 with "Full run 4 (Recommended)" (`../questions-log.md` round
+"2026-11-12 — C002-T-050 run 3 end batch"; plan critic CR-197). This task therefore **runs again, in
+full from step 0, as run 4**, on C002-T-084's candidate in the fresh run folder
+`C:\Sandbox\runs\t050f`, after C002-T-084 is done, with one record of run 4; run 3's results go into
+its Notes as an earlier stopped run (step 0 below). Wherever the paragraphs below name `t050e`,
+`t050f` applies.
 
 **Stopped run of 2026-11-12 and rerun (VSC-15, test design).** The binding run of 2026-11-12 (started
 01:10 in `C:\Sandbox\runs\t050d`, on C002-T-082's candidate e89dae8) stopped at VSC-15: in the
@@ -135,21 +135,19 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record; since the targeted retake `vscode-<date of the retake>-0.1.0.md` (for a retake on 2026-11-12, `vscode-2026-11-12-0.1.0.md`), holding run 3 and the retake |
-| modify | `docs/runsheets/T-050-vscode-checklist.md` | targeted retake: the banner, the retake section, the run folder `C:\Sandbox\runs\t050f` and the Package line are C002-T-084's; this task fills the retake's `<commit>` (C002-T-084's done commit) before the retake starts. Before, revision after the run of 2026-11-12: the banner, the run folder `C:\Sandbox\runs\t050e`, the conductor-copy method and the step-11 statement are C002-T-083's; this task only fills the `<commit>` of step 11 with C002-T-083's done commit before the run starts. Earlier, revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
+| add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record; since revision D-056, D-057 the record of run 4, `vscode-<date of run 4>-0.1.0.md` |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | run 4: the banner, the run folder `C:\Sandbox\runs\t050f`, the Package line and the step-11 statement are C002-T-084's; this task fills the `<commit>` of step 11 with C002-T-084's done commit before the run starts. Before, revision after the run of 2026-11-12: the banner, the run folder `C:\Sandbox\runs\t050e`, the conductor-copy method and the step-11 statement are C002-T-083's; this task only fills the `<commit>` of step 11 with C002-T-083's done commit before the run starts. Earlier, revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
 
 ## Preconditions
 
-- **Targeted retake after run 3** (supersedes the candidate and the run folder of the next item for
-  the retaken steps only): the G2 and G3 approvals of the revision for D-056 and D-057, and
-  **C002-T-084 done**: its candidate packed, the local tag `v0.1.0` moved to it, its dry run refusing
-  on ERR-REL-003 only, its diff check of step 7 matching the expected lists, and the baseline copy of
-  e89dae8's artifacts in `C:\Sandbox\runs\t050f\e89dae8\`. **Settings before the retake's step 0:**
-  the default profile's `%APPDATA%\Code\User\settings.json` is P-01's own; the conductor checks that
-  its hash equals the one run 3's step 0 backed up (the run sheet names it), and asks P-01 before
-  starting if it does not. Run 3's notes (the chat session files, the hooks log extracts and the
-  conductor's step notes of `t050e`) are kept unchanged until the record is committed: the record
-  cites them for every step that is not retaken.
+- **Run 4 after run 3** (supersedes the candidate and the run folder of the next item): the G2 and
+  G3 approvals of the revision for D-056 and D-057, and **C002-T-084 done**: its candidate packed, the
+  local tag `v0.1.0` moved to it, its dry run refusing on ERR-REL-003 only, and its file and line
+  comparisons of step 7 matching their lists. **Settings before step 0:** the default profile's
+  `%APPDATA%\Code\User\settings.json` is P-01's own; the conductor checks that its hash equals the one
+  run 3's step 0 backed up (the run sheet names it), and asks P-01 before starting if it does not.
+  Run 4 starts from step 0 in `C:\Sandbox\runs\t050f`; run 3 made no record, so no earlier `failed`
+  run binds it (run sheet step 10).
 - **Revision after the run of 2026-11-12** (supersedes the run folder and the done commit of the next
   item; the candidate stays): the G2 and G3 approvals of that revision (C002-TS-319 and VSC-15 in the
   prompt-file form only) and **C002-T-083 done**. The packages are still those of C002-T-082's
@@ -214,109 +212,33 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 ## Step outline (no production code)
 
-0. **Targeted retake after run 3 (defects D-056, D-057; P-01's answer to Q-t050-retake-01).** Steps 1
-   … 3 below describe a full run; after run 3 only the following runs, by the run sheet's "Targeted
-   retake" section and C002-IF-009 §4 "Targeted retake after a revision", in `C:\Sandbox\runs\t050f`
-   (no earlier package or toy repository in it):
-   1. **Conditions and comparison** (C002-IF-009 §4, When it applies). (1) Run 3 wrote no record. (2)
-      Its failed steps, VSC-01 (twin half) and VSC-12, were fixed by the approved revision for D-056
-      and D-057. (3) Unpack C002-T-084's `dist/architect-copilot-0.1.0.zip` and
-      `dist/architect-sdd-0.1.0.tgz` and the baseline copies of e89dae8 side by side and compare every
-      file by path and SHA-256: the Copilot package differs in exactly `INSTALL.md`,
-      `prompts/doctor.prompt.md`, `prompts/init.prompt.md`, `skills/code-discovery/SKILL.md`,
-      `agents/sdd-cartographer.agent.md`, `agents/sdd-researcher.agent.md` and
-      `architect-target.json`, with no file added or removed, and the tarball in no file. Any other
-      difference, or a failure of run 3 that the revision did not fix, rules the retake out: a full
-      new run (steps 1 … 3) is needed, and the conductor tells P-01. Both runs are on VS Code 1.145.2
-      with Copilot Chat 0.73.0.
-      **Usage audit of run 3** (C002-IF-009 §4, What the retake runs: a step after group 1 whose
-      earlier run used a changed file is retaken; extended from group 4 to every step after group 1
-      by the conductor's decision on Q-spec-retake-group2-01). From run 3's chat session files and
-      hooks log in `t050e`, list for every step after group 1 of the mode in use whether its sessions
-      ran the doctor or init prompt, started `sdd-cartographer` or `sdd-researcher` (whose agent files
-      and, for the workspace copies, `.github/agents/` files changed), or read `INSTALL.md`. Retaken by
-      that rule without the audit, since their Do runs a changed file: **VSC-03** and **VSC-04** (group
-      2: each runs the doctor prompt, whose researcher probe changed), **VSC-08** (group 3, the
-      doctor prompt; retaken in any case), **VSC-11** (its Serena half is observed
-      on a cartographer turn), **VSC-13** (doctor prompt, researcher, cartographer), **VSC-14** (init
-      prompt, researcher, cartographer) and **VSC-17** (the ideation of the toy change: the cartographer
-      wrote `evidence/greet-survey.md` and the researcher `research/R-001-node-type-stripping.md` in
-      run 3). Retaken **only if the audit shows such a use** in their run-3 sessions: VSC-18, VSC-19,
-      the `chat.autoReply` half of VSC-20, VSC-29, VSC-30 and VSC-31 (and any other group-4 step the
-      audit flags). **VSC-30** (P-01's gate G1 with its Revise rework) is not retaken unless the rule
-      requires it: run 3's ideation critic report (revision 3) lists `R-001` and the survey as
-      unchanged by the rework, so the expected audit result is that its sessions started neither
-      agent; if they did, VSC-30 is retaken by P-01. A retaken VSC-20 runs both halves in the retake
-      (the free-text half in P-01's batch). The audit also checks that no step that stays on run 3
-      has an earlier `failed` run that the rerun rule excused in run 3; one such step rules the
-      retake out (§4, last paragraph). The audit's table (step, sessions, agents and prompts used,
-      retaken yes or no) goes into the record's Notes.
-   2. **Group 1 on the new candidate:** install the CLI from the new tarball (`sdd --version` 0.1.0,
-      `sdd host-version vscode` 1.145.2 and 0.73.0); a new toy repository and two-folder workspace;
-      **VSC-01** conductor half (the package registered before the install: the picker and the
-      slash-command list offer the Architect entries, as revised for D-056; no Architect entry used
-      before the install), then its **twin half by P-01** in profile `t050-twin` on a second unpacked
-      new package and a second toy in `t050f\twin` (entries shown, with the twin's state recorded);
-      **VSC-02** (the install in the conductor's own shell, commit, settings, reload, Local chat,
-      Claude Sonnet 5.5 in the picker; the conductor copy from the chat session file's `mode`).
-   3. **Group 2, restore and group 3:** **VSC-03** (`chat.useHooks` false; the doctor's Copilot hooks
-      row as shown) and **VSC-04** (the workspace in restricted mode; where VS Code itself refuses the
-      chat or the doctor prompt and no tool call of the package runs, `passed` with the
-      `VS Code refused: ` note, run sheet step 7), then **VSC-07** (`chat.useHooks` true, workspace
-      trusted), **VSC-08**, then
-      directly **VSC-10** (the three sources must read `on`, `trusted`, `none`, as in run 3; any other
-      reading stops the retake and goes to P-01, since run 3's group-4 results rest on that state).
-      The retaken group-4 steps thus follow a hooks-state read of their own window and workspace
-      (C002-IF-009 §4, What the retake runs; Run order).
-   4. **Retaken group-4 steps, in run order** (conductor unless named): **VSC-11** (`/architect:status`
-      as the first message; its Serena half completed on VSC-14's cartographer turn), **VSC-13** (the
-      host row and the Context7 and DeepWiki rows `ok` with an empty Fix, the workspace servers
-      `context7` and `deepwiki` enabled), **VSC-14** (`/architect:init`, the toolchain record's
-      Context7 and DeepWiki rows detected `yes`; conductor's decision on Q-t050-retake-02); then, as
-      the retake's own toy-change state, `/architect:new "Toy change"` with the recommended profile
-      (VSC-16's Do, run as set-up and named in the Notes; VSC-16 itself stays on run 3, since its run
-      used no changed file; the conductor's decision on Q-spec-retake-setup-01); **VSC-17** (`/architect:ideate` until the first write; the cartographer
-      and the researcher run on the new files); then the steps the usage audit of 0.1 adds among VSC-18,
-      VSC-19, VSC-20 (`chat.autoReply` half) and VSC-29, in that order, the ideation continued as far
-      as the last of them needs (to `in-review` when VSC-29 is retaken); then **P-01's batch**: VSC-30
-      and VSC-20's free-text half only if the audit adds them, and **VSC-12** (the slash list, a bare
-      `/init`, then `/architect:doctor`, whose table shows Context7 and DeepWiki `ok`); then VSC-31 only
-      if the audit adds it. Expected retake list when the audit adds nothing beyond the fixed steps
-      (C002-IF-009 §4 names the rule and this list; the conductor's decision on
-      Q-spec-retake-list-01): VSC-01 (both halves), VSC-02, VSC-03, VSC-04, VSC-07, VSC-08, VSC-10,
-      VSC-11, VSC-13, VSC-14, VSC-17, VSC-12.
-   5. **Record** (C002-IF-009 §4 What the record holds; §5 Record of a targeted retake). One record,
-      `docs/checklists/records/vscode-<date of the retake>-0.1.0.md`, under the retake's date, with the
-      template's frontmatter and no field of its own: every step once, in the checklist's run order;
-      a retaken step with the result of its retake run and, in `earlier_results`, only the earlier
-      runs of the retake itself; a step not retaken with run 3's result, run 3's earlier runs of it in
-      `earlier_results`, and a `note` citing run 3 (`C:\Sandbox\runs\t050e`, e89dae8, 2026-11-12);
-      `hooks_state` and `hooks_sources` from the retake's VSC-10; `models_used` from the retake's
-      turns, and for an agent seen only in a step not retaken, from run 3; `executed_by` for both runs
-      (run 3: P-01 ran VSC-30 and VSC-20's free-text half; the retake: P-01 ran VSC-12 and VSC-01's
-      slash list on the twin, plus VSC-30 and VSC-20's free-text half if retaken). **Notes:** run 3's
-      results of the retaken steps, not in `earlier_results`, each with the defect or the changed file
-      behind its retake (VSC-01 twin half failed, D-056; VSC-12 failed, D-057; VSC-02, VSC-03,
-      VSC-04, VSC-07, VSC-08, VSC-10, VSC-11, VSC-13, VSC-14, VSC-17 and the audit's additions passed and were
-      retaken for the changed files they used); both candidates (e89dae8 for run 3, C002-T-084's
-      candidate for the retake); both run folders and start times; the comparison of 0.1 with every
-      changed file's SHA-256 on both sides and the fix that touches it (from C002-T-084's candidate
-      report); the usage-audit table of 0.1; the set-up `/architect:new`; and the statement: "Binding record
-      of C002-T-050: run 3 of 2026-11-12 (07:19, `t050e`, e89dae8) completed by the targeted retake
-      after C002-T-084 was done (<commit>), started <time> (P-01's answer to Q-t050-retake-01;
-      C002-IF-009 §4)." The release check reads this record as any other (§5); P-01's sign-off and the
-      review of C002-TC-618 cover the Notes.
-   6. **Sessions:** about 12 … 16 VS Code chat sessions with the expected list (VSC-02, VSC-03,
-      VSC-04, VSC-08, VSC-11, VSC-13, VSC-14 with its rounds and G0, the set-up `/architect:new`, VSC-17 with the
-      ideation turns that run the cartographer and the researcher, VSC-12), more for each step the
-      audit adds; Copilot plan AI Credits, no ledger entry; about 1.5 … 2.5 h of the conductor and
-      about 10 minutes of P-01 (20 with VSC-30). The conductor asks P-01 before a 26th session of the
-      retake.
-   7. **Close rules** (`../10-strategy.md` §2): after the record is committed and its dry run gives no
-      checklist error, the conductor closes D-054 (VSC-18 of run 3), D-055 (VSC-15 of run 3), D-056
-      (VSC-01, both halves, of the retake) and D-057 (VSC-12 and VSC-13 of the retake with Context7
-      and DeepWiki `ok`) with `sdd defect close`.
-   A failure in the retake is handled as step 3 says; a refuted assumption is a spec defect.
+0. **Run 4 after run 3 (defects D-056, D-057; P-01's answer to Q-t050-retake-03, "Full run 4
+   (Recommended)").** The task runs **again, in full from step 0, as run 4**, by steps 1 … 3 below and
+   the run sheet, on **C002-T-084's candidate** in the fresh run folder `C:\Sandbox\runs\t050f` (no
+   earlier package or toy repository in it; the twin of VSC-01 under `t050f\twin`), after C002-T-084
+   is done. No usage audit and no targeted retake: the clause of C002-IF-009 §4 "Targeted retake after
+   a revision" stays in the spec, unused by this run (Q-t050-retake-03 supersedes Q-t050-retake-01,
+   Q-t050-retake-02 and the Q-spec-retake-* answers for this run).
+   1. **Expectations of the revised steps:** VSC-01 expects the Architect entries offered before the
+      install (D-056; none used before the install), its twin half by P-01 in P-01's end batch;
+      VSC-12 and VSC-13 expect Context7 and DeepWiki `ok` with an empty Fix (D-057; VSC-13 with the
+      workspace servers `context7` and `deepwiki` enabled); VSC-14's `toolchain.md` records both
+      remote rows. Every other step as C002-T-083 left it.
+   2. **Record:** one record of run 4, `docs/checklists/records/vscode-<date of run 4>-0.1.0.md`, by
+      the normal rules of C002-IF-009 §4 (each step once at its last run, `earlier_results` only of
+      run 4). Run 3 made no record (run sheet step 10), so no run-3 result binds run 4; its results go
+      into the record's **Notes** as an earlier stopped run, as for the runs of `t050c` and `t050d`:
+      "Run 3 of 2026-11-12 (07:19, `t050e`, e89dae8): all steps passed except VSC-01 twin half (D-056)
+      and VSC-12 (D-057); no record (step 10)". Run-sheet step 11's statement names run 4's start
+      time, the stopped runs and C002-T-084's done commit.
+   3. **Sessions:** about 25 VS Code chat sessions, as any full run (about 50 with one repeat), the
+      conductor asking P-01 before a 51st; about 2 … 3 h of the conductor; P-01's end batch again
+      (VSC-30, VSC-20's free-text half, VSC-12 and VSC-01's twin half), about 20 minutes.
+   4. **Close rules** (`../10-strategy.md` §2; plan critic CR-203): after the record is committed and
+      its dry run gives no checklist error, the conductor closes D-054 (VSC-18 of run 4), D-055
+      (VSC-15 of run 4), D-056 (VSC-01, both halves, of run 4) and D-057 (VSC-12 and VSC-13 of run 4
+      with Context7 and DeepWiki `ok`) with `sdd defect close`.
+   A failed step of run 4 is handled as step 3 says; a refuted assumption is a spec defect.
 1. **P-01 step:** install the Copilot package from `dist/architect-copilot-<version>.zip` and
    `architect-sdd` from the local tarball in VS Code 1.145.2's default profile (stable, not Insiders;
    revision D-047), after backing up its `settings.json` (Q-t050-profile-01), following `INSTALL.md`
@@ -395,7 +317,7 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 - [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
-- [ ] **Targeted retake** (C002-IF-009 §4, §5): the conditions of step 0.1 held (comparison: only the seven Copilot files of step 0.1 differ, the CLI tarball not at all; no excused earlier failure on a step left on run 3); the record holds run 3 (`t050e`, e89dae8) for every step not retaken, each with a `note` citing run 3, and the retake (`t050f`, C002-T-084's candidate, started after C002-T-084 was done) for VSC-01 (both halves), VSC-02, VSC-03, VSC-04, VSC-07, VSC-08, VSC-10, VSC-11, VSC-13, VSC-14, VSC-17, VSC-12 and every step the usage audit added; VSC-01 passes with the entries shown before the install, VSC-12 and VSC-13 pass with Context7 and DeepWiki `ok`; its Notes hold run 3's results of the retaken steps with their defect or changed file, both candidates, both run folders and start times, the comparison with SHA-256 on both sides, the usage-audit table and the set-up `/architect:new`
-- [ ] D-054, D-055, D-056 and D-057 closed by the conductor after the record and its dry run (step 0.7)
-- [ ] (Superseded for the retaken steps by the item above) The record's run started after C002-T-083 was done, in `C:\Sandbox\runs\t050e`, on C002-T-082's candidate packages (e89dae8); its Notes state that it is the binding run of C002-T-050 after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design) and after C002-T-083 was done (<commit>, filled into run-sheet step 11 before the run), with the run's start time; the findings passes of 2026-11-11 and 2026-11-12 and both stopped runs appear in no record (before this revision the item named C002-T-082's done commit c8c1d10 and `t050d`; before revision D-054, C002-T-081's done commit 579c39b)
+- [ ] **Run 4:** the record's run started after C002-T-084 was done, in `C:\Sandbox\runs\t050f`, on C002-T-084's candidate packages, from step 0; VSC-01 passes (both halves) with the entries shown before the install, VSC-12 and VSC-13 pass with Context7 and DeepWiki `ok`; its Notes name run 3 (2026-11-12 07:19, `t050e`, e89dae8; VSC-01 twin half D-056, VSC-12 D-057; no record) beside the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design), and C002-T-084's done commit (filled into run-sheet step 11 before the run), with the run's start time
+- [ ] D-054 (VSC-18), D-055 (VSC-15), D-056 (VSC-01) and D-057 (VSC-12, VSC-13) closed by the conductor on the results of run 4's record and its dry run (step 0.4)
+- [ ] (Superseded by run 4 above) The record's run started after C002-T-083 was done, in `C:\Sandbox\runs\t050e`, on C002-T-082's candidate packages (e89dae8); its Notes state that it is the binding run of C002-T-050 after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design) and after C002-T-083 was done (<commit>, filled into run-sheet step 11 before the run), with the run's start time; the findings passes of 2026-11-11 and 2026-11-12 and both stopped runs appear in no record (before this revision the item named C002-T-082's done commit c8c1d10 and `t050d`; before revision D-054, C002-T-081's done commit 579c39b)
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`

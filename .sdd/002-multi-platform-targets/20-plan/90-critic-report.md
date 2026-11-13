@@ -1567,3 +1567,112 @@ Scope: `git diff -- .sdd/002-multi-platform-targets/20-plan/` and the new `50-ta
 | plan | consistency with spec and own rules | CR-181, CR-183 |
 
 **Checked without finding.** Weights add up (159) and the chain ends at 61; T-050 `depends_on` holds T-083; the hand-off is renumbered; T-083's AC/TS pairs match; the step-11 statement agrees across T-083, the T-050 done item and TC-901; the settings hash is defined; `scripts/release-check.mjs` exists. Process note: C002-T-083's edits were started in the working tree before G3 and are committed only after it.
+
+## Revision D-056, D-057 (2026-11-13)
+
+Scope: `git diff 4547cbe 265dda5 -- .sdd/002-multi-platform-targets/20-plan/`, read against the approved spec diff of the same range. Reviewed IDs: C002-T-084 (new), C002-T-050, C002-T-031, C002-T-046, C002-M-07; C002-TC-306, 506, 508, 509, 511, 512, 617, 618, 626, 901, 935, 936; C002-RISK-022, 044, 045; strategy §2, §3, §4, §5; WBS, critical path, rollout §1, regression set §3, §4.7, §5; hand-off; questions-log round "2026-11-12 — C002-T-050 run 3 end batch"; linked C002-T-038, 048, 055, 075, C002-TC-510, C002-REQ-304, 504, 505, 507, 522, 615, 618, 623, C002-IF-006 §2.1, C002-IF-009 §4/§5, C002-IF-010 §2.1, D-054 … D-057. Lint 0 findings; trace 100 % on every rule (TR-08 304/304). Read-only review; the conductor appended this section from the critic's reply and filled the Status lines from the planner's digest.
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 5 | 6 |
+
+### CR-197 — The targeted retake has grown far beyond the option P-01 chose, close to the full run P-01 rejected, and P-01 was not asked again
+- **Severity:** major
+- **Refs:** Q-t050-retake-01, Q-t050-retake-02, Q-spec-retake-list-01, Q-spec-retake-group2-01, C002-T-050 step 0, strategy §2
+- **Evidence:** P-01 was offered "retake only the rows the fixes touch (VSC-01 twin, VSC-02 install, VSC-12/13 doctor)" against "Full binding run again, about 2–3 h" (`questions-log.md:492`); the plan retook 12 steps plus audit additions, 12–16 sessions, 1.5–2.5 h (`T-050-vscode-checklist-run.md:286-313`), grown by conductor answers (`questions-log.md:510`).
+- **Why it matters:** the time saving behind P-01's choice had mostly gone, and P-01 never saw the new size before a binding step.
+- **Suggested fix:** put the comparison to P-01 before C002-T-050 step 0.
+- **Status:** resolved: P-01 asked on 2026-11-13 ("Retake size"), answer "Full run 4 (Recommended)", logged as Q-t050-retake-03 superseding Q-t050-retake-01/02 and the Q-spec-retake-* answers for this run; C002-T-050 runs from step 0 as run 4 in `C:\Sandbox\runs\t050f` on C002-T-084's candidate, one record, run 3 in its Notes as an earlier stopped run; strategy, hand-off, test plan §4.2/§6, TC-508/618/901, WBS and RISK-045 updated; the IF-009 §4 clause stays in the spec, unused (planner)
+
+### CR-198 — The usage audit and the retake lists are narrower than the changed-file rule of C002-IF-009 §4
+- **Severity:** major
+- **Refs:** C002-T-050 step 0.1 and 0.4, strategy §2, hand-off order item 2, Q-t050-retake-02, C002-IF-009 §4 and §5
+- **Evidence:** the audit test leaves out skill loads (`T-050…:235-237` against `verification-records.md:563`); strategy, hand-off and the questions log cut the rule to six steps (`10-strategy.md:110`, `handoff.md:568-569`, `questions-log.md:527`); the release check does not catch a missed step (`verification-records.md:696-697`).
+- **Why it matters:** a step using a changed file could stay on run 3 unseen.
+- **Suggested fix:** widen the audit and the lists.
+- **Status:** resolved: moot by Q-t050-retake-03 — run 4 runs every step, no usage audit (planner)
+
+### CR-199 — A file-level SHA-256 comparison cannot show "the probe line only" or "the inlined toolchain item only", yet the skipped reruns rest on it
+- **Severity:** major
+- **Refs:** C002-T-084 steps 7 and 9, regression set §5, Q-t084-copilot-cli-01, C002-RISK-045
+- **Evidence:** "file by file by SHA-256" (`T-084-…:112-113`) against "(the probe line only)" (`:116-117`), relied on by `regression-set.md:216-217`, `questions-log.md:542`, `70-risks.md:78`.
+- **Why it matters:** no Copilot CLI retake and no cartographer or researcher injection reruns rest on a bound a hash cannot give.
+- **Suggested fix:** a line-level diff with allowed regions; stop on any other line.
+- **Status:** resolved: T-084 step 7 adds a line comparison against e89dae8 of the changed `plugins/architect/` sources and the Copilot cartographer and researcher agent files; every changed line must lie in the probe line, the toolchain item, doctor steps 2–3 and remedies rows, init step 3, the install-notes and README lines, the anchors and variants, or schema line 73; any other line stops the task; the report lists each hunk with its region (planner)
+
+### CR-200 — Claude Code doctor evals on the changed doctor text are not retaken or argued away, against regression set §5's own rule
+- **Severity:** major
+- **Refs:** C002-T-084 step 8, regression set §5 rows 2 and 5, C002-TC-509, C002-TC-510, C001-TC-1112, C001-TC-1124
+- **Evidence:** row 2 covers C001-TS-1112, C001-TS-1124 and the doctor shims (`regression-set.md:204`), rest only if no source command changes (`:211`); step 8 ran only `doctor-no-ripwire` and `deepwiki-down` (`:212-214`), not C001-TS-1112 `bare`/`node18`, C001-TS-1124, TC-509's `node 18` row or TC-510's Claude Code rows, while strategy said the doctor evidence was retaken (`10-strategy.md:110`).
+- **Why it matters:** Claude Code 0.1.0 doctor evidence would stay on e89dae8's text.
+- **Suggested fix:** add the rows or argue each away.
+- **Status:** resolved: T-084 step 8 adds C001-TC-1112 `bare` and `node18`, C001-TC-1124, TC-509's Claude Code `node 18` row and TC-510's two Claude Code rows (6 sessions; 19 in all on the Max plan, about 6–7 USD notional); counts in strategy, test plan §4.2/§6 and hand-off; regression set §5 says row 2 is rerun and row 5 not (none of its evals runs the doctor or init) (planner)
+
+### CR-201 — The plan's cross-change condition CR-123 now applies but is not sent to P-01, and CHG-001's release record will state a fact that is no longer true
+- **Severity:** major
+- **Refs:** hand-off (CHG-001 impact, local tag open point), C002-T-055, CR-103, CR-123
+- **Evidence:** "Otherwise the case goes to P-01 before C002-T-055" (`handoff.md:411-413`); CHG-001's record states `plugins/architect/` unchanged since 9eb56c0 (`docs/release-0.1.0-evidence.md:16-17`); no owner for its correction.
+- **Why it matters:** T-084 moves the tag with changed Claude Code files.
+- **Suggested fix:** P-01's acceptance logged, and an owner and trigger for the CHG-001 correction.
+- **Status:** resolved: P-01's Q-t050-doctor-02 answer "Fix shared source (Recommended)" ("fixes Claude Code and Copilot together … both candidates rebuilt") is recorded in the hand-off, strategy §2, rollout and the questions log as P-01's acceptance that CR-123's empty-diff branch no longer holds; both hosts release 0.1.0 from C002-T-084's commit; CHG-001 defect D-033 on C001-REQ-1110 (close before C001-T-075) owns the record correction and is cited in the CHG-001 impact section and the local-tag open point with C002-T-084's candidate report (conductor, planner)
+
+### CR-202 — The record Notes in step 0.5 give the wrong retake reason for the always-retaken steps and leave out what the set-up runs served
+- **Severity:** minor
+- **Refs:** C002-T-050 steps 0.4 and 0.5, C002-TC-618, C002-IF-009 §4
+- **Evidence:** `T-050…:299-304`, `:277-281` against `verification-records.md:577`, `:593`.
+- **Why it matters:** P-01 would sign Notes with false reasons.
+- **Suggested fix:** per-step reasons and named set-up runs.
+- **Status:** resolved: moot by Q-t050-retake-03 (full run 4, no retake Notes or set-up runs) (planner)
+
+### CR-203 — The D-054 and D-055 close rules cite run 3 even when the audit retakes the step
+- **Severity:** minor
+- **Refs:** strategy §2 close rules, C002-T-050 step 0.7, D-054 … D-057
+- **Evidence:** "D-054 (VSC-18 of run 3), D-055 (VSC-15 of run 3)" (`T-050…:316`, `10-strategy.md:110`); D-057 "when this revision is approved" against D-056 "at G2 and G3".
+- **Why it matters:** a close on a result the record no longer holds.
+- **Suggested fix:** close on the record's results; "at G2 and G3" for D-057.
+- **Status:** resolved: D-054 and D-055 close on VSC-18 and VSC-15 of the binding record (run 4); D-057 "approved at G2 and G3"; strategy close rules, hand-off and T-050 (planner)
+
+### CR-204 — The exception to C002-CON-10 is stated three ways, and rollout row 1 still names only the bash guard
+- **Severity:** minor
+- **Refs:** strategy §5, hand-off instructions, C002-RISK-022, rollout §1
+- **Evidence:** `10-strategy.md:274-275` names the researcher's probe line; `handoff.md:674-675` and `70-risks.md:68` do not; `75-rollout.md:18` names only the bash guard.
+- **Why it matters:** an implementer reading the hand-off would treat the researcher edit as a breach.
+- **Suggested fix:** name the probe line everywhere.
+- **Status:** resolved: the researcher's probe line in `agents/sdd-researcher.md` (C002-COMP-019) is named in the hand-off exception, RISK-022 (with the line comparison) and rollout row 1 (planner)
+
+### CR-205 — P-01's questions in the round are logged without question text, and the material ones without their candidates and rejected options
+- **Severity:** minor
+- **Refs:** Q-t050-doctor-01, Q-t050-a3-01, Q-t050-retake-01, Q-t050-doctor-02, Q-t050-a3-02; hand-off questions row
+- **Evidence:** `questions-log.md:478-505` without "Question (as presented)", candidates or Rejected; Q-t050-retake-01 marked not material; `handoff.md:779` omits the Q-spec-retake-* entries.
+- **Why it matters:** the text P-01 saw is not traceable.
+- **Suggested fix:** add the texts, candidates and Rejected lines.
+- **Status:** resolved: the five entries carry the question and option texts as presented, "Candidates considered: 2 (as presented)" (3 for Q-t050-doctor-02) and Rejected lines; Q-t050-retake-01 marked material; Q-t050-doctor-01 notes its fix text was corrected by Q-t050-doctor-02; the hand-off row lists the Q-spec-retake-* entries and their supersession by Q-t050-retake-03 (planner)
+
+### CR-206 — The expected file list for the full Claude Code zip leaves out its `plugins/architect/` prefix
+- **Severity:** minor
+- **Refs:** C002-T-084 step 7
+- **Evidence:** `T-084-…:119-120` against `scripts/package.mjs:91`, `:275`.
+- **Why it matters:** read literally the full-zip check matches no path.
+- **Suggested fix:** prefix the paths; name the files that stay equal.
+- **Status:** resolved: full-zip paths prefixed with `plugins/architect/`; its `INSTALL.md` and `.claude-plugin/marketplace.json` must stay equal; the plugin zip keeps bare paths (planner)
+
+### CR-207 — The OpenCode doctor rows carried to CHG-003 are not in the hand-off's "Moved to CHG-003" section
+- **Severity:** minor
+- **Refs:** Q-t084-opencode-01, C002-TC-506, 509, 511, 512, 935, 936
+- **Evidence:** `handoff.md:596-597` against `60-test-plan.md:487`.
+- **Why it matters:** a CHG-003 planner would miss the rows.
+- **Suggested fix:** list them with their source.
+- **Status:** resolved: "Moved to CHG-003" lists TC-506 (2 rows), TC-509 (2), TC-511 (1), TC-512 (1 init row), TC-935 (2), TC-936 (3), source Q-t084-opencode-01 (planner)
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 143/143; C002-REQ-522 in T-084 `implements` |
+| plan | P2 Targets, verification, done-checks | CR-199, CR-202, CR-206 |
+| plan | P3 Acyclic graph, coherent milestones | pass: T-083 (58) → T-084 (60) → T-050 (61) → T-075 (62) → T-055 (63) |
+| plan | P4 Every scenario maps to a planned test | pass: TR-08 304/304; TS-709 → TC-935, TS-710 → TC-936 |
+| plan | P5 Risks cover the hotspots | CR-199 |
+| plan | P6 Rollout and rollback | CR-204 |
+| plan | P7 ADRs | n/a: P-01's answers and C002-IF-006 §2.1 / C002-IF-010 §2.1 fix the design |
+| plan | consistency with spec and own rules | CR-197, CR-198, CR-200, CR-201, CR-203, CR-205, CR-207 |
+
+**Checked without finding.** The expected diff counts hold against the generator: Copilot 7 files (`architect-target.json` changes, since `scripts/generate/writer.ts:78-88` records every SHA-256 and the source digest; only the cartographer preloads code-discovery; `install/plugin.json` holds no hash; the CLI copy is unchanged), Claude Code 5 (`CLAUDE_EXCLUDES` drops `targets/` and `evals/`; `.claude-plugin/plugin.json` holds no hashes), CLI tarball 0 (`stageNpm` copies nothing T-084 touches). TC-935/936 follow TS-709/710; the changed TCs match their scenarios. Session totals add up; spend stays within limits (no OpenRouter, no Copilot CLI, Claude Code on `--auth subscription`, VS Code on plan credits). RISK-044/045 complete; the A-3 strategy row and the T-031/T-046 history notes agree; T-084 `depends_on` and the edge to T-050 correct; weights 161; D-056/D-057 match `change.md`.

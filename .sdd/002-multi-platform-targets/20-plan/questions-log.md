@@ -476,33 +476,42 @@ D-057). Passed in run 3: VSC-30, VSC-20 (both halves), VSC-31 and VSC-54 (defaul
 every earlier step (VSC-02 … VSC-29, VSC-15 and VSC-18 included).
 
 ### Q-t050-doctor-01 — the doctor's Context7 and DeepWiki rows
-- **Blocking:** yes · **Material:** yes
-- **Options (as presented):** 1. Fix in 0.1.0 (Recommended) · 2. Known limitation, fix in 0.1.1
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (as presented)
+- **Question (as presented):** "Doctor bug found by your VSC-12 check: on VS Code the doctor prompt's tools list doesn't include context7/* or deepwiki/* (only the researcher has them). So it can't probe the two servers and always reports them 'unreachable' with a wrong 'check network' fix, even though they run fine. How do we handle it for 0.1.0?"
+- **Options (as presented):** 1. Fix in 0.1.0 (Recommended): add `context7/*` and `deepwiki/*` to `doctor.prompt.md`'s tools, plus a test that the doctor's tools name every server it probes, new candidate · 2. Known limitation, fix in 0.1.1: note in `INSTALL.md`, ship e89dae8 unchanged
+- **Rejected:** Known limitation, fix in 0.1.1 — ships a doctor that misreports two working servers, with a wrong fix
 - **Answer:** P-01 (2026-11-12): "Fix in 0.1.0 (Recommended)"
-- **Extracted instructions:** defect D-057; the fix ships in 0.1.0 (C002-T-084).
+- **Extracted instructions:** defect D-057; the fix ships in 0.1.0 (C002-T-084). The fix in the option text was corrected by Q-t050-doctor-02 (the probe runs on the cartographer, not the doctor prompt).
 
 ### Q-t050-a3-01 — assumption A-3 refuted (a registered folder without plugin.json is loaded)
-- **Blocking:** yes · **Material:** yes
-- **Options (as presented):** 1. Docs and spec fix (Recommended) · 2. Structural fix
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (as presented)
+- **Question (as presented):** "Your twin check (VSC-01) refutes assumption A-3. VS Code 1.145.2 loads a registered package folder even without plugin.json: its code falls back to a manifest-less plugin format. Before `sdd install`, the Architect agents, prompts and skills appear without the guard hooks, because hooks.json isn't written yet. INSTALL.md already says to register only after the install, but it claims the folder 'becomes a plugin only once the install has written plugin.json', which is false. What fix?"
+- **Options (as presented):** 1. Docs and spec fix (Recommended): correct `INSTALL.md` step 3, change spec, checklist and VSC-01 expectation, no code change · 2. Structural fix: ship agents, prompts and skills in folders VS Code reads only through `plugin.json`, bigger generator, install and test change, more rows to retake
+- **Rejected:** Structural fix — larger generator, install and test change and more rows to retake, for a window that on 1.145.2 adds little (Q-t050-a3-02)
 - **Answer:** P-01 (2026-11-12): "Docs and spec fix (Recommended)"
 - **Extracted instructions:** defect D-056; the package layout stays; C002-IF-005 §3 states the pre-install window as a fact; the install notes warn of it and have the folder registered after the install; the checklist's A-3 row and VSC-01 follow (C002-T-084).
 
 ### Q-t050-retake-01 — how C002-T-050 continues after run 3
-- **Blocking:** yes · **Material:** no
-- **Options (as presented):** 1. Targeted retake (Recommended): a plan revision; on the new candidate, retake only the rows the fixes touch (VSC-01 twin, VSC-02 install, VSC-12/13 doctor) plus a diff check that nothing else changed; one record cites run 3 for the rest · 2. Full binding run again, about 2–3 h
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (as presented)
+- **Question (as presented):** "Any fix above means a new 0.1.0 candidate. How much of T-050 should run again on it? Run 3 passed every other step on e89dae8."
+- **Options (as presented):** 1. Targeted retake (Recommended): plan revision, retake only the rows the fixes touch (VSC-01 twin, VSC-02 install, VSC-12/13 doctor) plus a diff check, one record cites run 3, about 30 min, 2 typed steps · 2. Full binding run again: run 4 from scratch, 2–3 h, end batch again
+- **Rejected:** Full binding run again — 2–3 h and P-01's end batch again (chosen later after all, Q-t050-retake-03)
 - **Answer:** P-01 (2026-11-12): "Targeted retake (Recommended)"
-- **Extracted instructions:** C002-T-050 step 0 (targeted retake in `C:\Sandbox\runs\t050f` on C002-T-084's candidate, diff check against e89dae8's package, one record holding run 3 and the retake); the record rules for a two-run record were asked as Q-t050-record-01 and the retake of VSC-14 as Q-t050-retake-02 (planner's questions, settled by the conductor on 2026-11-13, below).
+- **Extracted instructions:** superseded for this run by Q-t050-retake-03 (2026-11-13, "Full run 4 (Recommended)"); before that, C002-T-050 step 0 described a targeted retake in `C:\Sandbox\runs\t050f`, and the record rules and the retaken steps were asked as Q-t050-record-01, Q-t050-retake-02 and the Q-spec-retake-* questions (below).
 
 ### Q-t050-doctor-02 — where the probe fix goes
-- **Blocking:** yes · **Material:** yes
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 3 (as presented)
+- **Question (as presented):** "Correction on the doctor fix you approved. The doctor doesn't probe Context7 and DeepWiki itself: it hands the probe to the cartographer, which has neither server's tools on any target. So adding the tools to doctor.prompt.md wouldn't help. This repo's own Claude Code toolchain.md shows the same 'no (this session)' rows, so it's a bug in the shared doctor command and Claude Code 0.1.0 has it too (not published yet). Which fix?"
 - **Options (as presented):** 1. Fix shared source (Recommended): the researcher makes the probe calls; fixes Claude Code and Copilot together; the CHG-002 defect cites the CHG-001 doctor interface; one task, both candidates rebuilt · 2. Copilot-only fix (generator special case; Claude Code keeps the bug) · 3. Defer both
+- **Rejected:** Copilot-only fix — a generator special case, and Claude Code keeps the bug · Defer both — ships the misreporting doctor on both hosts
 - **Answer:** P-01 (2026-11-12): "Fix shared source (Recommended)"
-- **Extracted instructions:** C002-REQ-504 and C002-REQ-507 revised (C002-IF-006 §2.1); one task, C002-T-084, changes `doctor.md`, `init.md`, the code-discovery skill and the three wiring variants of both targets, and rebuilds the Claude Code plugin and the Copilot package; CHG-001's dogfoods C001-T-073 and C001-T-074 run on the rebuilt plugin (`handoff.md`).
+- **Extracted instructions:** C002-REQ-504, C002-REQ-507 and C002-REQ-522 (C002-IF-006 §2.1, C002-COMP-019); one task, C002-T-084, changes `doctor.md`, `init.md`, the code-discovery skill, the researcher's probe line and the three wiring variants of both targets, and rebuilds the Claude Code plugin and the Copilot package; since the Claude Code plugin changes, this answer is P-01's acceptance that CR-123's empty-diff branch no longer holds and that both hosts release 0.1.0 from C002-T-084's commit (plan critic CR-201); CHG-001's dogfoods C001-T-073 and C001-T-074 run on the rebuilt plugin, and the CHG-001 release record is corrected under CHG-001 defect D-033 (`handoff.md`).
 
 ### Q-t050-a3-02 — keep the docs and spec fix although the spec had planned the install/ fallback
-- **Blocking:** yes · **Material:** yes
-- **Context:** asked after the conductor said that the spec's S-08 assumption had planned a fallback (agents and prompt files under `install/`, copied to the package root by the install).
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (as presented)
+- **Question (as presented):** "On A-3, something I should have said earlier: the spec planned the structural fallback for exactly this case (agents and prompts under install/, copied at install time), so no agent runs before its guard hook. I still recommend the docs fix. On 1.145.2 the guard already can't stop host built-in subagents (no agent_type, the accepted D-052 limitation), and before the install there's no sdd-files or sdd-shell server either. So the early-registration window adds little. Keep your choice?"
 - **Options (as presented):** 1. Keep docs and spec fix (Recommended) · 2. Switch to structural fix
+- **Rejected:** Switch to structural fix — the window it closes adds little on 1.145.2 (D-052 limitation, no sdd MCP server before the install), at the cost of the structural change of Q-t050-a3-01
 - **Answer:** P-01 (2026-11-12): "Keep docs and spec fix (Recommended)"
 - **Extracted instructions:** the `install/` fallback is not applied; the reason holds for VS Code 1.145.2 (the guard stops no host built-in subagent after the install either, D-052), and the revision that a new tested build needs reviews it (C002-IF-005 §3; C002-RISK-044).
 
@@ -571,4 +580,12 @@ basis as above.
 - **Context:** the retaken VSC-17 needs a toy change in the fresh repository, but VSC-16 (`/architect:new`) used no changed file and is no retaken step.
 - **Options (as presented):** 1. Allow set-up, named in the Notes (Recommended) · 2. Retake VSC-16 as a step
 - **Answer:** conductor (2026-11-13): "Allow set-up, named in the Notes (Recommended)"
-- **Extracted instructions:** C002-T-050 step 0 runs VSC-16's Do as set-up, names it in the record's Notes, and VSC-16 keeps run 3's result.
+- **Extracted instructions:** C002-T-050 step 0 runs VSC-16's Do as set-up, names it in the record's Notes, and VSC-16 keeps run 3's result. Superseded for this run by Q-t050-retake-03.
+
+### Q-t050-retake-03 — retake size (plan critic CR-197)
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (as presented)
+- **Context:** the plan critic showed that the targeted retake of Q-t050-retake-01 had grown to 12 steps plus the additions of a usage audit of run 3 (about 12–16 VS Code sessions, 1.5–2.5 h, a two-run record that depends on the audit), against a full run 4 (about 25 sessions, 2–3 h, one record, P-01's end batch again, about 20 minutes of P-01).
+- **Options (as presented):** 1. Full run 4 (Recommended) · 2. Keep the targeted retake
+- **Rejected:** Keep the targeted retake — the record would rely on an audit that the release check cannot verify
+- **Answer:** P-01 (2026-11-13): "Full run 4 (Recommended)"
+- **Extracted instructions:** supersedes Q-t050-retake-01, Q-t050-retake-02 and the answers to Q-spec-retake-list-01, Q-spec-retake-group2-01 and Q-spec-retake-setup-01 for this run; the clause of C002-IF-009 §4 "Targeted retake after a revision" stays in the spec, unused by this run. C002-T-050 runs again from step 0 as run 4 in `C:\Sandbox\runs\t050f` on C002-T-084's candidate, with one record (run 4) and no usage audit; run 3's results go into the record's Notes as an earlier stopped run, as the runs of `t050c` and `t050d` did; D-054 and D-055 close on VSC-18 and VSC-15 of run 4; C002-T-084 writes no targeted-retake placeholder into the record template.

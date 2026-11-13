@@ -59,9 +59,9 @@ it, as it ran C002-T-082.
 | add or modify | a tool-grant assertion (in `doctor-variants.test.ts` or the existing agent tests) | on every host the researcher holds both servers' tools and the cartographer neither (C002-IF-005 §4); the researcher's `tools` list unchanged |
 | modify | `tests/integration/cap03/package.test.ts` › C002-TC-306 | the settings step's pre-install warning; the install list without "make the folder a plugin" |
 | modify | `docs/checklists/vscode-copilot.md` › row A-3 (line 223), VSC-01 Expect (lines 247–248), VSC-12 and VSC-13 | **A-3:** refuted on VS Code 1.145.2 (defect D-056; P-01's answers to Q-t050-a3-01, Q-t050-a3-02), with the pre-install window of C002-IF-005 §3 and a history note keeping the old statement. **VSC-01 Expect:** no `plugin.json` and no `hooks.json` at the package root yet, and the agent picker and the slash-command list offer the Architect agents and prompt files (C002-IF-009 §4 VSC-01 row); Record keeps what they show and, for the twin, its only `chat.pluginLocations` entry, no user prompt file and no other plugin; Do adds "use no Architect entry before the install". **VSC-13:** Do names the precondition of C002-TS-508 (`context7` and `deepwiki` of `.vscode/mcp.json` enabled, network access); Expect adds the two rows `ok` with an empty Fix; Record keeps both rows. **VSC-12:** the doctor run that `/architect:doctor` starts shows the same two rows `ok`, kept in Record. Step IDs, groups, modes and the step index unchanged |
-| modify | `docs/checklists/records/TEMPLATE.md` | the A-3 row refuted with its reason; the VSC-01, VSC-12 and VSC-13 placeholders as above; a Notes section for a targeted retake as C002-IF-009 §4 "Targeted retake after a revision" lists it (the earlier run's results of the retaken steps with the defect or changed file behind each, both candidates, both run folders, the comparison with every changed file's SHA-256 on both sides and the fix that touches it), and a `note` placeholder for a step not retaken that cites the earlier run by run folder, candidate and date |
+| modify | `docs/checklists/records/TEMPLATE.md` | the A-3 row refuted with its reason; the VSC-01, VSC-12 and VSC-13 placeholders as above. No targeted-retake placeholder: C002-T-050 runs in full (P-01's answer to Q-t050-retake-03), and the clause of C002-IF-009 §4 "Targeted retake after a revision" stays in the spec, unused by this run |
 | modify | `tests/integration/cap06/checklist.test.ts` | C002-TC-617 and the template checks of C002-TC-618 for the rows above |
-| modify | `docs/runsheets/T-050-vscode-checklist.md` | (a) banner: run 3 (2026-11-12 07:19, `t050e`, e89dae8) passed all steps but VSC-01 (twin half, D-056) and VSC-12 (D-057), no record written; P-01's answer to Q-t050-retake-01; (b) a section **Targeted retake** with C002-T-050 step 0: the usage audit of run 3, the comparison with its expected file list, the retake order, the twin in profile `t050-twin` under `C:\Sandbox\runs\t050f\twin`, the record rules of C002-IF-009 §4; (c) the Package line names this task's candidate commit (filled at step 7) beside e89dae8; (d) the settings check before the retake |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | (a) banner: run 3 (2026-11-12 07:19, `t050e`, e89dae8) passed all steps but VSC-01 (twin half, D-056) and VSC-12 (D-057), no record written (step 10); P-01's answer to Q-t050-retake-03 ("Full run 4 (Recommended)"); the run starts again from step 0 after C002-T-084 is done; (b) every `t050e` path becomes `C:\Sandbox\runs\t050f`, a fresh folder with no earlier package or toy repository, the twin of VSC-01 under `C:\Sandbox\runs\t050f\twin`; (c) the Package line names this task's candidate commit (filled at step 7), e89dae8 kept as history; (d) the settings check before step 0; (e) step 11's statement: "Binding run of C002-T-050 (run 4), started <time>, after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design), run 3 of 2026-11-12 (VSC-01 twin half, D-056; VSC-12, D-057; no record) and after C002-T-084 was done (<commit>)." |
 | add | `docs/releases/copilot/0.1.0/T-084-candidate-report.md` | the record of step 9 |
 | modify | generator golden or snapshot copies that hold the doctor, init, researcher or cartographer text (whatever `npm test` reports as changed) | regenerated; each changed expectation named with its REQ in the task report (C002-REQ-623) |
 
@@ -81,7 +81,7 @@ it, as it ran C002-T-082.
 - **Spend:** no OpenRouter session (the OpenCode rows go to CHG-003, conductor's decision on
   Q-t084-opencode-01); no Copilot CLI session (Q-t084-copilot-cli-01; Copilot pool 13.14 of 30 USD,
   C002-T-076's 15.00 USD stop untouched); the Claude Code sessions of step 8 on P-01's Max plan
-  (`--auth subscription`), 13 sessions, about 4 … 5 USD notional, inside the pacing limits of P-01's
+  (`--auth subscription`), 19 sessions, about 6 … 7 USD notional, inside the pacing limits of P-01's
   standing rules.
 
 ## Step outline (no production code)
@@ -105,21 +105,32 @@ it, as it ran C002-T-082.
    generated file (PLG-VAR-001, the stand-in detectors). Edit `targets/copilot/install.md` line 52
    and step 3; make `targets/mapping-table.schema.json` line 73 identical to the spec copy.
 6. **Checklist, template, run sheet.** As the Targets table says; no step added or removed, step IDs
-   kept (C002-IF-009 §5 step check). The run sheet's retake section lists the expected changed files
-   of step 7 and the steps of C002-T-050 step 0.
+   kept (C002-IF-009 §5 step check).
 7. **Package, check and candidate.** `npm run package`, then `npm run check` (the CHG-001 approval
    tests excepted only where C002-T-082 step 5 still excepts them); update the golden copies and list
-   them. **Comparison against the baseline of step 1**, file by file by SHA-256 over the unpacked
-   artifacts (C002-IF-009 §4 Targeted retake after a revision, condition 3, for the Copilot package
-   and the tarball; CR-103 for the Claude Code zips):
+   them. **File comparison against the baseline of step 1**, file by file by SHA-256 over the
+   unpacked artifacts (CR-103; plan critic CR-206):
    - Copilot zip: exactly `INSTALL.md`, `prompts/doctor.prompt.md`, `prompts/init.prompt.md`,
-     `skills/code-discovery/SKILL.md`, `agents/sdd-cartographer.agent.md` (the inlined toolchain item
-     only), `agents/sdd-researcher.agent.md` (the probe line only) and `architect-target.json`, with
-     no file added or removed;
-   - Claude Code plugin zip and full zip: exactly `commands/doctor.md`, `commands/init.md`,
-     `skills/code-discovery/SKILL.md`, `agents/sdd-researcher.md` and `README.md`;
+     `skills/code-discovery/SKILL.md`, `agents/sdd-cartographer.agent.md`,
+     `agents/sdd-researcher.agent.md` and `architect-target.json`, with no file added or removed;
+   - Claude Code plugin zip (`dist/architect-0.1.0-plugin.zip`): exactly `commands/doctor.md`,
+     `commands/init.md`, `skills/code-discovery/SKILL.md`, `agents/sdd-researcher.md` and
+     `README.md`;
+   - Claude Code full zip (`dist/architect-0.1.0.zip`): exactly `plugins/architect/commands/doctor.md`,
+     `plugins/architect/commands/init.md`, `plugins/architect/skills/code-discovery/SKILL.md`,
+     `plugins/architect/agents/sdd-researcher.md` and `plugins/architect/README.md`; its `INSTALL.md`
+     and `.claude-plugin/marketplace.json` equal;
    - `architect-sdd-0.1.0.tgz`: no file differs.
-   Any other difference stops the task and goes to the conductor. **Release-candidate commit:**
+   **Line comparison** (plan critic CR-199): `git diff e89dae8 <working tree> --
+   plugins/architect/` over the changed source files, and a line diff of the generated
+   `agents/sdd-cartographer.agent.md` and `agents/sdd-researcher.agent.md` of the Copilot package
+   against e89dae8's. Every changed line lies inside one of: the researcher's probe line; the
+   toolchain-record item of the code-discovery skill (and its inlined copy in the cartographer);
+   steps 2 and 3 and the Context7 and DeepWiki remedies rows of `doctor.md`; step 3 of `init.md`; the
+   install-notes lines of line 52 and step 3; the README Troubleshooting rows and the Copilot
+   section's settings sentence; the three anchors and six wiring files under `targets/` and the
+   target schema copy's line 73. Any other changed file or line stops the task and goes to the
+   conductor. The report lists each changed hunk with the region it belongs to. **Release-candidate commit:**
    commit; `plugin.json` gives 0.1.0. Report `git diff --stat e89dae8 <candidate> --
    plugins/architect/`. **Local tag:** move `v0.1.0` from e89dae8 to the candidate (`git tag -f`,
    local only; pushing and every publication stay P-01's). Fill the candidate commit into the run
@@ -128,17 +139,25 @@ it, as it ran C002-T-082.
    `copilot-hooks` replays under Git Bash and PowerShell 7 on `win32`, 0 differing, reports under
    `docs/releases/copilot/0.1.0/`; `dist/` equal to a regeneration; `sdd host-version vscode` prints
    `vscode 1.145.2` and `copilot-chat 0.73.0`. Then, label `c002-t084`, `--auth subscription`, one
-   session per row, at most one rerun after a failure (DOD-G-01 waiver), 13 sessions: C002-TC-506
-   (2 Claude Code rows), C002-TC-509 (2: no `sdd` on PATH; the DeepWiki probe call fails),
-   C002-TC-511 (1), C002-TC-512 (the Claude Code init row, 1), C002-TC-935 (2), C002-TC-936 (3:
-   Context7 `false`, DeepWiki `false`, the `cfg-deepwiki-down` URL), C001-TC-1112 `deepwiki-down` (1)
-   and `evals/cap11/doctor-no-ripwire.eval.mjs` (regression-set §5 row 1, 1). A file written by
-   `sdd-researcher`, or a second failure of a row, reopens this task and goes to the conductor.
+   session per row, at most one rerun after a failure (DOD-G-01 waiver), 19 sessions:
+   - the changed rows, 13: C002-TC-506 (2 Claude Code rows), C002-TC-509 (2: no `sdd` on PATH; the
+     DeepWiki probe call fails), C002-TC-511 (1), C002-TC-512 (the Claude Code init row, 1),
+     C002-TC-935 (2), C002-TC-936 (3: Context7 `false`, DeepWiki `false`, the `cfg-deepwiki-down`
+     URL), C001-TC-1112 `deepwiki-down` (1) and `evals/cap11/doctor-no-ripwire.eval.mjs`
+     (regression-set §5 row 1, 1);
+   - the unchanged rows that run the changed doctor text (plan critic CR-200), 6: C001-TC-1112 `bare`
+     and `node18` (2), C001-TC-1124 (1), the Claude Code `node 18` row of C002-TC-509 (1) and the two
+     Claude Code rows of C002-TC-510 (2) (regression-set §5 row 2).
+   Regression-set §5 row 5 (the other `evals/cap*/TS-*.eval.mjs` that exercise the guards) is not
+   rerun: none runs the doctor or the init command, and the only specialist texts that change, the
+   cartographer's toolchain item and the researcher's probe line, apply to doctor and init briefs
+   alone (the line comparison of step 7 holds this). A file written by `sdd-researcher`, or a second
+   failure of a row, reopens this task and goes to the conductor.
 9. **Dry run and report.** `node scripts/release-check.mjs --target copilot --dry-run` at the
    candidate refuses on ERR-REL-003 only (the record of C002-T-050). Report in
-   `docs/releases/copilot/0.1.0/T-084-candidate-report.md`: both commits of the tag move; the three
-   comparison results of step 7, each changed file with its SHA-256 on both sides and the fix that
-   touches it (C002-T-050 copies this into its record's Notes); the `plugins/architect/` diff; the
+   `docs/releases/copilot/0.1.0/T-084-candidate-report.md`: both commits of the tag move; the four
+   file comparisons of step 7, each changed file with its SHA-256 on both sides and the fix that
+   touches it; the line comparison with each hunk's region; the `plugins/architect/` diff; the
    changed golden copies with their REQ; the unpaid results; each Claude Code session with its result
    file and notional cost; the dry-run output; and the note that CHG-001's Claude Code 0.1.0 evidence
    was taken on e89dae8's doctor, init and researcher text (`handoff.md`, CHG-001 impact).
@@ -156,8 +175,8 @@ it, as it ran C002-T-082.
 - [ ] The three anchors and six wiring files of both targets follow the source; `npm run check` green; the C002-REQ-506 pin and every other changed expectation listed with its REQ
 - [ ] The three runners take `mcpOverrides` with `<url> | false`; the TS-709 and TS-710 case files exist with all Examples rows; `TS-1112-deepwiki-down` expects `untested` with the `not offered` fix
 - [ ] The Copilot install notes carry the pre-install warning and no "make the folder a plugin"; the target schema copy equals the spec copy; the README Troubleshooting covers every fix of both servers
-- [ ] A-3 reads refuted, VSC-01 expects the entries shown, VSC-12 and VSC-13 expect Context7 and DeepWiki `ok`, the template and the run sheet carry the targeted retake; `npm test -- cap06/checklist` green
-- [ ] The candidate holds this task's changes at 0.1.0; the three comparison results match step 7's lists exactly; the local tag `v0.1.0` points at the candidate (not pushed); `dist/` equals a regeneration; both replays 0 differing in both shells
-- [ ] The 13 Claude Code rows of step 8 have `c002-t084` sessions that passed, and no researcher session wrote a file
+- [ ] A-3 reads refuted, VSC-01 expects the entries shown, VSC-12 and VSC-13 expect Context7 and DeepWiki `ok`, the template follows them, and the run sheet points run 4 at `C:\Sandbox\runs\t050f`; `npm test -- cap06/checklist` green
+- [ ] The candidate holds this task's changes at 0.1.0; the four file comparisons match step 7's lists exactly and every changed line lies in a region of the line comparison; the local tag `v0.1.0` points at the candidate (not pushed); `dist/` equals a regeneration; both replays 0 differing in both shells
+- [ ] The 19 Claude Code rows of step 8 have `c002-t084` sessions that passed, and no researcher session wrote a file
 - [ ] The dry run refuses on ERR-REL-003 only; the candidate report is committed
 - [ ] Progress reported: `sdd task set C002-T-084 --status done --commit <sha>`

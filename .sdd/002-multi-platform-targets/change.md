@@ -4,11 +4,11 @@ title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
 status: active
-phase: 10-spec
+phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:ba68737cf9827263fa90b31314ea329a11347175bbfa2e6c0bc715bea0a66474", approved_at: 2026-11-13, approved_by: jerome.lacube }
-  20-plan: { status: stale, approved_hash: "sha256:ce1a1726c788014be77aa70430d6a72d8678904518a8a79e458c372ac0c23cb7", approved_at: 2026-11-12, approved_by: jerome.lacube }
+  20-plan: { status: approved, approved_hash: "sha256:5ad66278f84b66dab693a26ac590e595e3b1e89a72fe27e3e7dfe5099bd57455", approved_at: 2026-11-13, approved_by: jerome.lacube }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -587,3 +587,4 @@ waivers:
 | 2026-11-12 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Plan revision for CHG-002 defect D-055: C002-T-083 (checklist VSC-15 prompt-file form, A-2 halves, conductor copy and invocation form in the records, run sheet t050e), C002-T-050 rerun on e89dae8, C002-RISK-043; critic CR-181…185 resolved." | none | unavailable |
 | 2026-11-12 | G2 (spec) | **Revise** | "Spec revision for CHG-002 defects D-056 (A-3 refuted at VSC-01 twin: VS Code 1.145.2 loads a registered package folder without plugin.json) and D-057 (doctor probe of Context7/DeepWiki runs on the cartographer, which lacks their tools). P-01 (2026-11-12): 'Docs and spec fix (Recommended)' + 'Keep docs and spec fix (Recommended)'; 'Fix in 0.1.0 (Recommended)' + 'Fix shared source (Recommended)'; 'Targeted retake (Recommended)'." | none | unavailable |
 | 2026-11-13 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Spec revision for CHG-002 defects D-056 (A-3 refuted at the C002-T-050 VSC-01 twin; P-01: 'Docs and spec fix (Recommended)', 'Keep docs and spec fix (Recommended)') and D-057 (doctor probe of Context7/DeepWiki on the cartographer; P-01: 'Fix in 0.1.0 (Recommended)', 'Fix shared source (Recommended)'; 'Targeted retake (Recommended)'): IF-005 §3/§5, REQ-304, new REQ-522 (remote rows), REQ-504/505/507/615/618/623, IF-006 §2/§2.1, IF-009 §4/§5 targeted retake, IF-010 mcpOverrides, COMP-019, TS-306/506/508/509/512/626/709/710; critic CR-186…196 resolved." | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601 | unavailable |
+| 2026-11-13 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Plan revision for CHG-002 defects D-056 and D-057: new C002-T-084 (researcher probe, pre-install warning, line-level comparison, 19 Claude Code sessions), C002-T-050 as full run 4 in t050f (P-01 Q-t050-retake-03 'Full run 4 (Recommended)'), TC-935/936, RISK-044/045, CHG-001 impact with CHG-001 D-033; critic CR-197…207 resolved." | none | unavailable |

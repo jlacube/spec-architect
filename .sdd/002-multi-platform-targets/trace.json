@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-11-12T23:56:37.176Z",
+  "generated_at": "2026-11-13T00:53:09.000Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -2140,7 +2140,7 @@
       "file": "20-plan/10-strategy.md",
       "line": 133,
       "title": "Release evidence and release",
-      "content_hash": "sha256:be05a9c90cef0e3b32d9ec1d46483282e86f5a5e40c58b028833258165c90be2"
+      "content_hash": "sha256:909bbcf5d8672b9fa84389b8ea50ff87408213832fe9a2d7200eff66aad855bf"
     },
     {
       "id": "C002-NFR-101",
@@ -2378,7 +2378,7 @@
       "id": "C002-RB-001",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 81,
+      "line": 84,
       "title": "A published `architect-sdd` version is defective",
       "content_hash": "sha256:b61779601d23e94f28a7087ff5e239f327df58f40debf942f01df31847ef6735"
     },
@@ -2386,7 +2386,7 @@
       "id": "C002-RB-002",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 82,
+      "line": 85,
       "title": "A released OpenCode target package misbehaves",
       "content_hash": "sha256:18bb9706f0bec42e561a5a2530389cf546bd4aed79fdb4551e7fae27b8e6e8c7"
     },
@@ -2394,7 +2394,7 @@
       "id": "C002-RB-003",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 83,
+      "line": 86,
       "title": "A released Copilot target package misbehaves",
       "content_hash": "sha256:232eab3930b530dd4c9e4caf2256bf128637a226caada94e726836e7c41f45f3"
     },
@@ -2402,7 +2402,7 @@
       "id": "C002-RB-004",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 84,
+      "line": 87,
       "title": "The shared guard or CLI changes of C002-M-02 break Claude Code work",
       "content_hash": "sha256:124ca771db7782477227e8ebf1f25fed6cf5a7b6488c86b9c041e36ee91cc7d0"
     },
@@ -2410,7 +2410,7 @@
       "id": "C002-RB-005",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 85,
+      "line": 88,
       "title": "After release, the OpenCode permission rules turn out not to follow a guard rule (C002-T-043's glob-gap list grows)",
       "content_hash": "sha256:36dc7480bbbc59146290ae5220bd6844c47e1425228df042e60433a4a91eeaba"
     },
@@ -2418,7 +2418,7 @@
       "id": "C002-RB-006",
       "type": "RB",
       "file": "20-plan/75-rollout.md",
-      "line": 86,
+      "line": 89,
       "title": "An adopter must remove a generated target",
       "content_hash": "sha256:b328b2e3269f60cf576de64c404230d67d079ca2bc0e5c46e7848b97364c942f"
     },
@@ -3739,8 +3739,8 @@
       "type": "RISK",
       "file": "20-plan/70-risks.md",
       "line": 68,
-      "title": "Wiring variants or question-tool variants change the Claude Code text of an agent, command or skill (C002-CON-10), re-opening the Claude Code evals. **Taken on purpose once** (defect D-057): C002-T-084 changes the Claude Code `commands/doctor.md`, `commands/init.md` and the code-discovery toolchain item, lists the changed expectations with their REQ and retakes the Claude Code doctor rows (C002-RISK-045)",
-      "content_hash": "sha256:feab8137504462edf1e37a6bb14224c6e282ea10d7e98c11fb099735453d524c"
+      "title": "Wiring variants or question-tool variants change the Claude Code text of an agent, command or skill (C002-CON-10), re-opening the Claude Code evals. **Taken on purpose once** (defect D-057): C002-T-084 changes the Claude Code `commands/doctor.md`, `commands/init.md`, the code-discovery toolchain item and the researcher's probe line in `agents/sdd-researcher.md` (C002-COMP-019), lists the changed expectations with their REQ, holds every changed line to those regions by its line comparison, and retakes the Claude Code doctor rows, changed and unchanged, that run the changed text (C002-RISK-045)",
+      "content_hash": "sha256:370c5f26c76b6e3042daeda6e0439d801b834491fb890bb6dfb68469201c3270"
     },
     {
       "id": "C002-RISK-023",
@@ -3924,7 +3924,7 @@
       "file": "20-plan/70-risks.md",
       "line": 78,
       "title": "The researcher probe of the doctor and init (defect D-057, C002-IF-006 §2.1) misbehaves: the researcher writes a research note in spite of the probe line of its agent body (C002-COMP-019), reports an outcome line without having made the call, or calls more than once; a host lists no tool of a server that is merely not started yet, so a working server shows `untested`; the probe line changes the researcher's behaviour on other briefs; the extra subagent adds cost and time to every doctor and init run on every host; and the change re-opens the Claude Code doctor evidence of CHG-002 and of CHG-001's release record, moving the 0.1.0 candidate of both hosts",
-      "content_hash": "sha256:0d4d81cc11dfa99aa4d518ba626ca17805a28effa3b01b090080cdeb8b4b9777"
+      "content_hash": "sha256:c01eac858f1c647579bbfceccdf9ff4e8341332dfc3272b63f6febd4a2de05ae"
     },
     {
       "id": "C002-SC-01",
@@ -4413,7 +4413,7 @@
       "file": "20-plan/50-tasks/T-050-vscode-checklist-run.md",
       "line": 1,
       "title": "Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)",
-      "content_hash": "sha256:414563b509a12ae934ffa024ca16ec17b58009b4ddf6dca4ec74d14529db8d42",
+      "content_hash": "sha256:80a9ba614f36b6914135a16d68849b7c744d460d6c8ac39501a25ea86c4a2865",
       "status": "todo"
     },
     {
@@ -4719,7 +4719,7 @@
       "file": "20-plan/50-tasks/T-084-researcher-probe-preinstall-warning-d056-d057.md",
       "line": 1,
       "title": "Fix for revisions D-056, D-057: the researcher's Context7 and DeepWiki probe in the shared doctor, init and researcher text, the pre-install warning of the Copilot install notes, the checklist, and both 0.1.0 candidates rebuilt",
-      "content_hash": "sha256:d89f58a2822aa46d64a6ca4208e5031a4fc5d04ae120d8e46d2a116bad7f040e",
+      "content_hash": "sha256:e56fa721ff6938232ef461c27e25999ed34e80638781280fc36214c00ccf88e9",
       "status": "todo"
     },
     {
@@ -6048,7 +6048,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1235,
       "title": "C002-TS-508",
-      "content_hash": "sha256:93b5897999d7ab8f6bb6fd0e1840372a4f73faf189e2a46d30d256b125f19315"
+      "content_hash": "sha256:a69a5c3cf31b3f2d9cb0e7241c50e2fa7a97e7b966ad57e1372d64be40f43d82"
     },
     {
       "id": "C002-TC-509",
@@ -6432,7 +6432,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1324,
       "title": "C002-TS-618",
-      "content_hash": "sha256:b8d3e2851b07ef3dc148a82baeab4c2c856c50e51522f9d7c4ac04a13a8536b0"
+      "content_hash": "sha256:09a1d02221071fc3166d5ae80ae16a2c8421b8dc94c1c8d07945b0280c928909"
     },
     {
       "id": "C002-TC-619",
@@ -7000,7 +7000,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1368,
       "title": "C002-TS-618",
-      "content_hash": "sha256:f8e71372a5bca15b34706696a1c7ca70a1b80f2a73e15e29ec3ae3088989aac7"
+      "content_hash": "sha256:77a841f9ae72a3d18f5df51cddd5b6cb085792f09f737d60cb8af0c3609c7898"
     },
     {
       "id": "C002-TC-902",
@@ -22817,6 +22817,11 @@
     },
     {
       "from": "C002-RISK-022",
+      "to": "C002-COMP-019",
+      "relation": "references"
+    },
+    {
+      "from": "C002-RISK-022",
       "to": "C002-CON-10",
       "relation": "references"
     },
@@ -33567,11 +33572,6 @@
     },
     {
       "from": "C002-T-050",
-      "to": "C002-REQ-615",
-      "relation": "references"
-    },
-    {
-      "from": "C002-T-050",
       "to": "C002-REQ-618",
       "relation": "references"
     },
@@ -33819,11 +33819,6 @@
       "from": "C002-T-050",
       "to": "C002-TC-617",
       "relation": "verified-by"
-    },
-    {
-      "from": "C002-T-050",
-      "to": "C002-TC-618",
-      "relation": "references"
     },
     {
       "from": "C002-T-050",
@@ -42802,6 +42797,11 @@
     },
     {
       "from": "C002-T-084",
+      "to": "C002-TC-510",
+      "relation": "references"
+    },
+    {
+      "from": "C002-T-084",
       "to": "C002-TC-511",
       "relation": "references"
     },
@@ -46308,11 +46308,6 @@
     {
       "from": "C002-TC-618",
       "to": "C002-DOD-007",
-      "relation": "references"
-    },
-    {
-      "from": "C002-TC-618",
-      "to": "C002-IF-009",
       "relation": "references"
     },
     {

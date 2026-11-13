@@ -543,7 +543,8 @@ record also settles the open half of A-2: a plugin-copy session that starts no s
 to P-01 (C002-RISK-043).
 
 **Run 3 of C002-T-050 and defects D-056, D-057** (P-01's answers of 2026-11-12 to Q-t050-doctor-01,
-Q-t050-a3-01, Q-t050-retake-01, Q-t050-doctor-02 and Q-t050-a3-02; `10-strategy.md` §2; round
+Q-t050-a3-01, Q-t050-retake-01, Q-t050-doctor-02 and Q-t050-a3-02, and of 2026-11-13 to
+Q-t050-retake-03, "Full run 4 (Recommended)"; `10-strategy.md` §2; round
 "2026-11-12 — C002-T-050 run 3 end batch" of `questions-log.md`). Run 3 (started 07:19 in
 `C:\Sandbox\runs\t050e`, candidate e89dae8) passed every step except VSC-01's twin half (a registered
 package folder without `plugin.json` is loaded, assumption A-3 refuted: D-056) and VSC-12 (the doctor's
@@ -555,47 +556,65 @@ source, Claude Code included). Order:
    targets; the Copilot install notes' pre-install warning; the target schema copy; README
    Troubleshooting; `mcpOverrides` with `<url> | false` in the three eval runners; the TS-709, TS-710
    case files and the stub; C001-TS-1112 `deepwiki-down` expecting `untested`; the structure and
-   checklist tests; checklist A-3, VSC-01, VSC-12, VSC-13, the record template and the run sheet's
-   targeted-retake section (`C:\Sandbox\runs\t050f`); both 0.1.0 candidates rebuilt after a baseline
-   copy of e89dae8's artifacts, with the comparison (Copilot zip seven files, Claude Code zips five
-   files, CLI tarball none) and the local tag `v0.1.0` moved to the candidate (never pushed by an
-   agent); replays, dry run (ERR-REL-003 only); 13 Claude Code doctor sessions on the Max plan. No
-   OpenRouter session and no Copilot CLI session (the conductor's decisions on Q-t084-opencode-01 and
-   Q-t084-copilot-cli-01, 2026-11-13).
-2. **C002-T-050**, targeted retake (step 0, by C002-IF-009 §4 "Targeted retake after a revision"):
-   the conditions, the comparison and a usage audit of run 3's session files; then VSC-01 (both
-   halves, the twin by P-01), VSC-02, VSC-03, VSC-04, VSC-07, VSC-08, VSC-10, VSC-11, VSC-13, VSC-14, a set-up
-   `/architect:new`, VSC-17, any step the audit adds (VSC-18, VSC-19, VSC-20, VSC-29, VSC-30, VSC-31
-   if their run-3 sessions used the cartographer or the researcher), and VSC-12 (P-01) on
-   C002-T-084's candidate in `t050f`; one record holding run 3 for every other step (§4 What the
-   record holds); then the conductor closes D-054 … D-057; then C002-T-075 and C002-T-055 as before.
+   checklist tests; checklist A-3, VSC-01, VSC-12, VSC-13, the record template and the run sheet (run 4
+   in `C:\Sandbox\runs\t050f`); both 0.1.0 candidates rebuilt after a baseline copy of e89dae8's
+   artifacts, with the file comparison (Copilot zip seven files, Claude Code zips five files each, the
+   full zip's under `plugins/architect/` with `INSTALL.md` and `.claude-plugin/marketplace.json`
+   equal, CLI tarball none) and the line comparison (every changed line inside the probe line, the
+   toolchain item, doctor steps 2–3 and the remedies rows, init step 3, the install-notes and README
+   lines, the anchors, variants and schema line; plan critics CR-199, CR-206), and the local tag
+   `v0.1.0` moved to the candidate (never pushed by an agent); replays, dry run (ERR-REL-003 only); 19
+   Claude Code doctor sessions on the Max plan (13 changed rows, 6 unchanged rows over the changed
+   text; plan critic CR-200). No OpenRouter session and no Copilot CLI session (the conductor's
+   decisions on Q-t084-opencode-01 and Q-t084-copilot-cli-01, 2026-11-13).
+2. **C002-T-050**, **full run 4** (step 0; P-01's answer to Q-t050-retake-03, which supersedes the
+   targeted retake of Q-t050-retake-01, Q-t050-retake-02 and the Q-spec-retake-* answers for this
+   run; the clause of C002-IF-009 §4 "Targeted retake after a revision" stays in the spec, unused):
+   from step 0 on C002-T-084's candidate in `t050f`, P-01's end batch again; one record of run 4,
+   whose Notes name run 3 as an earlier stopped run; then the conductor closes D-054 … D-057; then
+   C002-T-075 and C002-T-055 as before.
 
 **Handoff condition:** C002-T-084 starts after the G2 and G3 approvals of this revision; C002-T-050's
-retake after C002-T-084 is done, the conductor first filling C002-T-084's done commit into the run
-sheet. **Close rules:** `10-strategy.md` §2 (D-056: VSC-01 of the retake; D-057: VSC-12 and VSC-13 of
-the retake with Context7 and DeepWiki `ok`; both after the approvals and C002-T-084 done).
+run 4 after C002-T-084 is done, the conductor first filling C002-T-084's done commit into run-sheet
+step 11. **Close rules** (`10-strategy.md` §2; plan critic CR-203): D-054 on VSC-18 and D-055 on
+VSC-15 of the binding record (run 4); D-056 on VSC-01 of run 4; D-057 on VSC-12 and VSC-13 of run 4
+with Context7 and DeepWiki `ok`; D-056 and D-057 also after the approvals at G2 and G3 and C002-T-084
+done.
 
-**CHG-001 impact** (P-01's answer to Q-t050-doctor-02, "Fix shared source (Recommended)"). C002-T-084
-changes four files that the Claude Code plugin ships, `commands/doctor.md`, `commands/init.md`,
-`skills/code-discovery/SKILL.md` and `agents/sdd-researcher.md`, plus `README.md`, so the Claude Code 0.1.0 package of C001-T-072's
-release gate (tag `v0.1.0`, local, last at e89dae8) is rebuilt at C002-T-084's candidate and the tag
-moves there for both hosts (CR-103 holds again at that commit). Effect on CHG-001's evidence: its
+**CHG-001 impact** (P-01's answer to Q-t050-doctor-02, "Fix shared source (Recommended)", whose
+option text P-01 saw as "the researcher makes the probe calls; fixes Claude Code and Copilot together;
+… one task, both candidates rebuilt"). C002-T-084 changes four files that the Claude Code plugin
+ships, `commands/doctor.md`, `commands/init.md`, `skills/code-discovery/SKILL.md` and
+`agents/sdd-researcher.md` (the researcher's probe line, C002-COMP-019), plus `README.md`. CR-123's
+condition, that "both hosts" holds only when C001-T-072's tag sits at a commit whose
+`plugins/architect/` diff against the earlier candidate is empty, therefore no longer holds through its
+empty-diff branch; P-01's answer above is the acceptance of that (plan critic CR-201): **both hosts
+release 0.1.0 from C002-T-084's commit**, to which the local tag `v0.1.0` (C001-T-072's release gate,
+last at e89dae8) moves. Effect on CHG-001's evidence: its
 release record (`docs/release-0.1.0-evidence.md`) holds the doctor and init sessions (C001-TS-1112,
 C001-TS-1111 with `doctor-no-ripwire`, C001-TS-1124, C001-TS-1015 and the cartographer cases) taken
 on the earlier text, whose Context7 and DeepWiki rows were `unreachable` in every run, and the
 researcher cases (`INJ-08` … `INJ-12`, the research rows) on the researcher's body without the probe
 line; C001-TS-1112's `deepwiki-down` row now expects DeepWiki `untested` with the `not offered` fix
 (C002-TS-626), its fixture unchanged. CHG-002
-retakes the Claude Code doctor rows that the fix changes, C001-TC-1112 `deepwiki-down` and
-`doctor-no-ripwire` among them (C002-T-084 step 8), and the C002-T-084 report names both commits; any
-note or retake in CHG-001's record is CHG-001's, and no CHG-001 file is edited here. **CHG-001's
+retakes the Claude Code doctor rows that the fix changes and the unchanged ones that run the changed
+doctor text, C001-TC-1112 (all three rows), C001-TC-1124 and `doctor-no-ripwire` among them
+(C002-T-084 step 8), and the C002-T-084 report names both commits. The correction of CHG-001's release
+record is **CHG-001 defect D-033** on C001-REQ-1110, opened by the conductor, to close before
+C001-T-075; no CHG-001 file is edited here. **CHG-001's
 dogfoods C001-T-073 and C001-T-074, still to do, run on the rebuilt plugin of C002-T-084's candidate**:
 the conductor starts them only after C002-T-084 is done, and C001-T-075 (archive) follows them as
 planned there. Like the other cross-change edges, this one lives on the CHG-002 side only.
 
 **Moved to CHG-003:** the OpenCode release, with C002-T-051 and C002-T-052 dropped from CHG-002. Its
 fix directions are an OpenCode-capable early stop or a bounded `INJ-21` case. CHG-002 spends no more
-OpenRouter credit (`10-strategy.md` §2, Moved to CHG-003).
+OpenRouter credit (`10-strategy.md` §2, Moved to CHG-003). **Carried with it by revision D-056, D-057**
+(the conductor's decision on Q-t084-opencode-01; plan critic CR-207): the OpenCode rows that
+C002-T-084 writes but does not run, to be run with CHG-003's OpenCode release evidence: C002-TC-506
+(the two OpenCode rows, with and without `.sdd/`), C002-TC-509 (the rows "the researcher's DeepWiki
+probe call fails" and "the researcher is offered no Context7 tool"), C002-TC-511 (the OpenCode row),
+C002-TC-512 (the OpenCode init row), C002-TC-935 (the two OpenCode rows) and C002-TC-936 (the three
+OpenCode rows).
 
 **Release from a commit with the CHG-001 fixes** (P-01 answer Q-release-base-01, "Retake after
 fixes (Recommended)"; plan critic CR-71). The fixes of C001-T-082 and C001-T-083 change files that
@@ -672,8 +691,9 @@ C001-T-082 reports the same check for the sessions of its step 4 against that st
 - Write the tests for your task's `verified_by` cases first, then implement.
 - Leave the Claude Code text of agents, commands and `SKILL.md` files unchanged (C002-CON-10).
   Variants belong in `plugins/architect/targets/`. One exception: C002-T-084 changes the Claude Code
-  `commands/doctor.md`, `commands/init.md` and the toolchain-record item of the code-discovery skill
-  (defect D-057; C002-GOAL-05 as revised) and lists those changed expectations with their REQ.
+  `commands/doctor.md`, `commands/init.md`, the toolchain-record item of the code-discovery skill and
+  the researcher's probe line in `agents/sdd-researcher.md` (C002-COMP-019) (defect D-057;
+  C002-GOAL-05 as revised) and lists those changed expectations with their REQ.
 - Guard tasks (C002-T-008 … C002-T-011): corpus cases first, one rule per task; run
   `npm test -- tests/guards` and `npm run bench` after each.
 - Run `npm run check` before reporting a task done. Replay cases run under `npm run replay`, not
@@ -776,10 +796,10 @@ Insiders builds): record the version before each run.
 | Q-c002-defects-01, Q-key-redact-01: scope of the open defects D-023, D-024, D-028, and the OpenRouter key in host or model text (`questions-log.md` round 2026-10-23) | C002-T-067 | settled: P-01 answered "Fix most, defer D-023(1) (Recommended)" and "Redact host text too (Recommended)"; one fix task, C002-T-067; D-023 item 1 deferred to a later change (`10-strategy.md` §2) |
 | Q-d054-fix-01, Q-d054-retake-01: the C002-T-050 binding run stopped at VSC-14 (`askQuestions` grants no tool on VS Code 1.145.2, `vscode/askQuestions` does); fix in 0.1.0 or stop, and which Copilot CLI rows to retake (defect D-054; `questions-log.md` round 2026-11-11 — defect D-054) | C002-T-082, C002-T-050 | settled: P-01 answered "Fix in 0.1.0 (Recommended)" and "4 key rows (Recommended)"; C002-T-082 adds `vscode/askQuestions`, records a new candidate and retakes `ROUTE-auditor-copilot-cli`, `INJ-19`, `INJ-21` and `TS-359`, the other 20 rows keeping their C002-T-081 evidence |
 | Q-d051-retake-01: retake the 24 Copilot CLI rows at the new 0.1.0 candidate of C002-T-081, under the rule of C002-T-076 step 1 that P-01 decides a retake after a package-source change (revision D-051 … D-053) | C002-T-081 step 5 | settled: the conductor answered option 1, "Retake all 24 rows" (about 2.4 … 3.4 USD, within the 15.00 USD stop), under P-01's waiver of 2026-10-19 for paid batches within approved limits (`questions-log.md` round 2026-11-11) |
-| Planner's questions of the D-056, D-057 revision: Q-t050-record-01 (the record rules for a record that holds run 3 and the retake: the run-3 results of the retaken steps in the Notes, not in `earlier_results`; the retaken steps in run order after their own VSC-07, VSC-08 and VSC-10), Q-t050-retake-02 (VSC-14 retaken, since the init prompt and the cartographer change), Q-t084-opencode-01 (the OpenCode doctor rows to CHG-003, no OpenRouter session), Q-t084-copilot-cli-01 (no Copilot CLI row retaken), Q-spec-req623-01 (C002-REQ-623 and C002-TS-626 still name the bash guard changes as the only changed expectations, while C002-DOD-022 names the D-057 doctor expectations too) | C002-T-084, C002-T-050; the G2 of the revision (Q-t050-record-01, Q-spec-req623-01) | settled: the conductor took the recommended option of each on 2026-11-13 (`questions-log.md`, round "2026-11-12 — C002-T-050 run 3 end batch"); the spec carries C002-IF-009 §4 "Targeted retake after a revision", §5 "Record of a targeted retake", C002-REQ-615 and C002-REQ-618 as narrowed, and C002-REQ-623 with C002-TS-626 as revised |
+| Planner's questions of the D-056, D-057 revision: Q-t050-record-01 (the record rules for a record that holds run 3 and the retake: the run-3 results of the retaken steps in the Notes, not in `earlier_results`; the retaken steps in run order after their own VSC-07, VSC-08 and VSC-10), Q-t050-retake-02 (VSC-14 retaken, since the init prompt and the cartographer change), Q-t084-opencode-01 (the OpenCode doctor rows to CHG-003, no OpenRouter session), Q-t084-copilot-cli-01 (no Copilot CLI row retaken), Q-spec-req623-01 (C002-REQ-623 and C002-TS-626 still name the bash guard changes as the only changed expectations, while C002-DOD-022 names the D-057 doctor expectations too); and, after the spec's targeted-retake clause, Q-spec-retake-list-01 (§4 names the rule and the expected list), Q-spec-retake-group2-01 (the rule extended to every step after group 1, VSC-03 and VSC-04 retaken) and Q-spec-retake-setup-01 (a set-up step named in the Notes) | C002-T-084, C002-T-050; the G2 of the revision (Q-t050-record-01, Q-spec-req623-01) | settled: the conductor took the recommended option of each on 2026-11-13; for C002-T-050 the targeted retake and the answers to Q-t050-record-01, Q-t050-retake-02 and the three Q-spec-retake-* questions are superseded by P-01's answer to Q-t050-retake-03, "Full run 4 (Recommended)" (plan critic CR-197; the §4 clause stays in the spec, unused by this run) (`questions-log.md`, round "2026-11-12 — C002-T-050 run 3 end batch"); the spec carries C002-IF-009 §4 "Targeted retake after a revision", §5 "Record of a targeted retake", C002-REQ-615 and C002-REQ-618 as narrowed, and C002-REQ-623 with C002-TS-626 as revised |
 | **Double guard run** (digest fact 10, D-053 observation): every PreToolUse in VS Code runs the guard twice, from the plugin `hooks.json` and from `.github/hooks/architect-guard.json`, about 3 s each | CHG-004 "Cost and token efficiency" | open: accepted cost at 0.1.0, no change in CHG-002 |
 | **Follow-ups of the findings pass** (digest fact 12, not defects): the doctor's Context7 and DeepWiki rows read `unreachable` without a probe (accepted on defect D-012: the conductor holds neither tool; **since run 3 of C002-T-050 defect D-057, fixed in CHG-002 by C002-T-084**, P-01's answers to Q-t050-doctor-01 and Q-t050-doctor-02); the G0 approval makes no commit and the conductor suggests `sdd gate approve --commit` (shared conductor text, Claude Code too); `sdd trace <NNN> --write` exits 1 at G1 on a lite change whose 10-spec scaffold holds placeholder IDs | CHG-004 "Cost and token efficiency" | open: recorded for CHG-004, not addressed in CHG-002 |
-| **Local tag `v0.1.0` and the CHG-001 release record** (revision D-051 … D-053, D-054, and D-056, D-057): C002-T-081 moved the local tag from 9eb56c0 to its candidate 54b83ff, C002-T-082 moved it on to e89dae8, and C002-T-084 moves it to its own candidate, whose Claude Code plugin differs from e89dae8's in the doctor, init, code-discovery and README files (CHG-001 impact, above); CHG-001's release evidence names the tagged commit | C002-T-081, C002-T-082, C002-T-084; CHG-001 (its own record; C001-T-073 and C001-T-074 on the rebuilt plugin) | open: the T-081 and T-082 reports name both commits of their move; any edit of a CHG-001 record is CHG-001's; pushing the tag stays P-01's |
+| **Local tag `v0.1.0` and the CHG-001 release record** (revision D-051 … D-053, D-054, and D-056, D-057): C002-T-081 moved the local tag from 9eb56c0 to its candidate 54b83ff, C002-T-082 moved it on to e89dae8, and C002-T-084 moves it to its own candidate, whose Claude Code plugin differs from e89dae8's in the doctor, init, code-discovery, researcher and README files (CHG-001 impact, above); both hosts release from that commit (P-01's answer to Q-t050-doctor-02; plan critic CR-201); CHG-001's release evidence names the tagged commit | C002-T-081, C002-T-082, C002-T-084; CHG-001 (its own record; C001-T-073 and C001-T-074 on the rebuilt plugin) | open: the correction of CHG-001's release record is CHG-001 defect D-033 on C001-REQ-1110, to close before C001-T-075, with `docs/releases/copilot/0.1.0/T-084-candidate-report.md` (both commits, the comparisons, the Claude Code sessions of its step 8) as its source; the T-081, T-082 and T-084 reports name both commits of their move; any edit of a CHG-001 record is CHG-001's; pushing the tag stays P-01's |
 | **Untimed docs walkthroughs** (defects D-049 and CHG-001 D-031): a person follows the Copilot `INSTALL.md` and the Claude Code README once, untimed, in the isolated profiles, and notes any undocumented step | follow-up change "Cost and token efficiency" | open: moved there with the waivers of C002-NFR-601 and C001-NFR-602 |
 | **Cost of a small lite change to G3** (major post-release issue; defect D-044; P-01 answer to Q-toy-g3-limit-01): the cfg-full toy chain needs about 50 USD notional to take a one-function lite change to G3; every critic review found issues (11 at ideation, 6 at spec) and each fix round takes a full session at the cap; thinking tokens grew after the budget was hidden, a cause **not proven**: the earlier sessions could see their budget, and the skills changed in between (C002-IF-010 §2.2 rule 1, `TS-511`; `docs/release-0.1.0-evidence.md` §7) | **the follow-up change "Cost and token efficiency"** (owner; named by the conductor, CHG-002 plan critic CR-112, and its number recorded once it exists), which the conductor creates at C001-T-072's close; it also holds the cfg-bare part of C001-NFR-304 (P-01 answer to Q-nfr304-bare-01, CHG-001 critic CR-40); it also holds the deferred G3 run on cfg-bare with its cap row `toy-g3-cfg-bare` (plan critic CR-112) | open: logged, not addressed in CHG-001 or CHG-002 |
 | Copilot CLI and its `--max-ai-credits` limit (assumption D-031 of C002-IF-010 §2.2, spec critic CR-108): whether Copilot CLI 1.0.98 shows the model its credit limit | C002-T-076 step 6, the Copilot CLI sessions at 0.1.0 (revision D-041; plan critic CR-102) | open: that batch searches every transcript for model text naming credits, the credit limit or a session budget, with the terms of test plan §6 "Revision D-031" plus `credit` and `AI Credits`, and quotes each hit in its report; a hit is a defect against C002-REQ-642 and P-01 decides the fix |
