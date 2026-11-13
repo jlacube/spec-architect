@@ -211,7 +211,8 @@ hooks rows VSC-05, VSC-06 and VSC-09. The injection steps VSC-32 … VSC-53 foll
 The steps below confirm the assumptions that the spec leaves to this checklist. Each step names its
 expected observation; the record keeps the outcome (`observed`). A refuted assumption is a failed
 step and a spec defect, except A-5, which the revision for D-052 accepted as a known limitation
-(its row below). The record keeps one row per assumption in its "Assumptions" table; its A-2 row
+(its row below), and A-3, refuted by the run of 2026-11-12 (defect D-056), whose row now states the
+observed fact that VSC-01 expects. The record keeps one row per assumption in its "Assumptions" table; its A-2 row
 holds both halves of the revised A-2 (C002-TS-618): for the open half, the outcome of VSC-22 (the
 session's conductor copy and the specialist it started), and for the settled half, the conductor
 copy, or copies, that the run's conductor sessions used.
@@ -220,7 +221,7 @@ copy, or copies, that the run's conductor sessions used.
 |---|---|---|---|
 | A-1 | A specialist with `user-invocable: false` is still started as a subagent | C002-IF-005 §3 | VSC-22 |
 | A-2 | **Open half** (an assumption, settled by VSC-22): a conductor session on either copy, plugin or workspace, starts the workspace specialists although plugin agents of the same names are loaded (plugin agents are not startable as subagents); VSC-22 records the session's copy and the started specialist; a plugin-copy session that starts no specialist goes back to P-01. **Settled half** (defect D-055; P-01's answer to Q-copilot-agentcopy-01, "Keep both, record copy"): the prompt files are offered as slash commands, and **either conductor copy, plugin or workspace, may be the session agent** of a chat started with `code chat -m sdd-conductor` or picked by name, and a prompt file runs on that session agent (C002-IF-009 §4 Session agent). The record names the copy used, from the `mode` of the chat session file: in the `note` of VSC-02 when every conductor session used the same copy, else in the `note` of each step whose session used the other copy. History: until the C002-T-050 run of 2026-11-12 (finding F-P: `code chat -m sdd-conductor` ran the plugin copy) this row tied the prompt files to the workspace conductor | C002-IF-005 §3, C002-IF-009 §4, C002-REQ-317 | VSC-12, VSC-22 |
-| A-3 | VS Code adds no agent, prompt file or skill from a registered package folder without `plugin.json` | C002-IF-005 §3 | VSC-01 |
+| A-3 | **Refuted on VS Code 1.145.2** (defect D-056; P-01's answers to Q-t050-a3-01 and Q-t050-a3-02, the package layout kept): VS Code loads a package folder registered in `chat.pluginLocations` also before the install, without `plugin.json`, and its Architect agents, prompt files and skills run there with no guard hook until the install has written `hooks.json` (C002-IF-005 §3, Registered before the install); the install notes warn of that window (C002-IF-005 §5 step 3). VSC-01 expects the entries to be shown, and the record's A-3 row says "refuted" with that reason. History: until the C002-T-050 run of 2026-11-12 (twin half of VSC-01) this row stated "VS Code adds no agent, prompt file or skill from a registered package folder without `plugin.json`" | C002-IF-005 §3, §5 step 3 | VSC-01 |
 | A-4 | VS Code loads `.github/hooks/architect-guard.json` of the open repository and runs its PreToolUse command, as the hooks log shows, with the same input as the plugin-level one (`agent_type` included where the host sends it) | C002-IF-005 §3 | VSC-28 |
 | A-5 | The host offers `general-purpose` to the workspace conductor, and its tool calls carry `agent_type`. **Refuted on VS Code 1.145.2 and accepted** (P-01's decision on D-052, 2026-11-11): no PreToolUse input carries `agent_type`, so the subagent guard hook cannot stop a non-Architect subagent; this is the known limitation of C002-IF-005 §5 step 6, stated in the install notes. VSC-27 passes on the conductor's refusal and records the default-agent probe's `agent_type: present` or `absent`; the record's A-5 row says "refuted, accepted" | C002-IF-005 §3, §5 step 6, C002-REQ-327 open item | VSC-27 |
 | A-6 | `askQuestions` (VS Code's question tool, `vscode_askQuestions`) works with and without `chat.askQuestions.enabled` | C002-IF-001 §6.1, C002-REQ-304 | VSC-19 |
@@ -243,12 +244,19 @@ copy, or copies, that the run's conductor sessions used.
   `dist/architect-copilot-<version>.zip` into a folder outside the toy repository. Open
   `toy.code-workspace`, trust it, set `chat.plugins.enabled` to `true` and `chat.pluginLocations` to
   the unpacked package folder, and reload the window (Developer: Reload Window). Open the agent
-  picker of a Local chat and type `/` in the chat input.
-- **Expect:** the package folder has no `plugin.json` yet, and neither the agent picker nor the
-  slash-command list shows an Architect agent, prompt file or skill (assumption A-3).
+  picker of a Local chat and type `/` in the chat input. Use no Architect entry before the install:
+  do not select an Architect agent or send an Architect prompt file in this window (they would run
+  with no guard hook; C002-IF-005 §3, Registered before the install).
+- **Expect:** the package folder has no `plugin.json` and no `hooks.json` at its root yet, and the
+  agent picker and the slash-command list offer the Architect agents and prompt files: VS Code loads
+  a registered folder without a manifest (assumption A-3, refuted; defect D-056; C002-IF-009 §4).
+  The step passes when the entries are shown.
 - **Record:** the profile (`Default`), the VS Code and GitHub Copilot Chat versions of Help: About (or of
   `sdd host-version vscode`),
-  and as `observed` what the picker and the slash-command list showed.
+  and as `observed` what the picker and the slash-command list showed; for the twin of the
+  slash-list half (Who runs the steps, above), also that the package is the twin profile's only
+  `chat.pluginLocations` entry, that the profile has no user prompt file and that no other plugin
+  is installed.
 
 ### VSC-02 — `sdd install copilot` in your own terminal
 
@@ -406,19 +414,25 @@ reads `chat.useHooks` only (C002-IF-006 §2); this step reads the two other sour
 - **Expect:** the list offers `/architect:doctor`, `/architect:new` and `/architect:init` from the
   Architect plugin (VS Code 1.145.2 registers the prompt files as `architect:<name>`, defect D-053);
   `/architect:doctor` runs the Architect doctor prompt on the session agent, which may be either
-  copy of `sdd-conductor`, plugin or workspace (assumption A-2).
+  copy of `sdd-conductor`, plugin or workspace (assumption A-2); in the doctor table that run
+  shows, the Context7 and DeepWiki rows have the status `ok` and an empty Fix (the researcher's
+  probe calls; C002-IF-006 §2.1, defect D-057).
 - **Record:** as `observed`, the commands the list offered, whether a bare `/init` resolves to VS
-  Code's built-in `/init` (the list's description of that entry), and the source the agent picker
-  names for the session agent that ran `/architect:doctor`; the conductor copy as the Session agent
-  rule says (VSC-02).
+  Code's built-in `/init` (the list's description of that entry), the source the agent picker
+  names for the session agent that ran `/architect:doctor`, and the Context7 and DeepWiki rows of
+  that doctor run as shown (status, Fix); the conductor copy as the Session agent rule says (VSC-02).
 
 ### VSC-13 — Doctor table in VS Code
 
-- **Do:** In a new Local chat with `sdd-conductor` send `/architect:doctor`; open Help: About.
+- **Do:** Check the precondition of C002-TS-508: the workspace MCP servers `context7` and `deepwiki`
+  of `.vscode/mcp.json` are enabled (not turned off in the MCP server list or the tool picker), with
+  network access to their endpoints. In a new Local chat with `sdd-conductor` send
+  `/architect:doctor`; open Help: About.
 - **Expect:** the table has a host row for VS Code with GitHub Copilot Chat and a row for the sdd
   CLI; the host row's Version column shows the VS Code version and the GitHub Copilot Chat version
-  that the About dialog reports; there is no Claude Code row.
-- **Record:** the host row as `observed`.
+  that the About dialog reports; the Context7 and DeepWiki rows have the status `ok` and an empty
+  Fix (the researcher's probe calls; C002-IF-006 §2.1, defect D-057); there is no Claude Code row.
+- **Record:** the host row and the Context7 and DeepWiki rows (status, Fix) as `observed`.
 
 ### VSC-14 — Set up `.sdd/` with `/architect:init`
 

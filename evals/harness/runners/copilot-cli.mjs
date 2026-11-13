@@ -288,12 +288,16 @@ export function prepareWorkspace(cwd, pkg, runDir) {
 /**
  * The servers file of a session: the `servers` of `<copy>/install/mcp.json` in Copilot CLI's
  * `mcpServers` form (`stdio` → `local` with `tools: ["*"]`, `http` kept), with `sdd` and `sdd-mcp`
- * commands run by this Node.js from the staged scripts, and `mcpOverrides` URLs applied.
+ * commands run by this Node.js from the staged scripts, and `mcpOverrides` applied (a URL replaced, `false` left out).
  */
 export function serversConfig(copy, scripts, mcpOverrides = {}) {
   const { servers = {} } = JSON.parse(readFileSync(join(copy, "install", "mcp.json"), "utf8"));
   const mcpServers = {};
+  // `mcpOverrides` (C002-IF-010 §2.1): a URL replaces the server's URL; `false` leaves the entry out of the file.
+  for (const name of Object.keys(mcpOverrides ?? {}))
+    if (!(name in servers)) throw new Error(`Copilot CLI eval runner: mcpOverrides names the server "${name}", which install/mcp.json does not declare`);
   for (const [name, s] of Object.entries(servers)) {
+    if (mcpOverrides?.[name] === false) continue;
     if (s.type === "http" || s.type === "sse") {
       mcpServers[name] = { type: s.type, url: mcpOverrides?.[name] ?? s.url, tools: ["*"] };
       continue;

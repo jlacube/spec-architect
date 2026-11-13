@@ -5,8 +5,18 @@
 // (`.eval/handbacks/<agent-name>.md`). Real agent files are always kept.
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { dirname, join } from "node:path";
-import { ROOT } from "./fixtures.mjs";
+import { dirname, join, resolve } from "node:path";
+// The repository root: the first folder up from this module that holds the source plugin (also when a test
+// bundles this module elsewhere in the repository).
+const ROOT = (() => {
+  let dir = import.meta.dirname;
+  for (;;) {
+    if (existsSync(join(dir, "plugins", "architect", ".mcp.json"))) return dir;
+    const up = dirname(dir);
+    if (up === dir) return join(import.meta.dirname, "..", "..");
+    dir = up;
+  }
+})();
 
 export const SPECIALISTS = ["researcher", "cartographer", "options-analyst", "spec-writer", "test-designer", "architect", "planner", "critic", "auditor"].map((n) => `sdd-${n}`);
 
@@ -114,8 +124,7 @@ function build(omitServers, urls = {}) {
   const mcp = join(dir, ".mcp.json");
   if (existsSync(mcp)) {
     const config = JSON.parse(readFileSync(mcp, "utf8"));
-    for (const s of omitServers) delete config.mcpServers?.[s];
-    for (const [s, url] of Object.entries(urls)) if (config.mcpServers?.[s]) config.mcpServers[s].url = url;
+    applyMcpServerOverrides(config.mcpServers, { ...Object.fromEntries(omitServers.map((s) => [s, false])), ...urls });
     // Serena's home for evals: persistent, outside the fixture repository (C001-IF-14 §4).
     if (config.mcpServers?.serena?.env) config.mcpServers.serena.env.SERENA_HOME = evalSerenaHome();
     writeFileSync(mcp, JSON.stringify(config, null, 2) + "\n");
@@ -128,6 +137,7 @@ function build(omitServers, urls = {}) {
 export function architectWithStubs() {
   return build([]);
 }
+architectWithStubs.overlay = { omit: [], urls: {} };
 
 /**
  * Path of the overlay plugin, refusing stand-ins: every specialist must be the real agent file (CHG-001
@@ -143,10 +153,62 @@ export function architectReal() {
 
 /** A plugin-path function for an overlay without the named MCP servers (degraded-mode scenarios). */
 export function architectWithout(...servers) {
-  return () => build(servers);
+  return Object.assign(() => build(servers), { overlay: { omit: servers, urls: {} } });
 }
 
 /** A plugin-path function for an overlay whose named remote MCP servers point to other URLs. */
 export function architectWithUrls(urls) {
-  return () => build([], urls);
+  return Object.assign(() => build([], urls), { overlay: { omit: [], urls } });
+}
+
+// --- `mcpOverrides` (C002-IF-010 §2.1; revised for defect D-057, critic CR-195) ---------------------
+// A case row's `{ <server>: <url> | false }` for a remote MCP server of the session's configuration, on
+// every host: a URL replaces the server's URL, `false` turns the server off for the session. A server
+// the configuration does not declare ends the row before any session (run.mjs, exit code 1).
+
+/** The MCP servers the session's configuration declares on `host`. */
+export function declaredMcpServers(host, root = ROOT) {
+  if (host === "claude-code") return Object.keys(JSON.parse(readFileSync(join(root, "plugins", "architect", ".mcp.json"), "utf8")).mcpServers ?? {});
+  const target = host === "opencode" ? "opencode" : host === "copilot-cli" ? "copilot" : null;
+  if (!target) return [];
+  return Object.keys(JSON.parse(readFileSync(join(root, "plugins", "architect", "targets", `${target}.json`), "utf8")).mcp_servers ?? {});
+}
+
+/** The problem of a row's `mcpOverrides` against the declared servers, or null when it is valid (or absent). */
+export function mcpOverridesProblem(overrides, declared) {
+  if (overrides === undefined || overrides === null) return null;
+  if (typeof overrides !== "object" || Array.isArray(overrides)) return `mcpOverrides must be an object { <server>: <url> | false }, got ${JSON.stringify(overrides)}`;
+  for (const [server, value] of Object.entries(overrides)) {
+    if (!declared.includes(server)) return `mcpOverrides names the server "${server}", which the session's configuration does not declare (declared: ${declared.join(", ") || "none"})`;
+    if (value !== false && !(typeof value === "string" && /^https?:\/\/\S+$/.test(value))) return `mcpOverrides gives "${server}" ${JSON.stringify(value)}: a URL (http or https) or false`;
+  }
+  return null;
+}
+
+/** Applies `overrides` in place to a `mcpServers` map (Claude Code `.mcp.json`): URL replaced, `false` removes the server. */
+export function applyMcpServerOverrides(mcpServers, overrides = {}) {
+  if (!mcpServers) return mcpServers;
+  for (const [server, value] of Object.entries(overrides ?? {})) {
+    if (!(server in mcpServers)) throw new Error(mcpOverridesProblem({ [server]: value }, Object.keys(mcpServers)) ?? `unknown server ${server}`);
+    if (value === false) delete mcpServers[server];
+    else mcpServers[server] = { ...mcpServers[server], url: value };
+  }
+  return mcpServers;
+}
+
+/**
+ * The Claude Code plugin list of a row with `mcpOverrides`: each overlay function and the source plugin
+ * folder become an overlay copy whose `.mcp.json` carries the overrides on top of the overlay's own.
+ */
+export function pluginsWithOverrides(plugins, overrides) {
+  if (!overrides || Object.keys(overrides).length === 0) return plugins;
+  const source = join(ROOT, "plugins", "architect");
+  return plugins.map((p) => {
+    const base = typeof p === "function" ? p.overlay : typeof p === "string" && resolve(ROOT, p) === source ? { omit: [], urls: {} } : null;
+    if (!base) return p;
+    const off = Object.entries(overrides).filter(([, v]) => v === false).map(([s]) => s);
+    const urls = { ...base.urls, ...Object.fromEntries(Object.entries(overrides).filter(([, v]) => v !== false)) };
+    for (const s of off) delete urls[s];
+    return Object.assign(() => build([...new Set([...base.omit, ...off])], urls), { overlay: { omit: [...new Set([...base.omit, ...off])], urls } });
+  });
 }

@@ -1,8 +1,17 @@
 // C002-T-038 — doctor host rows, version checks and the toolchain record per host (C002-IF-006;
 // C002-REQ-504 … C002-REQ-510, C002-REQ-327): the doctor command and the toolchain record of the
 // generated OpenCode and Copilot packages, in each enforcement mode, read back from disk; and the
-// Claude Code doctor, whose text does not change (C002-REQ-506, C002-GOAL-05, C002-CON-10; C001-TS-1116
-// stays green). Expected values come from the mapping tables and the source plugin, never from a copy.
+// Claude Code doctor, whose rows, minimum-version row and outcome lines do not change (C002-REQ-506,
+// C002-GOAL-05, C002-CON-10; C001-TS-1116 stays green). Expected values come from the mapping tables and
+// the source plugin, never from a copy.
+// C002-T-084 (defect D-057; C002-IF-006 §2.1, C002-IF-001 §2.1, C002-IF-005 §4, C002-COMP-019): on the source
+// and on each generated package in each mode, the researcher's Context7 and DeepWiki probe: the doctor's
+// step 2 and the init command's step 3 dispatch `sdd-researcher` before `sdd-cartographer`, the
+// cartographer gets the outcome lines and makes no Context7 or DeepWiki call, step 3 and the remedies rows
+// map the five outcomes to their statuses and exact fix texts, the toolchain record item reads the
+// researcher's outcome, the researcher's agent body carries the probe line, and the tool grants (the
+// researcher holds both servers' tools, the cartographer neither; the researcher's `tools` unchanged).
+// The pin of the Claude Code doctor is a changed expectation under C002-REQ-504 (new SHA-256).
 // The agent behaviour of these texts is graded by the doctor evals under evals/targets/doctor/
 // (C002-TC-506 … C002-TC-515, C002-TC-526, C002-TC-639).
 import { test } from "node:test";
@@ -117,18 +126,117 @@ function remedies(body: string): Map<string, [string, string]> {
 const outcomes = (body: string) => [...body.matchAll(/^\s+- `(Doctor: [^`]+)`/gm)].map((m) => m[1]);
 
 // --- Claude Code: the source doctor text does not change (C002-REQ-506, C002-CON-10) ---
-test("C002-REQ-506: the Claude Code doctor command is byte-unchanged — eight rows, the minimum-version row, three outcome lines", () => {
+test("C002-REQ-506: the Claude Code doctor command is pinned — eight rows, the minimum-version row, three outcome lines", () => {
   const text = readFileSync(join(PLUGIN, "commands", "doctor.md"), "utf8").replace(/\r\n/g, "\n");
-  // SHA-256 of commands/doctor.md at C002-T-037 (CHG-001 text; LF line endings).
-  assert.equal(createHash("sha256").update(text).digest("hex"), "29573c31c4feb4f25f9aa452f3a24ce78d1a180113032aac8d668e6b463ffaf9");
-  assert.ok(text.includes("one row each for node, git, Claude Code, ripwire, Serena, ast-grep,\n   Context7, DeepWiki with detected"), "the eight rows of today");
+  // SHA-256 of commands/doctor.md (LF line endings) as revised by C002-T-084 for defect D-057: a changed
+  // expectation under C002-REQ-504 (before: 29573c31… of C002-T-037, the CHG-001 text).
+  assert.equal(createHash("sha256").update(text).digest("hex"), "f16e57429fbf203954f29439f257d163819c9b2e3008906468032ad6a2f8fd1a");
+  assert.ok(flat(text).includes("one row each for node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki with detected"), "the eight rows of today");
   const r = remedies(text);
   assert.deepEqual(r.get("Claude Code")?.[0], "`claude --version` ≥ 2.1.295");
   assert.ok(r.get("Claude Code")![1].startsWith("`claude update`"));
   assert.ok(!r.has("sdd CLI") && !r.has("Copilot hooks"), "no generated-target rows");
   assert.ok(text.includes("- Claude Code: `error` below 2.1.295 (`claude --version`)."));
   assert.deepEqual(outcomes(text), ["Doctor: failed: node ≥ 20 required", "Doctor: completed with warnings", "Doctor: completed"]);
-  assert.ok(!text.includes("untested") && !text.includes("host-version"));
+  assert.ok(!text.includes("host-version"), "no host-version probe on Claude Code");
+  // `untested` for the two remote rows only (C002-IF-006 §2.1 Where the text lives).
+  assert.ok(flat(text).includes("and `untested` for a remote server that no probe call reached"));
+});
+
+// --- C002-T-084: the researcher's Context7 and DeepWiki probe (C002-IF-006 §2.1) ---
+
+const REMOTE = { Context7: "https://mcp.context7.com/mcp", DeepWiki: "https://mcp.deepwiki.com/mcp" } as const;
+/** The fix texts of C002-IF-006 §2.1 step 3, as the Report step states them (with `<server>`, `<endpoint>`). */
+const STEP3_OUTCOMES = [
+  "`ok` → `ok`, Fix empty",
+  "`failed: <text>` → `unreachable`, Fix `check network; endpoint <endpoint>`",
+  "`not offered` → `untested`, Fix `the researcher was offered no <server> tool: turn on or start the <server> MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint <endpoint>`",
+  "`refused: <text>` → `untested`, Fix `allow the <server> tools for the researcher`",
+  "no line for the server → `untested`, Fix `no probe outcome from the researcher; run the doctor again`",
+];
+const OUTCOME_LINES = ["`<server>: ok`", "`<server>: failed: <error text as returned>`", "`<server>: refused: <host text as returned>`", "`<server>: not offered`"];
+/** The four non-ok fix texts of one remote row, as its remedies row carries them. */
+const rowFixes = (server: keyof typeof REMOTE) => [
+  `check network; endpoint \`${REMOTE[server]}\``,
+  `the researcher was offered no ${server} tool: turn on or start the ${server} MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint \`${REMOTE[server]}\``,
+  `allow the ${server} tools for the researcher`,
+  "no probe outcome from the researcher; run the doctor again",
+];
+/** The text of numbered step `n` of a command body (to the next numbered step or the remedies table). */
+function stepOf(body: string, n: number): string {
+  const start = body.search(new RegExp(`^${n}\\. `, "m"));
+  assert.ok(start >= 0, `step ${n}`);
+  const rest = body.slice(start + 2);
+  const end = rest.search(/^(\d+\. |\| Tool )/m);
+  return flat(end < 0 ? rest : rest.slice(0, end));
+}
+/** The probe tool names of a doctor's step 2 per host (C002-IF-001 §2 MCP tool names). */
+const PROBE_TOOLS: Record<"claude-code" | Target, [string, string]> = {
+  "claude-code": ["`resolve-library-id`", "`read_wiki_structure`"],
+  copilot: ["`context7-resolve-library-id`", "`deepwiki-read_wiki_structure`"],
+  opencode: ["`context7_resolve-library-id`", "`deepwiki_read_wiki_structure`"],
+};
+const RESEARCHER_TOOLS = "WebSearch, WebFetch, ToolSearch, mcp__plugin_architect_context7__resolve-library-id, mcp__plugin_architect_context7__query-docs, mcp__plugin_architect_deepwiki__read_wiki_structure, mcp__plugin_architect_deepwiki__read_wiki_contents, mcp__plugin_architect_deepwiki__ask_wiki_question, Read, Glob, Write";
+
+/** The probe checks on one doctor body, init body, toolchain texts and researcher agent text. */
+function probeChecks(where: string, host: "claude-code" | Target, texts: { doctor: string; init: string; toolchain: string[]; researcher: string }) {
+  const step2 = stepOf(texts.doctor, 2);
+  const r = step2.indexOf("dispatch `sdd-researcher`");
+  const c = step2.indexOf("dispatch `sdd-cartographer`");
+  assert.ok(r >= 0 && c > r, `${where}: doctor step 2 dispatches sdd-researcher before sdd-cartographer`);
+  assert.ok(step2.includes(`Context7 ${PROBE_TOOLS[host][0]} with a short library name`), `${where}: Context7 probe tool ${PROBE_TOOLS[host][0]}`);
+  assert.ok(step2.includes(`DeepWiki ${PROBE_TOOLS[host][1]} on \`oraios/serena\``), `${where}: DeepWiki probe tool ${PROBE_TOOLS[host][1]}`);
+  assert.ok(step2.includes("at most one call per remote server"), `${where}: one call per server`);
+  for (const l of OUTCOME_LINES) assert.ok(step2.includes(l), `${where}: step 2 outcome line ${l}`);
+  assert.ok(step2.includes("its brief holds the researcher's two lines, and it makes no Context7 or DeepWiki call"), `${where}: the cartographer's brief carries the lines, no remote call`);
+  assert.ok(!/load one of their tools|make one small call/.test(step2), `${where}: the cartographer's probe of the remote servers is gone`);
+  const step3 = stepOf(texts.doctor, 3);
+  assert.ok(step3.includes("Context7 and DeepWiki, from the researcher's line for the server (`<endpoint>` its endpoint in the remedies table)"), `${where}: step 3 maps the researcher's line`);
+  for (const o of STEP3_OUTCOMES) assert.ok(step3.includes(o), `${where}: step 3 outcome ${o}`);
+  assert.ok(/`untested` (for a remote server that no probe call reached|when no probe call\s+reached the server)/.test(step3), `${where}: status untested for a remote server`);
+  const rows = remedies(texts.doctor);
+  for (const server of ["Context7", "DeepWiki"] as const) {
+    const row = rows.get(server);
+    assert.ok(row, `${where}: remedies row ${server}`);
+    assert.ok(row[0].includes("by `sdd-researcher`"), `${where}: ${server} detection by the researcher`);
+    for (const fix of rowFixes(server)) assert.ok(row[1].includes(fix), `${where}: ${server} remedies fix "${fix}"`);
+    assert.equal(/`([^`]+)`/.exec(row[1])?.[1], REMOTE[server], `${where}: ${server} endpoint is the first code span of the fix (C001-TS-1116)`);
+  }
+  const init3 = stepOf(texts.init, 3);
+  const ir = init3.indexOf("dispatch `sdd-researcher`");
+  const ic = init3.indexOf("dispatch `sdd-cartographer`");
+  assert.ok(ir >= 0 && ic > ir, `${where}: init step 3 dispatches sdd-researcher before sdd-cartographer`);
+  for (const l of OUTCOME_LINES) assert.ok(init3.includes(l), `${where}: init outcome line ${l}`);
+  assert.ok(init3.includes("with the researcher's two lines in its brief") && init3.includes("with no Context7 or DeepWiki call of its own"), `${where}: init cartographer brief`);
+  assert.ok(init3.includes("the baseline survey `.sdd/_constitution/baseline-survey.md`"), `${where}: init baseline survey kept`);
+  for (const tc of texts.toolchain) {
+    const i = tc.indexOf("**Toolchain record**");
+    const part = flat(tc.slice(i, tc.indexOf("\n- **", i + 1)));
+    assert.ok(part.includes("Make no Context7 or DeepWiki call: the brief holds the researcher's probe outcome line for each"), `${where}: toolchain item reads the researcher's outcome`);
+    assert.ok(part.includes("record the server detected `yes` for `ok` and `no` otherwise"), `${where}: detected yes for ok`);
+    assert.ok(part.includes(REMOTE.Context7) && part.includes(REMOTE.DeepWiki), `${where}: endpoints`);
+    assert.ok(!part.includes("when their tools load"), `${where}: no "when their tools load"`);
+  }
+  const res = flat(texts.researcher);
+  assert.ok(res.includes("A doctor or init probe brief is answered with the outcome lines only"), `${where}: researcher probe line`);
+  for (const l of OUTCOME_LINES) assert.ok(res.includes(l), `${where}: researcher outcome line ${l}`);
+  assert.ok(res.includes("Make at most one call per server") && res.includes("load a deferred tool of the server before you report `not offered`") && res.includes("Write no note for a probe brief"), `${where}: researcher probe rules`);
+}
+
+test("C002-REQ-504, C002-REQ-507 (C002-T-084) source: the researcher's probe in doctor step 2 and 3, the remedies rows, init step 3, the toolchain item and the researcher's agent body", () => {
+  const read = (p: string) => readFileSync(join(PLUGIN, p), "utf8").replace(/\r\n/g, "\n");
+  probeChecks("source", "claude-code", {
+    doctor: read("commands/doctor.md"),
+    init: read("commands/init.md"),
+    toolchain: [read("skills/code-discovery/SKILL.md")],
+    researcher: read("agents/sdd-researcher.md"),
+  });
+});
+
+test("C002-IF-005 §4 (C002-T-084) source: the researcher's tools list is unchanged and holds both servers' tools; the cartographer holds neither", () => {
+  const tools = (name: string) => /^tools: (.*)$/m.exec(readFileSync(join(PLUGIN, "agents", `${name}.md`), "utf8"))?.[1] ?? "";
+  assert.equal(tools("sdd-researcher"), RESEARCHER_TOOLS);
+  assert.ok(!/context7|deepwiki/.test(tools("sdd-cartographer")), tools("sdd-cartographer"));
 });
 
 for (const t of ["opencode", "copilot"] as const) {
@@ -229,6 +337,32 @@ for (const t of ["opencode", "copilot"] as const) {
         assert.ok(part.includes("detected (yes/no), version, path or endpoint, fallback in use"));
         assert.ok(part.includes(`\`sdd host-version ${arg}\``) && part.includes("`sdd --version`"));
         assert.ok(!part.includes("Claude Code"));
+      }
+    });
+
+    test(`C002-REQ-504, C002-REQ-507 (C002-T-084) ${where}: the researcher's probe in the doctor and init prompts, the toolchain item of the skill and the cartographer, and the researcher's agent file`, () => {
+      const files = fxDist(t, mode);
+      const initPath = `${tables[t].placement["commands_dir"]}/${tables[t].placement["command_file"]!.replace("{name}", "init")}`;
+      probeChecks(where, t, {
+        doctor: bodyOf(file(files, doctorPath(t))),
+        init: bodyOf(file(files, initPath)),
+        toolchain: [file(files, skillPath(t, "code-discovery")), file(files, agentPath(t, "sdd-cartographer"))],
+        researcher: file(files, agentPath(t, "sdd-researcher")),
+      });
+    });
+
+    test(`C002-IF-005 §4 (C002-T-084) ${where}: the researcher is granted both servers' tools, the cartographer neither`, () => {
+      const files = fxDist(t, mode);
+      if (t === "copilot") {
+        const tools = (name: string) => JSON.parse((/^tools: (\[.*\])$/m.exec(file(files, agentPath(t, name)))?.[1] ?? "[]").replace(/'/g, '"')) as string[];
+        assert.ok(tools("sdd-researcher").includes("context7/*") && tools("sdd-researcher").includes("deepwiki/*"), JSON.stringify(tools("sdd-researcher")));
+        assert.ok(!tools("sdd-cartographer").some((x) => /context7|deepwiki/.test(x)), JSON.stringify(tools("sdd-cartographer")));
+      } else {
+        const agents = (JSON.parse(file(files, "opencode.json")) as { agent: Record<string, { tools?: Record<string, boolean> }> }).agent;
+        const granted = (name: string) => Object.entries(agents[name]?.tools ?? {}).filter(([, v]) => v).map(([k]) => k);
+        for (const tool of ["context7_resolve-library-id", "context7_query-docs", "deepwiki_read_wiki_structure", "deepwiki_read_wiki_contents", "deepwiki_ask_wiki_question"])
+          assert.ok(granted("sdd-researcher").includes(tool), `sdd-researcher: ${tool}`);
+        assert.ok(!granted("sdd-cartographer").some((x) => /context7|deepwiki/.test(x)), JSON.stringify(granted("sdd-cartographer")));
       }
     });
   }

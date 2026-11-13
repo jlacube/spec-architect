@@ -12,12 +12,14 @@
 //                  session: `mode` is the enforcement mode (`--mode <target>=<mode>`); `tested_versions`
 //                  and `version` replace `host.tested_versions` and the package version in a copy of the
 //                  mapping table and plugin manifest (the fixture of C002-TS-513 and C002-TS-515);
-//   mcpOverrides   { <server>: <url> } — a remote MCP server URL replaced in the generated config
-//                  (the cfg-deepwiki-down row of C002-TS-509 on OpenCode).
+//   mcpOverrides   { <server>: <url> | false } — on every host (C002-IF-010 §2.1; defect D-057): a URL
+//                  replaces a remote MCP server's URL (the stub of C002-TS-709, the cfg-deepwiki-down URL
+//                  of C002-TS-710), false turns the server off for the session (C002-TS-710); the Claude
+//                  Code runner applies it through an overlay copy of the plugin.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { finalReply } from "../../harness/assert.mjs";
+import { finalReply, toolCalls } from "../../harness/assert.mjs";
 import { resolveOpenCodeBinary } from "../../harness/opencode/driver.mjs";
 import { ROOT } from "../../harness/fixtures.mjs";
 import { machine } from "../../harness/machines.mjs";
@@ -164,4 +166,68 @@ export function doctorCase(host, cfg, { prepend = [], without = [], env = {}, ..
   // opencode` and `--host copilot-cli` leave them out.
   if (host === "claude-code") return { ...base, host, plugins: m.plugins, startDelayMs: 15000, ...extra };
   return { ...base, host, ...extra };
+}
+
+// --- The researcher's Context7 and DeepWiki probe (C002-IF-006 §2.1; defect D-057) ---------------------
+
+/** The two remote servers: row name, MCP server name and endpoint (the doctor remedies table). */
+export const REMOTE = {
+  Context7: { server: "context7", endpoint: "https://mcp.context7.com/mcp" },
+  DeepWiki: { server: "deepwiki", endpoint: "https://mcp.deepwiki.com/mcp" },
+};
+
+/** The fix texts of C002-IF-006 §2.1 step 3 for the row `row` ("Context7" or "DeepWiki"). */
+export function remoteFix(row, outcome) {
+  const endpoint = REMOTE[row].endpoint;
+  return {
+    failed: `check network; endpoint ${endpoint}`,
+    "not offered": `the researcher was offered no ${row} tool: turn on or start the ${row} MCP server for the researcher (it is in the package's MCP configuration); if it is on, check network; endpoint ${endpoint}`,
+    refused: `allow the ${row} tools for the researcher`,
+    none: "no probe outcome from the researcher; run the doctor again",
+  }[outcome];
+}
+
+/**
+ * Every Context7 or DeepWiki tool call of the session (source tool names on every host), with the agent
+ * that made it: the `subagent_type` of the dispatch it runs under (`architect:` dropped), or "main".
+ */
+export function remoteCalls(transcript) {
+  const agentOf = new Map(toolCalls(transcript).filter((c) => c.name === "Agent" || c.name === "Task").map((c) => [c.id, String(c.input?.subagent_type ?? "subagent").replace(/^architect:/, "")]));
+  return toolCalls(transcript)
+    .map((c) => ({ ...c, server: /^mcp__plugin_architect_(context7|deepwiki)__/.exec(c.name)?.[1] ?? null }))
+    .filter((c) => c.server !== null)
+    .map((c) => ({ ...c, by: c.agent === null ? "main" : (agentOf.get(c.agent) ?? "subagent") }));
+}
+
+/**
+ * The Given line on the researcher's tool list (deferred tools included) for `server`: true when the
+ * session offered the server's tools, false when it offered none, null when the transcript and the
+ * workspace do not tell. Evidence, in order: a call of one of its tools (only an offered tool is
+ * called); on Claude Code the server's state in the SDK's init message (`connected` lists its tools to
+ * the plugin's agents, the researcher's `tools` naming them; `failed`, `pending` or absent lists none);
+ * on OpenCode, whose runner records no tool list, the generated `opencode.json` of the workspace
+ * (`"enabled": false`, or the unresolvable `.invalid` URL of cfg-deepwiki-down, lists none; any other
+ * URL, the stub's included, lists the tools).
+ */
+export function offered(transcript, root, server) {
+  if (remoteCalls(transcript).some((c) => c.server === server)) return true;
+  const init = transcript.find((r) => r.type === "sdk" && r.message?.type === "system" && r.message?.subtype === "init");
+  if (init && Array.isArray(init.message.mcp_servers)) {
+    const s = init.message.mcp_servers.find((x) => x.name === `plugin:architect:${server}` || x.name === server);
+    return s?.status === "connected";
+  }
+  const cfg = join(root, "opencode.json");
+  if (existsSync(cfg)) {
+    const entry = JSON.parse(readFileSync(cfg, "utf8")).mcp?.[server];
+    if (!entry || entry.enabled === false) return false;
+    return !/\.invalid(?:[:/]|$)/.test(String(entry.url ?? ""));
+  }
+  return null;
+}
+
+/** Files the session wrote with a write tool, relative to the workspace root (`/` separators). */
+export function writtenFiles(transcript, root) {
+  const base = root.split("\\").join("/").replace(/\/$/, "");
+  return [...new Set(toolCalls(transcript).filter((c) => ["Write", "Edit", "MultiEdit", "NotebookEdit"].includes(c.name)).map((c) => String(c.input?.file_path ?? c.input?.notebook_path ?? "").split("\\").join("/")))]
+    .map((p) => (p.toLowerCase().startsWith(base.toLowerCase() + "/") ? p.slice(base.length + 1) : p));
 }

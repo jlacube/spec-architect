@@ -70,7 +70,7 @@
           "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
         },
         "plugin_manifest": {
-          "description": "Copilot: install/plugin.json, which the install command copies to plugin.json at the package root together with hooks.json, so that the folder is no plugin before the install (C002-IF-005 §3); null when the target has no plugin manifest.",
+          "description": "Copilot: install/plugin.json, which the install command copies to plugin.json at the package root together with hooks.json (C002-IF-005 §3); null when the target has no plugin manifest.",
           "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }]
         },
         "cli_copy": {

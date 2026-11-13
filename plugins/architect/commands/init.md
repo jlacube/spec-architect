@@ -9,8 +9,14 @@ This command runs in the `architect:sdd-conductor` main session. If you are not 
    `sdd serena-config "${CLAUDE_PLUGIN_DATA}"` (Serena's data folder, as `/architect:doctor` does).
 2. If `.sdd/_constitution/constitution.md` exists, report its status and stop: approve a draft
    with `/architect:gate constitution`.
-3. Dispatch `sdd-cartographer` (code-discovery skill) for:
-   - the toolchain record `.sdd/_constitution/toolchain.md` (always);
+3. First dispatch `sdd-researcher` with a probe brief: at most one call per remote server,
+   Context7 `resolve-library-id` with a short library name and DeepWiki `read_wiki_structure` on
+   `oraios/serena`; its reply is one outcome line per server: `<server>: ok`, `<server>: failed:
+   <error text as returned>`, `<server>: refused: <host text as returned>` or `<server>: not
+   offered`. Then dispatch `sdd-cartographer` (code-discovery skill), with the researcher's two
+   lines in its brief, for:
+   - the toolchain record `.sdd/_constitution/toolchain.md` (always; Context7 and DeepWiki from the
+     researcher's lines, with no Context7 or DeepWiki call of its own);
    - if the repository has code: the baseline survey `.sdd/_constitution/baseline-survey.md`
      (languages, size, test layout, build commands), and, when `.sdd/_living/` is empty, one
      inventory stub `.sdd/_living/CAP-<slug>.md` per detected capability (inventory only, no

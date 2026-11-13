@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: in-progress
 depends_on: [C002-T-038, C002-T-079, C002-T-080, C002-T-082, C002-T-083]
 implements: [C002-REQ-304, C002-REQ-504, C002-REQ-505, C002-REQ-507, C002-REQ-522, C002-REQ-614, C002-REQ-615, C002-REQ-623]
 satisfies_ac: [C002-AC-304.1, C002-AC-504.1, C002-AC-505.1, C002-AC-507.1, C002-AC-522.1, C002-AC-614.1, C002-AC-615.1, C002-AC-623.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-306, C002-TS-506, C002-TS-508, C002-TS-509, C002-TS-511, C
 components: [C002-COMP-002, C002-COMP-004, C002-COMP-009, C002-COMP-011, C002-COMP-014, C002-COMP-015, C002-COMP-016, C002-COMP-017, C002-COMP-019]
 risk_refs: [C002-RISK-022, C002-RISK-031, C002-RISK-044, C002-RISK-045]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: null, completed_at: null, notes: "started 2026-11-13; baseline e89dae8 artifacts copied to C:\\Sandbox\\runs\\t050f\\e89dae8 (step 1)" }
 ---
 
 # C002-T-084 — Fix for revisions D-056, D-057: the researcher's Context7 and DeepWiki probe in the shared doctor, init and researcher text, the pre-install warning of the Copilot install notes, the checklist, and both 0.1.0 candidates rebuilt

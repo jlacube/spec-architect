@@ -49,7 +49,7 @@ This puts `sdd` (the workflow CLI) and `sdd-mcp` (the sdd MCP server) on PATH. C
      machine's package path;
    - `.github/architect-install.json`, the install record;
    - the Architect entries of `servers` in `.vscode/mcp.json`, your own entries kept;
-   - `plugin.json` and `hooks.json` in the package folder, which make the folder a plugin.
+   - `plugin.json` and `hooks.json` in the package folder.
 
    Keep the four repository files together: put all of them in version control or none. The package
    folder itself stays outside the repository. In a clone where the package path named by
@@ -60,9 +60,13 @@ This puts `sdd` (the workflow CLI) and `sdd-mcp` (the sdd MCP server) on PATH. C
    - `chat.pluginLocations`: the package folder of step 1;
    - `chat.askQuestions.enabled`: `true`.
 
-   The package folder becomes a plugin only once the install has written its `plugin.json` and
-   `hooks.json`, so set the settings after step 2. After a later install, reload the window
-   (Developer: Reload Window): VS Code loads the plugin from a copy it took earlier.
+   Register the package folder in `chat.pluginLocations` only after step 2 has run: VS Code loads
+   the folder as soon as it is registered, also before the install, and its Architect agents,
+   prompt files and skills then run with no guard hook, since `hooks.json` does not exist yet.
+   Where the folder was registered before the install, use no Architect agent, prompt file or skill
+   in that window until the install has run and the window is reloaded. After the install, and
+   after each later install that changes `hooks.json`, reload the window (Developer: Reload
+   Window): VS Code loads the plugin from a copy it took earlier.
 
 ## Start the conductor
 

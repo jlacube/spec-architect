@@ -12,7 +12,7 @@ executed_by: <P-01 name>   # conductor run (D-050): "<P-01 name>; conductor for 
 steps:
   - id: VSC-01   # both
     result: <passed | failed | not-applicable>
-    observed: "<what the agent picker and the slash-command list showed before the install>"
+    observed: "<the Architect agents and prompt files the agent picker and the slash-command list offered before the install (no plugin.json and no hooks.json at the package root yet); twin: the package is the profile's only chat.pluginLocations entry, no user prompt file, no other plugin installed>"
   - id: VSC-02   # both
     result: <passed | failed | not-applicable>
     observed: "<the install output>"
@@ -44,10 +44,10 @@ steps:
     observed: "<state of each MCP server after /architect:status and after a step that uses Serena (name it); Serena start arguments (--context vscode)>"
   - id: VSC-12   # both
     result: <passed | failed | not-applicable>
-    observed: "<commands the / list offered (/architect:doctor, /architect:new, /architect:init); whether a bare /init resolves to VS Code's built-in; source of the session agent that ran /architect:doctor>"
+    observed: "<commands the / list offered (/architect:doctor, /architect:new, /architect:init); whether a bare /init resolves to VS Code's built-in; source of the session agent that ran /architect:doctor; the Context7 and DeepWiki rows of that doctor run (status, Fix; expected ok, empty)>"
   - id: VSC-13   # both
     result: <passed | failed | not-applicable>
-    observed: "<the host row of the doctor table>"
+    observed: "<the host row of the doctor table; the Context7 and DeepWiki rows (status, Fix; expected ok, empty), with context7 and deepwiki of .vscode/mcp.json enabled>"
   - id: VSC-14   # both
     result: <passed | failed | not-applicable>
     observed: "<path of .sdd/>"
@@ -273,7 +273,7 @@ One row per assumption of the checklist's "Assumption steps" table.
 |---|---|---|
 | A-1 | VSC-22 | <confirmed \| refuted: what was seen> |
 | A-2 | VSC-12, VSC-22 | open half: <confirmed (the session on the <plugin \| workspace> copy started the workspace <specialist>, VSC-22) \| refuted: what was seen; a plugin-copy session that started no specialist went back to P-01>; settled half (Q-copilot-agentcopy-01): either conductor copy may be the session agent; the copy used, <plugin \| workspace \| both: which steps used which>, from the `mode` of the chat session files (named in the `note` of VSC-02, and of each step whose session used the other copy) |
-| A-3 | VSC-01 | <confirmed \| refuted: what was seen> |
+| A-3 | VSC-01 | refuted (defect D-056; P-01's answers to Q-t050-a3-01 and Q-t050-a3-02): VS Code <version> offered the Architect agents and prompt files of the package folder registered before the install, without `plugin.json` and `hooks.json` (VSC-01: <what the picker and the slash-command list showed>); they run with no guard hook until the install, as C002-IF-005 §3 (Registered before the install) records and the install notes warn (C002-IF-005 §5 step 3). Where VSC-01 shows no Architect entry, write "confirmed" instead and raise it as a spec defect |
 | A-4 | VSC-28 | <confirmed (the hooks log shows the PreToolUse command of the workspace hook file) \| refuted: what was seen> |
 | A-5 | VSC-27 | refuted, accepted: VS Code <version> sends no `agent_type` on PreToolUse (probe: `agent_type: <present \| absent>`); known limitation of D-052 (C002-IF-005 §5 step 6, stated in the install notes): the subagent guard hook does not stop a non-Architect subagent; the boundary on VS Code rests on the specialists' tool lists, the conductor's refusal and the sdd MCP server guard. Where the probe shows `present`, write "confirmed" instead |
 | A-6 | VSC-19 | <confirmed \| refuted: what was seen> |
@@ -282,6 +282,6 @@ One row per assumption of the checklist's "Assumption steps" table.
 
 ## Notes
 
-<Anything the frontmatter does not hold: refuted assumptions raised as spec defects (A-5 excepted, accepted above). Earlier runs belong in earlier_results, not here.>
+<Anything the frontmatter does not hold: refuted assumptions raised as spec defects (A-5 excepted, accepted above, and A-3, refuted by defect D-056 above). Earlier runs belong in earlier_results, not here.>
 
 Signed off: <P-01 name>, <YYYY-MM-DD>

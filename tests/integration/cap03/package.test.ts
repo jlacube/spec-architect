@@ -289,6 +289,21 @@ test("C002-TC-306 (C002-TS-306): the install notes state prerequisites, the npm 
     assert.ok(at > install, `${setting} with its value, after the install step`);
   }
   assert.match(notes, /reload the window/);
+  // C002-T-084 (revised C002-TS-306; defect D-056, C002-IF-005 §3 Registered before the install, §5 step 3):
+  // the settings step has the folder registered after the install, warns of the window before it, and the
+  // install list no longer says the install makes the folder a plugin.
+  {
+    const flat3 = notes.replace(/\s+/g, " ");
+    const settings = notes.indexOf("`chat.plugins.enabled`");
+    const register = flat3.indexOf("Register the package folder in `chat.pluginLocations` only after step 2 has run");
+    assert.ok(register > 0, "the folder registered only after the install command has run");
+    assert.ok(flat3.includes("VS Code loads the folder as soon as it is registered, also before the install, and its Architect agents, prompt files and skills then run with no guard hook, since `hooks.json` does not exist yet"), "the pre-install warning");
+    assert.ok(flat3.includes("Where the folder was registered before the install, use no Architect agent, prompt file or skill in that window until the install has run and the window is reloaded"), "no Architect entry in the pre-install window");
+    assert.ok(flat3.includes("after each later install that changes `hooks.json`, reload the window"), "reload after a later install that changes hooks.json");
+    assert.ok(settings > install && notes.indexOf("**Local**") > settings, "the warning is part of the settings step");
+    assert.ok(flat3.includes("- `plugin.json` and `hooks.json` in the package folder."), "the install list names plugin.json and hooks.json");
+    assert.ok(!/make the folder a plugin|becomes a plugin only once/.test(flat3), "the earlier wording is gone");
+  }
   assert.match(notes, /\*\*Local\*\* session type/);
   assert.match(notes, /select `sdd-conductor` as the session agent/);
   const flat = notes.replace(/\s+/g, " ");

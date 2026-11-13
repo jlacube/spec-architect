@@ -39,6 +39,7 @@ import { checkHostEnv, resolveAuth } from "./env.mjs";
 import { readKeyUsage, readOpenRouterKey, redactor } from "./key-usage.mjs";
 import { makeWorkspace, ROOT } from "./fixtures.mjs";
 import { runMetrics } from "./metrics.mjs";
+import { declaredMcpServers, mcpOverridesProblem, pluginsWithOverrides } from "./overlay.mjs";
 import { DEFAULT_HOST, HOSTS, runSession, setHarnessContext, usdText } from "./session.mjs";
 
 export const TIERS = {
@@ -91,7 +92,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         prompt,
         agent: scenario.agent,
         // Claude Code plugin folders (overlays included); a generated-target runner places its own package.
-        plugins: host === "claude-code" ? (scenario.plugins ?? [join(ROOT, "plugins", "architect")]).map((p) => (typeof p === "function" ? p() : resolve(ROOT, p))) : [],
+        // A row's `mcpOverrides` reaches Claude Code through an overlay copy of the plugin (C002-IF-010 §2.1).
+        plugins: host === "claude-code" ? pluginsWithOverrides(scenario.plugins ?? [join(ROOT, "plugins", "architect")], scenario.mcpOverrides).map((p) => (typeof p === "function" ? p() : resolve(ROOT, p))) : [],
         answer: scenario.answer,
         allowTools: scenario.allowTools ?? [],
         maxTurns: caps.turns,
@@ -103,7 +105,8 @@ export async function runScenario(scenario, { tier = "dev", runs, label, budget 
         // The row's stop condition, for the Claude Code eval runner only (C002-IF-010 §2 `stopWhen`, §2.2 Early
         // stop when the check is decided, item 7: the OpenCode and Copilot CLI runners get none).
         stopWhen: host === "claude-code" ? scenario.stopWhen : undefined,
-        // Fields the generated-target runners read (C002-T-038, C002-T-044); Claude Code ignores them.
+        // Fields the generated-target runners read (C002-T-038, C002-T-044); Claude Code ignores them,
+        // except `mcpOverrides`, applied above through the plugin overlay.
         host: scenario.host,
         targetPackage: scenario.targetPackage,
         mcpOverrides: scenario.mcpOverrides,
@@ -843,6 +846,14 @@ export async function main(argv, deps = {}) {
     return fail(`eval: ${e instanceof Error ? e.message : String(e)}`);
   }
   for (const na of picked.notApplicable) log(`${na.id}: not applicable, no session (${na.reason})`);
+  // `mcpOverrides` (C002-IF-010 §2.1): a server the host's configuration does not declare, or a value that
+  // is neither a URL nor false, ends the run before any session.
+  {
+    const withOverrides = picked.scenarios.filter(({ scenario }) => scenario.mcpOverrides !== undefined);
+    const declared = withOverrides.length > 0 ? declaredMcpServers(host) : [];
+    const problems = withOverrides.map(({ scenario }) => [scenario.id, mcpOverridesProblem(scenario.mcpOverrides, declared)]).filter(([, p]) => p);
+    if (problems.length > 0) return fail(`eval: ${problems.map(([id, p]) => `${id}: ${p}`).join("; ")}; no session started`);
+  }
   if (picked.scenarios.length === 0 && picked.notApplicable.length > 0) return 0;
   if (picked.scenarios.length === 0)
     return fail(`eval: the selection holds no case for host ${host} (${selected.length} file(s); ${picked.skipped.host} row(s) of another host, ${picked.skipped.only} row(s) left out by --only); no session started`);

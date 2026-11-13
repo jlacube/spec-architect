@@ -639,3 +639,45 @@ test("C002-TC-618 (C002-T-083): the template's VSC-15 observed names the three f
   const v22 = String(entry("VSC-22")["observed"]);
   assert.ok(/session's conductor copy/.test(v22) && /specialist that session started/.test(v22), v22);
 });
+
+// --- C002-T-084 (C002-T-050 run 3 of 2026-11-12; defects D-056, D-057): A-3 refuted, VSC-01 expects the
+// entries shown, VSC-12 and VSC-13 expect Context7 and DeepWiki `ok`; the template follows them ---
+
+test("C002-TC-617 (C002-T-084): A-3 reads refuted with the pre-install window and a history note; VSC-01 expects the Architect entries shown before the install", () => {
+  const a3 = (CHECKLIST.split("\n").find((l) => l.startsWith("| A-3 |")) ?? "").replace(/\s+/g, " ");
+  assert.ok(/[Rr]efuted on VS Code 1\.145\.2/.test(a3) && /D-056/.test(a3) && /Q-t050-a3-01/.test(a3) && /Q-t050-a3-02/.test(a3), a3);
+  assert.ok(/also before the install/.test(a3) && /no guard hook/.test(a3) && /Registered before the install/.test(a3), `the pre-install window: ${a3}`);
+  assert.ok(/History:/.test(a3) && /VS Code adds no agent, prompt file or skill from a registered package folder without `plugin\.json`/.test(a3), `the old statement kept as history: ${a3}`);
+  const v01 = STEPS.find((s) => s.id === "VSC-01")!;
+  const expect = (/- \*\*Expect:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(v01.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/no `plugin\.json` and no `hooks\.json` at its root yet/.test(expect), expect);
+  assert.ok(/the agent picker and the slash-command list offer the Architect agents and prompt files/.test(expect), expect);
+  assert.ok(!/neither the agent picker nor/.test(expect), "the old expectation is gone");
+  const doText = (/- \*\*Do:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(v01.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/Use no Architect entry before the install/.test(doText), doText);
+  const record = (/- \*\*Record:\*\* ([\s\S]*?)(?:\n- \*\*|\n### |$)/.exec(v01.body)?.[1] ?? "").replace(/\s+/g, " ");
+  assert.ok(/twin profile's only `chat\.pluginLocations` entry/.test(record) && /no user prompt file/.test(record) && /no other plugin/.test(record), record);
+});
+
+test("C002-TC-617 (C002-T-084): VSC-13 names the TS-508 precondition and expects Context7 and DeepWiki ok with an empty Fix; VSC-12's doctor run shows the same", () => {
+  const v13 = stepText("VSC-13");
+  assert.ok(/`context7` and `deepwiki` of `\.vscode\/mcp\.json` are enabled/.test(v13) && /network access/.test(v13), v13);
+  assert.ok(/the Context7 and DeepWiki rows have the status `ok` and an empty Fix/.test(v13), v13);
+  assert.ok(/- \*\*Record:\*\* the host row and the Context7 and DeepWiki rows/.test(v13), v13);
+  const v12 = stepText("VSC-12");
+  assert.ok(/the Context7 and DeepWiki rows have the status `ok` and an empty Fix/.test(v12), v12);
+  assert.ok(/the Context7 and DeepWiki rows of that doctor run as shown/.test(v12), v12);
+});
+
+test("C002-TC-618 (C002-T-084): the template's A-3 row is refuted with its reason; VSC-01, VSC-12 and VSC-13 placeholders follow the checklist; no targeted-retake placeholder", () => {
+  const doc = splitFrontmatter(TEMPLATE);
+  assert.equal(doc.error, undefined);
+  const recorded = doc.data!["steps"] as Record<string, unknown>[];
+  const entry = (id: string) => recorded.find((s) => s["id"] === id)!;
+  const v01 = String(entry("VSC-01")["observed"]);
+  assert.ok(/Architect agents and prompt files/.test(v01) && /no plugin\.json and no hooks\.json/.test(v01) && /only chat\.pluginLocations entry/.test(v01), v01);
+  for (const id of ["VSC-12", "VSC-13"]) assert.ok(/Context7 and DeepWiki rows/.test(String(entry(id)["observed"])) && /expected ok, empty/.test(String(entry(id)["observed"])), `${id}: ${String(entry(id)["observed"])}`);
+  const a3 = TEMPLATE.split("\n").find((l) => l.startsWith("| A-3 |")) ?? "";
+  assert.ok(/\| refuted \(defect D-056/.test(a3) && /Registered before the install/.test(a3), a3);
+  assert.ok(!/retake/i.test(TEMPLATE), "no targeted-retake placeholder (P-01's answer to Q-t050-retake-03)");
+});

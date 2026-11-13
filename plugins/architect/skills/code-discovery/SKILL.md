@@ -98,8 +98,11 @@ disclosures: `ripwire failed: exit <code>` (or `serena failed: <error>`, `ripwir
 - **Toolchain record** (`_constitution/toolchain.md`, init and doctor): a table with one row per
   node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki — detected (yes/no),
   version, path or endpoint, fallback in use (for ripwire absent: `serena → lsp → grep`, or the
-  next layer that is available). Probe with `--version`; Context7 and DeepWiki are detected when
-  their tools load.
+  next layer that is available). Probe with `--version`. Make no Context7 or DeepWiki call: the
+  brief holds the researcher's probe outcome line for each (`<server>: ok`, `failed: …`,
+  `refused: …` or `not offered`); record the server detected `yes` for `ok` and `no` otherwise (also
+  when the brief has no line for it), with its endpoint (Context7 `https://mcp.context7.com/mcp`,
+  DeepWiki `https://mcp.deepwiki.com/mcp`) and, for `no`, the fallback in use.
 - **Impact** (plan phase, brownfield and mixed): `20-plan/30-impact/blast-radius.md` — per targeted
   symbol: direct callers, transitive reach count, layer; `20-plan/30-impact/regression-set.md` —
   the existing tests that reach the targeted symbols (ripwire `--test-gate` when available), each

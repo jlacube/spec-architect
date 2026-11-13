@@ -233,11 +233,11 @@ for (const [file, line, id] of [
 for (const t of TARGETS) {
   test(`C002-TC-123 (C002-TS-123): the doctor host rows take the ${NAME[t]} variant`, () => {
     const path = "commands/doctor.md";
-    assert.ok(sourceLine(path, 12).includes("Claude Code"), "probe list names Claude Code");
-    assert.ok(sourceLine(path, 33).startsWith("| Claude Code | `claude --version`"), "remedies row");
+    assert.ok(sourceLine(path, 17).includes("Claude Code"), "probe list names Claude Code");
+    assert.ok(sourceLine(path, 45).startsWith("| Claude Code | `claude --version`"), "remedies row");
     const g = generated(t);
     const doc = g.docs.get(path)!;
-    for (const [id, n] of [["doctor-probe", 11], ["doctor-report", 17], ["doctor-remedies-host", 33]] as const)
+    for (const [id, n] of [["doctor-probe", 11], ["doctor-report", 21], ["doctor-remedies-host", 45]] as const)
       assert.equal(linesFrom(doc, n), variantText(t, id), `${t}: ${id}`);
     const rows = doc.body.split("\n").filter((l) => l.startsWith("| "));
     assert.ok(rows.some((l) => l.startsWith(`| ${tables[t].host.name} |`)), "host row");
@@ -252,7 +252,7 @@ for (const t of TARGETS) {
 // --- C002-TC-134 (the inlined-body clause) ---
 for (const [skill, section, sourceName, call, grant] of [
   ["research-protocol", 93, "mcp__plugin_architect_context7__query-docs", "context7-query-docs", "context7/query-docs"],
-  ["code-discovery", 115, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
+  ["code-discovery", 118, "mcp__plugin_architect_serena__find_symbol", "serena-find_symbol", "serena/find_symbol"],
 ] as const) {
   test(`C002-TC-134 (C002-TS-134): every Copilot agent that inlines ${skill} names "${call}"`, () => {
     const g = generated("copilot");
@@ -299,7 +299,7 @@ for (const [fixture, file, line, present, missing, plant] of [
       );
     },
   ],
-  ["fx-plugin-novariant-doctor", "commands/doctor.md", 33, "opencode", "copilot", (src: string) => dropVariant(src, "copilot", "doctor-remedies-host")],
+  ["fx-plugin-novariant-doctor", "commands/doctor.md", 45, "opencode", "copilot", (src: string) => dropVariant(src, "copilot", "doctor-remedies-host")],
   // Defect D-020 item 1 (C002-T-065): the file-inspection rule, construct glob-prose on line 16.
   ["fx-plugin-novariant-glob", "skills/sdd-conventions/SKILL.md", 16, "copilot", "opencode", (src: string) => dropVariant(src, "opencode", "file-inspection")],
 ] as const) {

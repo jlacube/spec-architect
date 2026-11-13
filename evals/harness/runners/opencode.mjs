@@ -369,8 +369,12 @@ export function placePackage(project, pkg, scripts, mcpOverrides = {}) {
     const [exe, ...args] = server.command;
     if (exe === "sdd" || exe === "sdd-mcp") server.command = [process.execPath, join(scripts, `${exe}.mjs`), ...args];
   }
-  // A remote server URL replaced for one case (`mcpOverrides`, the cfg-deepwiki-down row of C002-TS-509).
-  for (const [name, url] of Object.entries(mcpOverrides ?? {})) if (merged.mcp?.[name]) merged.mcp[name] = { ...merged.mcp[name], url };
+  // `mcpOverrides` (C002-IF-010 §2.1): a URL replaces the server's URL; `false` gives its entry `"enabled": false`.
+  // A server the generated configuration does not declare ends the session before the host starts.
+  for (const [name, value] of Object.entries(mcpOverrides ?? {})) {
+    if (!merged.mcp?.[name]) throw new Error(`OpenCode eval runner: mcpOverrides names the server "${name}", which the generated opencode.json does not declare`);
+    merged.mcp[name] = value === false ? { ...merged.mcp[name], enabled: false } : { ...merged.mcp[name], url: value };
+  }
   writeFileSync(own, JSON.stringify(merged, null, 2) + "\n");
   return merged;
 }
