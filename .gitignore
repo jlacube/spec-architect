@@ -10,3 +10,5 @@ evals/results/transcripts/
 **/evals/results/*/
 # Serena project data (written by the plugin's Serena before its data folder is configured, D-010)
 .serena/
+# Local benchmark run output (bench/*.mjs); results worth keeping go into docs/
+bench/results/
