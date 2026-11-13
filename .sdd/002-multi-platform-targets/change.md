@@ -8,7 +8,7 @@ phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }
   10-spec: { status: approved, approved_hash: "sha256:49ffb9e38b6e6327175a964c4884fb6b6d47487a7342b37362a5e086276f5e9f", approved_at: 2026-11-13, approved_by: "Jerome LACUBE" }
-  20-plan: { status: in-revision, approved_hash: "sha256:28ad248a4c848843793b6eb82105021caff111914c5ffea8300221afbc7163ff", approved_at: 2026-11-13, approved_by: "Jerome LACUBE" }
+  20-plan: { status: approved, approved_hash: "sha256:0d7582c2a2a3f458aab9d186dbc9e09a8372497d3d9137d6bc23acb6a8c16e16", approved_at: 2026-11-13, approved_by: "Jerome LACUBE" }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -620,3 +620,4 @@ waivers:
 | 2026-11-13 | G2 (spec) | **Revise** | "Correction for D-058 (C002-T-085 findings): §5 rule 6, ERR-REL-004 and TS-711 notes said the release check reads defect and tracked_by as present and non-empty; §4 (critic CR-219) requires the forms D-<NNN> and CHG-<NNN> D-<NNN>. Align the three. Plan: repair of the T-085 task file, duplicated by a faulty text replacement at the D-058 revision." | none | unavailable |
 | 2026-11-13 | G3 (plan) | **Revise** | "Correction for D-058: repair of the C002-T-085 task file (text duplicated by a faulty replacement before G2; regexes restored) and alignment with the corrected §5 rule 6 wording." | none | unavailable |
 | 2026-11-13 | G2 (spec) | **Approved with waivers** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Correction of the D-058 revision: §5 rule 6, ERR-REL-004 and the TS-711 notes name the key forms (D-<NNN>, CHG-<NNN> D-<NNN>) as §4 does; critic CR-221 resolved." | C002-REQ-211, C002-REQ-212, C002-REQ-213, C002-REQ-503, C002-REQ-504, C002-REQ-505, C002-REQ-506, C002-REQ-507, C002-REQ-601, C002-DOD-G-01, C002-TS-634, C002-NFR-601 | unavailable |
+| 2026-11-13 | G3 (plan) | **Approved** | "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise. Correction of the D-058 revision: C002-T-085 task file restored (text duplicated by a faulty replacement before G2), strategy, hand-off and TC-668 name the key forms, T-085 template guidance asks for timed evidence of condition (a); critic CR-222, CR-223 resolved." | none | unavailable |
