@@ -106,6 +106,7 @@ flowchart TB
     C002_T_082["T-082 Fix D-054: vscode/askQuestions, new candidate, 4-row retake"]
     C002_T_083["T-083 VSC-15 prompt-file form, conductor copy, run folder t050e"]
     C002_T_084["T-084 Fix D-056, D-057: researcher probe, pre-install warning, both candidates rebuilt"]
+    C002_T_085["T-085 Fix D-058: cause outside-narrowed-step in the step check, VSC-20 in an open phase, template, run sheet"]
   end
   C002_T_053 --> C002_T_006
   C002_T_007 --> C002_T_008
@@ -351,16 +352,27 @@ flowchart TB
   C002_T_082 --> C002_T_084
   C002_T_083 --> C002_T_084
   C002_T_084 --> C002_T_050
+  C002_T_084 --> C002_T_085
+  C002_T_085 --> C002_T_050
 ```
 
 ## Critical path
 
-Weights S = 1, M = 2, L = 3. Of the 84 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
+Weights S = 1, M = 2, L = 3. Of the 85 tasks, C002-T-051 (M) and C002-T-052 (S) are dropped and move
 to CHG-003 (P-01 answer to Q-opencode-scope-01; plan critic CR-85), and C002-T-057 (S) is dropped
-(defect D-049). The 81 others weigh 161 (25 S, 32 M, 24 L). The longest chain weighs 63 and ends
+(defect D-049). The 82 others weigh 162 (26 S, 32 M, 24 L). The longest chain weighs 64 and ends
 with the Copilot release.
 
-**The D-056, D-057 plan update lengthens it by 2** (P-01 answers of 2026-11-12, round "2026-11-12 —
+**The D-058 plan update lengthens it by 1** (P-01's answers of 2026-11-13 to Q-t050-vsc20-01 …
+Q-t050-vsc20-03, round "2026-11-13 — C002-T-050 run 4, VSC-20 free-text half"). C002-T-085 waits for
+C002-T-084 (60) and finishes at 61. It is S: the step check's cause `outside-narrowed-step` and its
+catalogue row, the two C002-TS-668 test rows, VSC-20's free-text half in an open phase, the record
+template and the run sheet; P-01's option gave about 2–3 h; no package file. C002-T-050 (S, the record
+of run 4, rewritten after C002-T-085) then finishes at 62, C002-T-075 at 63 and C002-T-055 at 64. The
+reworked design (Q-t050-vsc20-03) keeps T-085 at S, so the weight does not change from the first
+draft of this update. Before it, the chain weighed 63.
+
+**The D-056, D-057 plan update lengthened it by 2** (P-01 answers of 2026-11-12, round "2026-11-12 —
 C002-T-050 run 3 end batch"). C002-T-084 (M, the researcher probe in the shared doctor and init, the
 pre-install warning, both candidates rebuilt) waits for C002-T-082 (57) and C002-T-083 (58) and
 finishes at 60; C002-T-050 (S, the full run 4 after run 3 (P-01's answer to Q-t050-retake-03)) then finishes at 61, C002-T-075 at 62
@@ -470,6 +482,11 @@ and C002-T-058 at 21, four units before C002-T-044, and C002-T-045 still starts 
 the eval auth switch, is already built and finishes at 1, before C002-T-010, C002-T-037, C002-T-038
 and C002-T-048 need it. The OpenCode release ends one unit earlier, at 35, and
 no longer waits for any Copilot release task (C002-T-050, C002-T-054, C002-T-055, C002-T-057).
+
+**Overall (to C002-T-055, weight 64, from the D-058 revision):** as the list below up to C002-T-084
+(60), then C002-T-085 — the cause `outside-narrowed-step` in the step check, VSC-20's free-text half
+in an open phase, the template and the run sheet (S, 61), C002-T-050 — checklist record of run 4 (S, 62), C002-T-075 — P-01 npm publication after
+a `released` dry run (S, 63) and C002-T-055 — P-01 Copilot release (S, 64).
 
 **Overall (to C002-T-055, weight 63, from the D-056, D-057 revision):** as the list below up to
 C002-T-083 (58), then C002-T-084 — the researcher's Context7 and DeepWiki probe, the pre-install
@@ -631,7 +648,8 @@ C002-M-02 and C002-M-03 can therefore slip by at least 2 units without moving th
 | C002-M-07 | C002-T-082 | Fix for revision D-054: vscode/askQuestions in the Copilot question-tool mapping, new 0.1.0 candidate and a 4-row Copilot CLI retake | M | T-077, T-080, T-081 |
 | C002-M-07 | C002-T-083 | VSC-15 in the prompt-file form only, the conductor copy in the T-050 run sheet, and the fresh run folder t050e (C002-T-050 run of 2026-11-12) | S | T-082 |
 | C002-M-07 | C002-T-084 | Fix for revisions D-056, D-057: the researcher's Context7 and DeepWiki probe in the shared doctor and init, the pre-install warning of the Copilot install notes, the checklist, and both 0.1.0 candidates rebuilt | M | T-038, T-079, T-080, T-082, T-083 |
-| C002-M-07 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | S | T-046, T-054, T-071, T-076, T-077, T-078, T-079, T-080, T-081, T-082, T-083, T-084 |
+| C002-M-07 | C002-T-085 | Fix for revision D-058: the cause outside-narrowed-step in the release check's step check, VSC-20's free-text half while a phase of the toy change is open, the record template and the T-050 run sheet | S | T-084 |
+| C002-M-07 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | S | T-046, T-054, T-071, T-076, T-077, T-078, T-079, T-080, T-081, T-082, T-083, T-084, T-085 |
 | C002-M-07 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | S | T-003, T-023, T-050, T-071, T-074, T-076, T-081 |
 | C002-M-07 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | S | T-023, T-034, T-039, T-058, T-071, T-076 |
 | C002-M-07 | C002-T-055 | P-01: release the Copilot target | S | T-003, T-023, T-047, T-048, T-050, T-054, T-071, T-075, T-076, T-081 |

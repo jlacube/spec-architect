@@ -76,7 +76,7 @@ hooks fallback the release record is flagged under the exception of C002-DEC-005
 
 ## Step outline (no production code)
 
-1. Run `node scripts/release-check.mjs --target copilot` at the release-candidate commit. It compares
+1. Run `node scripts/release-check.mjs --target copilot` at the release-candidate commit (plan critic CR-217: "release-candidate commit" means a commit whose `plugins/architect/` equals the candidate's, here 7b8414a, and that holds C002-T-085's release-check change and the C002-T-050 record; the release record names that commit beside the candidate, and ERR-REL-007 guards the package). It compares
    the regenerated package with `dist/copilot/` and with the zip (C002-T-047 step 4).
 2. **npm check:** `npm view architect-sdd@<version>` shows the version that C002-T-075 published. If
    the check of step 1 refuses Copilot, release nothing; the refusal stays recorded.

@@ -581,6 +581,46 @@ VSC-15 of the binding record (run 4); D-056 on VSC-01 of run 4; D-057 on VSC-12 
 with Context7 and DeepWiki `ok`; D-056 and D-057 also after the approvals at G2 and G3 and C002-T-084
 done.
 
+**Run 4 of C002-T-050 and defect D-058** (P-01's answers of 2026-11-13 to Q-t050-vsc20-01, "Retype in
+VSC-31 (Recommended)", Q-t050-vsc20-02, "Revision for VSC-20 (Recommended)", and Q-t050-vsc20-03,
+"Listed cause + known gap (Recommended)"; `10-strategy.md` §2; round "2026-11-13 — C002-T-050 run 4,
+VSC-20 free-text half" of `questions-log.md`). Run 4 (started 05:58 in `C:\Sandbox\runs\t050f`,
+candidate 7b8414a) passed every step. VSC-20's free-text half passed only at its retake inside VSC-31:
+its first try was typed after gate G1 was approved, when no phase of the toy change was open, and the
+conductor logged it in no questions log (CHG-001 defect D-034, below). Order:
+1. **C002-T-085** (S, conductor):
+   - the release check's step check (`scripts/release/evidence.ts` rule 6) excuses an earlier
+     `failed` run under `outside-narrowed-step` only with non-empty `defect` and `tracked_by`;
+   - the ERR-REL-004 catalogue row is mirrored, and the two new C002-TS-668 rows are added;
+   - VSC-20's free-text half runs while a phase is `draft`, `in-review` or `in-revision` (during the
+     VSC-30 rework, or inside VSC-31);
+   - the template gains the cause, its keys, the note evidence (a) … (e) and `open_phase`;
+   - the run sheet and `checklist.test.ts` follow.
+
+   No package file changes (`scripts/release/`, `docs/` and `tests/` reach no artifact), the
+   candidate stays 7b8414a, and there is no `npm run package`.
+2. **C002-T-050** (step 0.5): the draft record `docs/checklists/records/vscode-2026-11-13-0.1.0.md`,
+   signed before the approvals, is rewritten from C002-T-085's template after the G2 and G3 approvals
+   and after C002-T-085:
+   - VSC-20 `passed` from the retake, its first try in `earlier_results` (`failed`,
+     `outside-narrowed-step`, `defect: D-058`, `tracked_by: "CHG-001 D-034"`, the evidence in `note`);
+   - the review of C002-TC-618 and C002-TC-937 and P-01's sign-off dated after the approvals;
+   - no step runs again.
+
+   Then the dry run and the close of D-054 … D-058; then C002-T-075 and C002-T-055 as before.
+
+**Close rule** (`10-strategy.md` §2): D-058 closes when this revision is approved at G2 and G3,
+C002-T-085 is done, and the record of run 4 lists VSC-20's first try under `outside-narrowed-step`
+with the dry run accepting it.
+
+**CHG-001 impact of revision D-058.** The conductor gap that VSC-20's first try showed is in the
+shared conductor text, so Claude Code has it too. It is **CHG-001 defect D-034** on C001-REQ-210
+(every interview answer verbatim in the phase's questions log): an answer that arrives after a gate
+approval, before the next phase starts, is logged in no questions log. It is a known gap of 0.1.0 on
+both hosts, fixed in a later change (P-01's answer to Q-t050-vsc20-03). No CHG-001 file is edited
+here, and no Claude Code evidence changes. C002-T-050's record names D-034 in VSC-20's `tracked_by`,
+so D-034 stays open at least until that record is committed.
+
 **CHG-001 impact** (P-01's answer to Q-t050-doctor-02, "Fix shared source (Recommended)", whose
 option text P-01 saw as "the researcher makes the probe calls; fixes Claude Code and Copilot together;
 … one task, both candidates rebuilt"). C002-T-084 changes four files that the Claude Code plugin
@@ -729,7 +769,7 @@ C001-T-082 reports the same check for the sessions of its step 4 against that st
   the spec is a spec defect; the contingencies are those of `10-strategy.md` §4 and the Copilot
   defer branch of `75-rollout.md` §5.
 - C002-T-050 is executed by the conductor for P-01 since defect D-050, P-01 running the typed steps;
-  C002-T-076, C002-T-081, C002-T-082 and C002-T-084 are the conductor's.
+  C002-T-076, C002-T-081, C002-T-082, C002-T-084 and C002-T-085 are the conductor's.
 - P-01 steps are done by P-01: C002-T-003, C002-T-050, C002-T-051, C002-T-052, C002-T-055 and
   C002-T-057, the OpenRouter confirmation of C002-T-001 step 1, the Copilot subscription of C002-T-002, and the
   sign-offs. Never publish, never store a token or credential in the repository.
@@ -797,6 +837,7 @@ Insiders builds): record the version before each run.
 | Q-d054-fix-01, Q-d054-retake-01: the C002-T-050 binding run stopped at VSC-14 (`askQuestions` grants no tool on VS Code 1.145.2, `vscode/askQuestions` does); fix in 0.1.0 or stop, and which Copilot CLI rows to retake (defect D-054; `questions-log.md` round 2026-11-11 — defect D-054) | C002-T-082, C002-T-050 | settled: P-01 answered "Fix in 0.1.0 (Recommended)" and "4 key rows (Recommended)"; C002-T-082 adds `vscode/askQuestions`, records a new candidate and retakes `ROUTE-auditor-copilot-cli`, `INJ-19`, `INJ-21` and `TS-359`, the other 20 rows keeping their C002-T-081 evidence |
 | Q-d051-retake-01: retake the 24 Copilot CLI rows at the new 0.1.0 candidate of C002-T-081, under the rule of C002-T-076 step 1 that P-01 decides a retake after a package-source change (revision D-051 … D-053) | C002-T-081 step 5 | settled: the conductor answered option 1, "Retake all 24 rows" (about 2.4 … 3.4 USD, within the 15.00 USD stop), under P-01's waiver of 2026-10-19 for paid batches within approved limits (`questions-log.md` round 2026-11-11) |
 | Planner's questions of the D-056, D-057 revision: Q-t050-record-01 (the record rules for a record that holds run 3 and the retake: the run-3 results of the retaken steps in the Notes, not in `earlier_results`; the retaken steps in run order after their own VSC-07, VSC-08 and VSC-10), Q-t050-retake-02 (VSC-14 retaken, since the init prompt and the cartographer change), Q-t084-opencode-01 (the OpenCode doctor rows to CHG-003, no OpenRouter session), Q-t084-copilot-cli-01 (no Copilot CLI row retaken), Q-spec-req623-01 (C002-REQ-623 and C002-TS-626 still name the bash guard changes as the only changed expectations, while C002-DOD-022 names the D-057 doctor expectations too); and, after the spec's targeted-retake clause, Q-spec-retake-list-01 (§4 names the rule and the expected list), Q-spec-retake-group2-01 (the rule extended to every step after group 1, VSC-03 and VSC-04 retaken) and Q-spec-retake-setup-01 (a set-up step named in the Notes) | C002-T-084, C002-T-050; the G2 of the revision (Q-t050-record-01, Q-spec-req623-01) | settled: the conductor took the recommended option of each on 2026-11-13; for C002-T-050 the targeted retake and the answers to Q-t050-record-01, Q-t050-retake-02 and the three Q-spec-retake-* questions are superseded by P-01's answer to Q-t050-retake-03, "Full run 4 (Recommended)" (plan critic CR-197; the §4 clause stays in the spec, unused by this run) (`questions-log.md`, round "2026-11-12 — C002-T-050 run 3 end batch"); the spec carries C002-IF-009 §4 "Targeted retake after a revision", §5 "Record of a targeted retake", C002-REQ-615 and C002-REQ-618 as narrowed, and C002-REQ-623 with C002-TS-626 as revised |
+| **Known gap of 0.1.0: CHG-001 defect D-034 on C001-REQ-210** (revision D-058; P-01's answer to Q-t050-vsc20-03, "Listed cause + known gap (Recommended)"; C002-TS-317 notes as revised): an interview answer that arrives after a gate approval, before the next phase starts, when no phase is open, is logged in no questions log. Seen twice in C002-T-050: run 3 (2026-11-12) created a new `10-spec/questions-log.md`, and run 4 (2026-11-13) logged `Keep the CSV export out of v1` nowhere. The conductor text is shared, so Claude Code has the gap too (CHG-001 impact of revision D-058, above). In CHG-002 the checklist avoids the window (VSC-20's free-text half only while a phase is open, C002-T-085), and run 4's first try is recorded under `outside-narrowed-step` with `tracked_by: "CHG-001 D-034"` | a later change, by CHG-001's defect process (the conductor fix: the answer goes to the next phase's questions log, or as that change decides) | open: known gap, shipped in 0.1.0 on both hosts; not fixed in CHG-001 or CHG-002 |
 | **Double guard run** (digest fact 10, D-053 observation): every PreToolUse in VS Code runs the guard twice, from the plugin `hooks.json` and from `.github/hooks/architect-guard.json`, about 3 s each | CHG-004 "Cost and token efficiency" | open: accepted cost at 0.1.0, no change in CHG-002 |
 | **Follow-ups of the findings pass** (digest fact 12, not defects): the doctor's Context7 and DeepWiki rows read `unreachable` without a probe (accepted on defect D-012: the conductor holds neither tool; **since run 3 of C002-T-050 defect D-057, fixed in CHG-002 by C002-T-084**, P-01's answers to Q-t050-doctor-01 and Q-t050-doctor-02); the G0 approval makes no commit and the conductor suggests `sdd gate approve --commit` (shared conductor text, Claude Code too); `sdd trace <NNN> --write` exits 1 at G1 on a lite change whose 10-spec scaffold holds placeholder IDs | CHG-004 "Cost and token efficiency" | open: recorded for CHG-004, not addressed in CHG-002 |
 | **Local tag `v0.1.0` and the CHG-001 release record** (revision D-051 … D-053, D-054, and D-056, D-057): C002-T-081 moved the local tag from 9eb56c0 to its candidate 54b83ff, C002-T-082 moved it on to e89dae8, and C002-T-084 moves it to its own candidate, whose Claude Code plugin differs from e89dae8's in the doctor, init, code-discovery, researcher and README files (CHG-001 impact, above); both hosts release from that commit (P-01's answer to Q-t050-doctor-02; plan critic CR-201); CHG-001's release evidence names the tagged commit | C002-T-081, C002-T-082, C002-T-084; CHG-001 (its own record; C001-T-073 and C001-T-074 on the rebuilt plugin) | open: the correction of CHG-001's release record is CHG-001 defect D-033 on C001-REQ-1110, to close before C001-T-075, with `docs/releases/copilot/0.1.0/T-084-candidate-report.md` (both commits, the comparisons, the Claude Code sessions of its step 8) as its source; the T-081, T-082 and T-084 reports name both commits of their move; any edit of a CHG-001 record is CHG-001's; pushing the tag stays P-01's |
@@ -936,10 +977,11 @@ C002-T-066 (the OpenCode summary backfill and the Copilot CLI harness changes; p
 | 75 | C002-T-082 | Fix for revision D-054: vscode/askQuestions in the Copilot question-tool mapping, new 0.1.0 candidate and a 4-row Copilot CLI retake | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-082-question-tool-vscode-askquestions-d054.md` |
 | 76 | C002-T-083 | VSC-15 in the prompt-file form only, the conductor copy in the T-050 run sheet, and the fresh run folder t050e (C002-T-050 run of 2026-11-12) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-083-checklist-vsc15-conductor-copy.md` |
 | 77 | C002-T-084 | Fix for revisions D-056, D-057: the researcher's Context7 and DeepWiki probe in the shared doctor and init, the pre-install warning of the Copilot install notes, the checklist, and both 0.1.0 candidates rebuilt | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-084-researcher-probe-preinstall-warning-d056-d057.md` |
-| 78 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
-| 79 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
-| 80 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
-| 81 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
+| 78 | C002-T-085 | Fix for revision D-058: the cause outside-narrowed-step in the release check's step check, VSC-20's free-text half while a phase of the toy change is open, the record template and the T-050 run sheet | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-085-checklist-vsc20-open-phase-d058.md` |
+| 79 | C002-T-050 | Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-050-vscode-checklist-run.md` |
+| 80 | C002-T-057 | Timed clean-profile run for the Copilot target (dropped, defect D-049) | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-057-copilot-clean-profile-run.md` |
+| 81 | C002-T-075 | P-01: publish architect-sdd at the release version, apart from any target release | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-075-publish-architect-sdd.md` |
+| 82 | C002-T-055 | P-01: release the Copilot target | `.sdd/002-multi-platform-targets/20-plan/50-tasks/T-055-copilot-release.md` |
 
 C002-T-051 and C002-T-052 are **dropped** (P-01 answer to Q-opencode-scope-01; plan critic CR-85) and
 are not in this list. The OpenCode release moves to CHG-003 "OpenCode release" (created 2026-11-10; `.sdd/003-opencode-release/`); the follow-up "Cost and token efficiency" is CHG-004 (`.sdd/004-cost-and-token-efficiency/`).

@@ -382,7 +382,8 @@ Scenario Outline: C002-TS-316 — no choice on OpenCode
 ```gherkin
 @manual-vscode
 Scenario Outline: C002-TS-317 — interview answer without a selected label in VS Code
-  Given <setting>, so that the conductor's "askQuestions" call returns for the first question <result>
+  Given a phase of the toy change is open: "draft", "in-review" or "in-revision" in "change.md"
+  And <setting>, so that the conductor's "askQuestions" call returns for the first question <result>
   When the conductor asks an interview round for the toy change
   Then the questions log of the toy change <log>
   And the checklist record notes the result that "askQuestions" returned
@@ -410,7 +411,16 @@ as no answer and no decision (T-050 findings pass of 2026-11-11). The checklist 
 `chat.autoReply` true for these steps and false again after them (C002-IF-009 §4). A result with no
 selected label and P-01's own free text is an answer, recorded verbatim (second row of
 C002-TS-317; critic CR-157): only the host's auto-reply text, or a result with neither a selected
-label nor free text, is no answer.
+label nor free text, is no answer. Both rows run while a phase of the toy change is open (revised for
+defect D-058, critic CR-208): an interview round belongs to an open phase, whose questions log takes
+the answer; after a gate approval and before the next phase starts, no phase is open, so a round
+asked then is no run of this scenario. An answer that arrives while no phase is open is logged in no
+questions log by the 0.1.0 conductor (C002-T-050 run 4, 2026-11-13; run 3 created
+`10-spec/questions-log.md` for it), which misses C001-REQ-210 (every interview answer verbatim in the
+phase's questions log); this is a known gap of 0.1.0, tracked by CHG-001 defect D-034 (P-01's answer
+to Q-t050-vsc20-03, "Listed cause + known gap (Recommended)"; critic CR-210), and a try of the
+free-text row in that window is recorded under the cause `outside-narrowed-step` (C002-IF-009 §4
+Earlier runs).
 
 ## C002-REQ-312
 

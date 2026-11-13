@@ -64,7 +64,7 @@ the account of C002-T-003.
 
 1. **Released dry run** (plan critics CR-82, CR-84). At the release-candidate commit of C002-T-076,
    run `node scripts/release-check.mjs --target copilot --dry-run`. It must give `released`, with the
-   checklist record of C002-T-050 in place. Any other outcome stops this
+   checklist record of C002-T-050 in place (plan critic CR-217: "release-candidate commit" means a commit whose `plugins/architect/` equals the candidate's, here 7b8414a, and that holds C002-T-085's release-check change and the C002-T-050 record; the release record names that commit beside the candidate, and ERR-REL-007 guards the package). Any other outcome stops this
    task, and nothing is published.
 2. At the same commit, run `npm run smoke:npm` and the tarball check
    (`node scripts/check/tarball.mjs dist/architect-sdd-0.1.0.tgz`). Record the tarball's `sha512`

@@ -1861,3 +1861,109 @@ Scope: `git diff -- .sdd/002-multi-platform-targets/10-spec/` (uncommitted), the
 **Checked without finding.** No 10-spec line states the refuted A-3 claim as current apart from CR-191 (the historical "before, …" mentions at `target-packages.md:141-143`, `:439-440` and CAP-03 `acceptance.md:169-170` are fine); the schema description, F13, Fail closed and the §6.2 PreToolUse row were restated. The VSC-01 row agrees with C002-IF-005 §3, the Executor paragraph and the release-check sentence. The Claude Code change is stated in the same terms in GOAL-05, the scope non-goal, the requirements intro, US-502/503, the architecture actor row, §9, the glossary and DoD-022. The C002-IF-001 variants carry the §2.1 probe; `init.md` has no variant. TS-506, 508, 511 and 512 agree with §2.1; TS-709 is testable with the stub. One more subagent per doctor run fits the eval cap (last Claude Code doctor run 0.248 USD under 0.50 USD).
 
 **Later additions in this revision (conductor, not reviewed by this critic pass):** C002-REQ-623 and C002-TS-626 aligned with DoD-022 (Q-spec-req623-01); the targeted-retake clause in C002-IF-009 §4/§5 with C002-REQ-615 and C002-REQ-618 narrowed (Q-t050-record-01); C002-AC-522.1 has no scenario for the `refused` and no-outcome-line causes (eval runners cannot set them up; recorded under TS-710 and the REQ-522 authorization cell).
+
+## Revision D-058 (2026-11-13)
+
+Scope: the uncommitted revision for CHG-002 defect D-058 (C002-T-050 run 4, VSC-20's free-text half typed after the G1 approval; P-01 Q-t050-vsc20-01 "Retype in VSC-31 (Recommended)", Q-t050-vsc20-02 "Revision for VSC-20 (Recommended)"), first draft: "Tries outside a narrowed step" in the record's Notes, no new `earlier_results` cause, no release-check change. Spec and plan reviewed in one pass: CR-208 … CR-213 here, CR-214 and CR-215 in `20-plan/90-critic-report.md`. Reviewed IDs: C002-TS-317 (C002-AC-311.1, C002-REQ-311, C002-US-304, C002-US-204); C002-IF-009 §4 (VSC-20 free-text row, Executor, Earlier runs, Tries outside a narrowed step, Targeted retake after a revision) and §5; linked C002-REQ-614, 615, 618, C002-AC-614.1, 615.1, 618.1, C002-TS-617, C002-TS-618, C002-DOD-004, C002-DOD-007; C001-REQ-210 read for context. Mechanical state at review: `sdd lint 002 --phase 10-spec` 9 errors, all LINT-DELTA-001 (the waived set); `sdd trace 002` TR-01 … TR-08 100 %. Read-only review.
+
+| blocker | major | minor |
+|---|---|---|
+| 1 | 4 | 1 |
+
+### CR-208 — TS-317's new Given names a phase status that does not exist and leaves out the status of the VSC-30 rework window
+- **Severity:** blocker
+- **Refs:** C002-TS-317, C002-AC-311.1, C002-IF-009 §4 (VSC-20 free-text row), C002-T-085, C002-T-050, C002-TC-317
+- **Evidence:** the draft Given "a phase of the toy change is open, "in-progress" or "in-revision" in "change.md"" (`20-capabilities/CAP-03-copilot-target/acceptance.md:385`); the CLI's phase statuses are not-started → draft → in-review → approved → (stale | in-revision) → archived (`plugins/architect/scripts/sdd.mjs:10440`); after Revise the conductor sets the phase back to `draft` (`plugins/architect/skills/gate-protocol/SKILL.md:67`).
+- **Why it matters:** read literally, the main window (the VSC-30 rework, `draft`, then `in-review`) fails the Given, and T-085 would copy the wrong pair into the checklist Do.
+- **Suggested fix:** "`draft`, `in-review` or `in-revision` in `change.md`", the same words in the IF-009 row, T-085 and T-050.
+- **Status:** resolved (re-review 2026-11-13): TS-317 Given, the IF-009 row, T-085 and T-050 name `draft`, `in-review` or `in-revision`
+
+### CR-209 — The narrowing rule can excuse a genuine failure: nothing ties the narrowing to the requirements, and tries made after the narrowing are not excluded
+- **Severity:** major
+- **Refs:** C002-IF-009 §4, C002-REQ-615, C002-REQ-618, C002-TS-618
+- **Evidence:** the draft paragraph's conditions (1) docs-only revision and (2) the try fails only for the part the revision removes (`50-interfaces/verification-records.md:543-550`).
+- **Why it matters:** a docs-only revision can remove the circumstance a step failed in, condition (2) then holds by construction, and a try made after the narrowing is not excluded; the release check does not read the Notes.
+- **Suggested fix:** require the try to precede the narrowing's approval, the narrowing to be in the step's scenario (approved at G2), and the behaviour the try showed to be tracked by a named defect cited in the entry.
+- **Status:** resolved: P-01 chose the listed cause (Q-t050-vsc20-03); the try stays in `earlier_results` under `outside-narrowed-step` with `defect` and `tracked_by`; conditions (a) try before the approval, (b) scenario-level narrowing, (e) a tracking defect added; `repeated` stays binding
+
+### CR-210 — The rule's first use excuses an observed miss of C001-REQ-210, which TS-317's notes called "not specified for 0.1.0"
+- **Severity:** major
+- **Refs:** C002-TS-317 notes, C002-IF-009 §4, C001-REQ-210, defect D-058
+- **Evidence:** C001-REQ-210 (`.sdd/001-architect-agent-suite/10-spec/20-capabilities/CAP-02-conductor/requirements.md:93`, Must): every answer verbatim in the phase's questions log; the run-4 conductor: "I also haven't logged it, because the ideation is approved and editing its files would make G1 stale".
+- **Why it matters:** an answered round reached no questions log; the conductor text is shared (Claude Code too); no defect recorded it.
+- **Suggested fix:** raise a CHG-001 defect on C001-REQ-210 and cite it in TS-317 and the hand-off; put the scope to P-01.
+- **Status:** resolved: CHG-001 defect D-034 opened on C001-REQ-210 (known gap of 0.1.0, P-01 Q-t050-vsc20-03); TS-317 notes and the hand-off cite it
+
+### CR-211 — C002-REQ-615, C002-DOD-004 and the "Failures stay binding" rationale are not revised, and the Notes variant has the effect of the option P-01 did not pick
+- **Severity:** major
+- **Refs:** C002-REQ-615, C002-REQ-618, C002-DOD-004, C002-IF-009 §4, Q-t050-vsc20-02, Q-checklist-rerun-01
+- **Evidence:** C002-REQ-615 requires the list of earlier runs on the candidate (`20-capabilities/CAP-06-cross-target-verification/requirements.md:148`) because a free-text note "could hide a failed one" (`:149`); the draft: "The release check does not read the Notes".
+- **Why it matters:** to the release check the record looks like option 3, "Record retake only", which P-01 did not choose; the listed-cause variant was not shown to P-01.
+- **Suggested fix:** revise REQ-615, its rationale, REQ-618's rationale and DoD-004, and put the Notes variant against the listed-cause variant to P-01.
+- **Status:** resolved: C002-REQ-615 and C002-REQ-618 statements and rationales, C002-DOD-004, ERR-REL-004 and the glossary revised; P-01 chose the listed-cause variant over the Notes variant
+
+### CR-212 — The record review cannot check the conditions: TS-618 has no Then for the entry, the entry carries no evidence, and condition (2) is worded two ways
+- **Severity:** major
+- **Refs:** C002-IF-009 §4, C002-TS-618, C002-AC-615.1, C002-TC-618, C002-T-050
+- **Evidence:** TS-618 has no Then on such an entry (`20-capabilities/CAP-06-cross-target-verification/acceptance.md:770-785`) and asks for "one entry per earlier run" (`:779`); condition (2) "removes" in the spec, "adds" in the plan.
+- **Why it matters:** the review the spec relies on is not asked for, and a reviewer must rebuild the evidence from outside the record.
+- **Suggested fix:** a TS-618 Then for the entry with each condition evidenced; one wording of the failing-expectation condition.
+- **Status:** resolved: TS-618 lists the four causes and asks for the keys and the evidence; new C002-TS-711 (C002-TC-937); one wording of condition (c)
+
+### CR-213 — The VSC-31 window contradicts the end-batch and Executor wording
+- **Severity:** minor
+- **Refs:** C002-IF-009 §4 (VSC-20 free-text row, Executor), C002-T-085
+- **Evidence:** "a typed part of VSC-20 that P-01 runs in the end batch … or after the revise of VSC-31" (`50-interfaces/verification-records.md:353`) against "P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54" (`:377`).
+- **Why it matters:** the window that worked (VSC-31) is outside the batch the Executor paragraph defines.
+- **Suggested fix:** let the free-text half run inside VSC-31 in the Executor paragraph, and name the input point in the run sheet.
+- **Status:** resolved: the Executor paragraph lets the free-text half run inside VSC-31; the run sheet names VSC-31 as the fallback window
+
+| Rubric | Item | Result |
+|---|---|---|
+| requirements | R3 Unambiguous | CR-212 |
+| requirements | R6 Complete | CR-209 |
+| requirements | R7 Consistent | CR-210, CR-211 |
+| requirements | R8 Feasible | CR-213 |
+| acceptance | A1 Coverage | CR-212 |
+| acceptance | A2 Observable and concrete | CR-208 |
+| acceptance | A4 Error and abuse cases | CR-209, CR-212 |
+| domain, interfaces, architecture | D5 Decisions with alternatives | CR-211 |
+| DoD and index | O2 Evidence types fit | CR-211 |
+| other items | stories, NFRs, R1, R2, R4, R5, R9, R12, A3, D3, O1, O3, X1 | pass or n/a as in the review |
+
+**Verdict of the review:** not approvable as reviewed; CR-208 to be fixed before G2, CR-209 to CR-212 change the rule and its basis, CR-211 needed P-01's choice of variant.
+
+### Re-review of the reworked revision (2026-11-13)
+
+After P-01's answer to Q-t050-vsc20-03 ("Listed cause + known gap (Recommended)") the revision was reworked: the cause `outside-narrowed-step` with the keys `defect` and `tracked_by` in C002-IF-009 §4, §5 rule 6 and ERR-REL-004; C002-REQ-615, C002-REQ-618, C002-DOD-004 and the glossary revised; C002-TS-317's Given; C002-TS-668 rows; new C002-TS-711; CHG-001 defect D-034 on C001-REQ-210. Statuses of CR-208 … CR-213 above are as of this re-review. New findings: CR-216, CR-218 and CR-219 here, CR-217 and CR-220 in `20-plan/90-critic-report.md`. Lint: 9 errors, all the waived LINT-DELTA-001 set; trace 100 % (TR-08 305/305).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 2 |
+
+#### CR-216 — Condition (a) could not be decided from the evidence it named: the Gate log and `approvals.json` hold dates only, and the try and the approval share a date
+- **Severity:** major
+- **Refs:** C002-IF-009 §4 (Tries outside a narrowed step, condition (a)), C002-TS-711, C002-TC-937, C002-T-050 step 0.5
+- **Evidence:** "(a) the try was made before the revision that narrowed the step was approved (the try's date and the approval's date in the Gate log)" — `50-interfaces/verification-records.md:548-549`; the Gate log and `approvals.json` record dates only; the try was on 2026-11-13 about 08:05, and the revision would be approved on 2026-11-13.
+- **Why it matters:** the review could not show the try as the earlier, and would either fail the entry (the release is refused) or wave condition (a) through.
+- **Suggested fix:** timed evidence: the try's timestamp from the chat session file or hooks log against the commit time of the approval commit.
+- **Status:** resolved: C002-IF-009 §4 (a), C002-TS-711 and C002-T-050 step 0.5 now name the try's timestamp and the commit time of the approval commit (`git log -1 --format=%cI`)
+
+#### CR-218 — TS-711 was tied to one historical record; no general scenario asked for the keys and the evidence of a future try
+- **Severity:** minor
+- **Refs:** C002-TS-711, C002-TS-618, C002-AC-615.1
+- **Evidence:** TS-711's Given names candidate 7b8414a, D-058 and CHG-001 D-034 (`20-capabilities/CAP-06-cross-target-verification/acceptance.md:798`); TS-618 named only the cause value (`:779`).
+- **Why it matters:** after archiving, a later try would meet no scenario requiring `defect`, `tracked_by` or the (a) … (e) evidence.
+- **Suggested fix:** a general Then in TS-618, or TS-711 as an outline.
+- **Status:** resolved: TS-618 has a general Then for an `outside-narrowed-step` entry (the two ID forms and the evidence for (a) … (e)); TS-711 stays the review of run 4's record
+
+#### CR-219 — The chosen option promised a check "only with a defect ID"; the check read two non-empty strings
+- **Severity:** minor
+- **Refs:** Q-t050-vsc20-03, C002-IF-009 §4 machine part, §5 rule 6, C002-T-085, C002-TS-668
+- **Evidence:** the machine part required `defect` and `tracked_by` "present and non-empty" (`50-interfaces/verification-records.md:543-544`); T-085 checked strings non-empty after trimming.
+- **Why it matters:** `defect: x` would have passed the machine part.
+- **Suggested fix:** check the ID forms, with a supporting TS-668 row each.
+- **Status:** resolved: the machine part and T-085 require `defect` of the form `D-<NNN>` and `tracked_by` of the form `CHG-<NNN> D-<NNN>`, one supporting C002-TC-668 test row each; the check still does not verify that the defects exist (stated)
+
+**Verdict of the re-review:** approvable for G2 once CR-216 is fixed; CR-216, CR-218 and CR-219 are resolved.
+

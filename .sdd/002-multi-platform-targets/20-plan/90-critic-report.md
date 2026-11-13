@@ -1676,3 +1676,63 @@ Scope: `git diff 4547cbe 265dda5 -- .sdd/002-multi-platform-targets/20-plan/`, r
 | plan | consistency with spec and own rules | CR-197, CR-198, CR-200, CR-201, CR-203, CR-205, CR-207 |
 
 **Checked without finding.** The expected diff counts hold against the generator: Copilot 7 files (`architect-target.json` changes, since `scripts/generate/writer.ts:78-88` records every SHA-256 and the source digest; only the cartographer preloads code-discovery; `install/plugin.json` holds no hash; the CLI copy is unchanged), Claude Code 5 (`CLAUDE_EXCLUDES` drops `targets/` and `evals/`; `.claude-plugin/plugin.json` holds no hashes), CLI tarball 0 (`stageNpm` copies nothing T-084 touches). TC-935/936 follow TS-709/710; the changed TCs match their scenarios. Session totals add up; spend stays within limits (no OpenRouter, no Copilot CLI, Claude Code on `--auth subscription`, VS Code on plan credits). RISK-044/045 complete; the A-3 strategy row and the T-031/T-046 history notes agree; T-084 `depends_on` and the edge to T-050 correct; weights 161; D-056/D-057 match `change.md`.
+
+## Revision D-058 (2026-11-13)
+
+Scope: the plan side of the review of the revision for CHG-002 defect D-058 (spec findings CR-208 … CR-213 in `10-spec/90-critic-report.md`): new C002-T-085, C002-T-050, C002-M-07, WBS and critical path, strategy row, test plan (C002-TC-317, 617, 618, 901), hand-off D-058 section and task list, questions-log round "2026-11-13 — C002-T-050 run 4, VSC-20 free-text half", `change.md` D-058 row. Mechanical state at review: `sdd lint 002 --phase 20-plan` 0; `sdd trace 002` 100 %, DAG acyclic; critical path T-084 (60) → T-085 (61) → T-050 (62) → T-075 (63) → T-055 (64).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 1 |
+
+### CR-214 — The record of run 4 already exists and is signed off, citing a rule that is not approved, without `open_phase`; the plan says it is written only afterwards
+- **Severity:** major
+- **Refs:** C002-T-050 Preconditions, step 0.5 and Done when; C002-T-085; C002-IF-009 §4; C002-TC-618
+- **Evidence:** T-050 writes the record only after the G2 and G3 approvals and C002-T-085 (`50-tasks/T-050-vscode-checklist-run.md:160-163`); yet `docs/checklists/records/vscode-2026-11-13-0.1.0.md` exists untracked, cites the unapproved rule in its Notes, has no `open_phase` and ends "Signed off: Jerome LACUBE, 2026-11-13".
+- **Why it matters:** the sign-off is one of the rule's safeguards and was given before the rule was approved; nothing in the plan makes T-050 rewrite the draft.
+- **Suggested fix:** name the draft in T-050 step 0.5, require its rewrite from the T-085 template after the approvals, and date the review and the sign-off after them.
+- **Status:** resolved (re-review 2026-11-13): C002-T-050 step 0.5 names the draft, its sign-off does not count, and the record is rewritten from the C002-T-085 template after the approvals, with the review and the sign-off dated after them
+
+### CR-215 — The material question Q-t050-vsc20-02 is logged without its rejected options and reasons, and the D-058 row carries no resolution or close rule
+- **Severity:** minor
+- **Refs:** Q-t050-vsc20-02, Q-t050-vsc20-01, defect D-058 (`change.md`)
+- **Evidence:** "Candidates considered: 3 (as presented)" with no Rejected line (`questions-log.md:612`); D-058's row has `resolution: null` and no close rule (`change.md:73`), unlike D-057's.
+- **Why it matters:** the rejected options and the in-answer alternative have no recorded reason; the defect row is where a reader looks for the close rule.
+- **Suggested fix:** Rejected lines with reasons; carry P-01's answers and the close rule into the D-058 record when the defect is updated or closed.
+- **Status:** resolved: Rejected lines with reasons for Q-t050-vsc20-02 and -03; the close rule (strategy §2, hand-off, T-050) goes into the D-058 resolution at `sdd defect close`
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1, P3, P4, P5, P6 | pass |
+| plan | P2 Targets, verification, done-checks | CR-208 (spec), CR-214 |
+| plan | P7 ADRs | n/a |
+| plan | consistency with spec and own rules | CR-213 (spec), CR-214, CR-215 |
+
+**Checked without finding:** the close rule of D-058 reads the same in strategy §2, the hand-off and T-050; the M-07 row, WBS node and edges, T-050 `depends_on` and the renumbered hand-off task list include C002-T-085; T-085's line references match the files and its no-package-input argument (`scripts/package.mjs`) holds.
+
+### Re-review of the reworked revision (2026-11-13)
+
+Plan side of the re-review (spec side and CR-216, CR-218, CR-219 in `10-spec/90-critic-report.md`). Statuses of CR-214 and CR-215 above are as of this re-review. Lint 20-plan: 0; trace 100 %; critical path unchanged at 64 (T-084 60 → T-085 61 → T-050 62 → T-075 63 → T-055 64).
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 2 |
+
+#### CR-217 — The release checks were planned "at the release-candidate commit", but C002-T-085 changes the step check after that commit
+- **Severity:** minor
+- **Refs:** C002-T-085, C002-T-075 step 1, C002-T-055 step 1, C002-IF-009 §5 rule 6, C002-M-07
+- **Evidence:** T-085 changes `scripts/release/evidence.ts` rule 6 while the candidate stays 7b8414a; T-075 and T-055 run the release check "at the release-candidate commit"; T-085's dry run "refuses on ERR-REL-003 or on the draft record of run 4 only".
+- **Why it matters:** read literally, the checks at 7b8414a refuse VSC-20's `outside-narrowed-step` entry, and the T-085 dry-run expectation named no defined outcome.
+- **Suggested fix:** define the commit as one whose package equals the candidate's and that holds T-085 and the record; give T-085's dry run an exact expected result.
+- **Status:** resolved: T-075 and T-055 define the release-candidate commit as a commit whose `plugins/architect/` equals 7b8414a's and that holds C002-T-085 and the record (named in the release record; ERR-REL-007 guards the package); T-085's dry run, with the draft moved aside, refuses on ERR-REL-003 only
+
+#### CR-220 — Three statements still read as before the rework
+- **Severity:** minor
+- **Refs:** C002-T-050 Intent and Done when, C002-TC-618
+- **Evidence:** T-050 "since the phase is in review by then" and "none that the rerun rule does not excuse"; the TC-618 base text listed three causes.
+- **Why it matters:** the first misstated the window's status, the second would fail run 4's record, the third left the review one cause short.
+- **Suggested fix:** the three rewordings.
+- **Status:** resolved: all three reworded (open phase `draft`, `in-review` or `in-revision`; "none that neither the rerun rule nor the rule for tries outside a narrowed step excuses"; `outside-narrowed-step` in the TC-618 base text)
+
+**Verdict of the re-review:** approvable for G3; no finding open.
+

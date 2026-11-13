@@ -350,7 +350,7 @@ and records follow the tested build:
 | VSC-12 | the slash list offers the prompt files as `/architect:<name>` (`/architect:doctor`, `/architect:new`, `/architect:init`); the record keeps whether a bare `/init` resolves to VS Code's built-in `/init` (C002-IF-001 §2 command reference); every other step names a command as `/architect:<name>` |
 | VSC-15, VSC-16, VSC-18, VSC-19 | the question tool is `askQuestions`, granted by the `tools` entry `vscode/askQuestions` (defect D-054, C002-T-050 binding run of 2026-11-11, VSC-14): VSC-15 removes `ask_user`, `askQuestions` and `vscode/askQuestions` from the `tools` lists of both conductor agent files, the package's `agents/sdd-conductor.agent.md` and the workspace's `.github/agents/sdd-conductor.agent.md`, and of the package's `prompts/new.prompt.md`, reloads the window and runs the new-change prompt (C002-TS-319); in the C002-T-050 run of 2026-11-12 the text form appeared only with the names removed from all three files, and the run did not separate the causes of the dialog in its earlier attempts, nor verify whether a prompt attached with `code chat -a` applies the prompt file's `tools` (the attempts: C002-IF-005 §3, Same names in two places; defect D-055); the step has no plain-request form (a request without the prompt file), since C001-REQ-116 binds the profile question only when `/architect:new` runs and a plain request that runs `sdd change new` with the CLI defaults is CHG-001 defect D-032 (C002-T-050 run of 2026-11-12); its `note` names the invocation form (the prompt attached with `code chat -a`, or a slash command typed by P-01) and, when it differs from VSC-02's, the copy the session used (Session agent, below), VSC-18 checks that the `tools` lists of the conductor and of the prompt file it runs name `ask_user`, `askQuestions` and `vscode/askQuestions`, expects each dialog to come from a `vscode_askQuestions` call, records the input shape of that call (C002-TS-216, C002-TS-617) and notes the invocation form as VSC-15 does, VSC-19 runs a round with `chat.askQuestions.enabled` off (checklist assumption A-6, renamed to `askQuestions`; C002-IF-001 §6.1) |
 | VSC-20, VSC-29 | the skipped answer comes from `chat.autoReply`, set true for the step and false after it (global tool auto-approve no longer answers questions); the record keeps the tool result as returned (`selected`, `freeText`, `skipped`); the questions log has no answer (VSC-20), and the phase stays `in-review` with `approvals.json` unchanged (VSC-29) (C002-IF-001 §6.1 No answer). The conductor runs both |
-| VSC-20, free-text half | the free-text row of C002-TS-317, a typed part of VSC-20 that P-01 runs in the end batch (Executor below), as the slash-list half of VSC-01 is: with `chat.autoReply` off, P-01 types an answer in the free-text field of an interview question without selecting an option; the tool result has no selected label and that text as `freeText`, which is an answer since it is not the host's auto-reply text, and the questions log records the text verbatim as the answer (C002-IF-001 §6.1 No answer). The record keeps the tool result and the questions-log entry; VSC-20 is `passed` only when both halves pass, and it is listed at the position of its last half |
+| VSC-20, free-text half | the free-text row of C002-TS-317, a typed part of VSC-20 that P-01 runs in the end batch (Executor below), as the slash-list half of VSC-01 is, while a phase of the toy change is open, that is, its status in the toy change's `change.md` is `draft`, `in-review` or `in-revision`: during the VSC-30 rework (`draft`), before gate G1 is decided again, or after the revise of VSC-31 (`in-revision`), before gate G1 is decided; never after an approval, before the next phase starts (revised for defect D-058; then no phase is open, and the 0.1.0 conductor logs the answer in no questions log, CHG-001 defect D-034; a try in that window is recorded under the cause `outside-narrowed-step`, Earlier runs below): with `chat.autoReply` off, P-01 types an answer in the free-text field of an interview question without selecting an option; the tool result has no selected label and that text as `freeText`, which is an answer since it is not the host's auto-reply text, and the questions log records the text verbatim as the answer (C002-IF-001 §6.1 No answer). The record keeps the tool result and the questions-log entry; VSC-20 is `passed` only when both halves pass, and it is listed at the position of its last half |
 | VSC-21 | the reply names the toy change and its phase without a status command, and the "GitHub Copilot Chat Hooks" log shows the session-start command's output as the JSON object of C002-IF-008 §3 |
 | VSC-22, VSC-54 | when the conductor declines to start `sdd-spec-writer`, the step starts it from the default agent with `runSubagent` and `agentName: sdd-spec-writer`, with the same task, and the record says which agent started it (VSC-23 keeps its default-agent fallback) |
 | VSC-23 | the record names the sdd MCP server tools by the ids VS Code shows (`mcp_sdd-mcp_write_file`, `mcp_sdd-mcp2_run_command`, the form `mcp_<command>[N]_<tool>`) and the error texts (GUARD-PATH-001, GUARD-BASH-001) |
@@ -374,7 +374,7 @@ sends a slash command with `code chat` by attaching the prompt file (`-a`) with 
 attached Architect <name> prompt", since `code chat` sends `/<name>` as plain text without expanding
 the prompt file (defect D-053, run sheet).
 
-**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type; started with `-m sdd-conductor`, its session agent may be either copy of the conductor, and it was the plugin copy in the C002-T-050 run of 2026-11-12, Session agent below), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list), the free-text half of VSC-20 (an interview answer typed without selecting an option, the free-text row of C002-TS-317; the conductor runs the `chat.autoReply` half; added for the D-051 revision) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 runs on that twin, since the run's own package is installed by then (critic CR-145); in the C002-T-050 run of 2026-11-12 it showed the Architect entries before the install, which refuted assumption A-3 (defect D-056; VSC-01 row above). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
+**Executor** (defect D-050; P-01's instruction of 2026-11-10, "do T-050 I will do mine afterwards"). The steps may be executed by the conductor for P-01: it sends each chat step's prompt with `code chat` (VS Code's command line; with `chat.defaultToCopilotHarness` and `chat.editor.preferCopilotHarness` set to `false` in the default profile's user settings, the session starts on the Local session type; started with `-m sdd-conductor`, its session agent may be either copy of the conductor, and it was the plugin copy in the C002-T-050 run of 2026-11-12, Session agent below), answers question prompts and dialogs by clicks, edits settings and files and runs commands in its own shell (for the install step, the counterpart of P-01's own terminal: not a chat agent). P-01 runs the steps that need typing in the chat input or in a running chat: VSC-30 (the Revise reason typed, then Approve), VSC-12 (the `/` list), the free-text half of VSC-20 (an interview answer typed without selecting an option, the free-text row of C002-TS-317; the conductor runs the `chat.autoReply` half; added for the D-051 revision) and the slash-list half of VSC-01 on a twin (a second unpacked package and a second toy repository in the pre-install state of VSC-01, opened in a separate VS Code profile `t050-twin` whose only `chat.pluginLocations` entry is that second package; set up by the conductor). The slash-list half of VSC-01 runs on that twin, since the run's own package is installed by then (critic CR-145); in the C002-T-050 run of 2026-11-12 it showed the Architect entries before the install, which refuted assumption A-3 (defect D-056; VSC-01 row above). When an interview question during a conductor step needs a typed answer, the conductor picks the recommended option where one is offered; otherwise it hands that turn to P-01 mid-run, which is no failed step (critic CR-152). `executed_by` then names P-01 and the conductor and lists P-01's steps. Within group 4 (below) the order is free as far as the hooks state goes; each step's Do precondition still binds (critic CR-147). P-01's steps therefore run as one batch after VSC-29, and the conductor then runs VSC-31 and VSC-54. The free-text half of VSC-20 needs an open phase of the toy change (its row above) and may therefore run inside VSC-31, after its revise and before gate G1 is decided, so the batch may continue after VSC-31 has begun (revised for defect D-058, critic CR-213); it is then still listed at the position of its last half. Wherever this section says P-01 runs or records a step, the conductor may do it for P-01 under this rule; the sign-off of the record stays P-01's (the conductor may record it under P-01's standing waiver of 2026-10-19).
 
 **Session agent** (C002-T-050 run of 2026-11-12; defect D-055; critic CR-178 … CR-180). VS Code
 1.145.2 loads the conductor twice under the name `sdd-conductor`: the plugin copy,
@@ -511,11 +511,14 @@ its earlier runs, oldest first, in `earlier_results`, a list of mappings:
 | Key | Values | Meaning |
 |---|---|---|
 | `result` | `passed` or `failed` | the result of that run |
-| `cause` | `hooks-source-changed`, `ran-before-hooks-state` or `repeated` | why the step was run again after that run: `hooks-source-changed`, the rerun rule after `chat.useHooks`, Workspace Trust or an organisation policy changed after the hooks-state step, or after the hooks-state step read one of them off and P-01 put it right; `ran-before-hooks-state`, the rerun rule after a step of group 4 ran before the hooks-state step; `repeated`, any other reason (P-01 ran the step again) |
-| `note` | text, optional | what happened in that run; for a `failed` run, what failed |
+| `cause` | `hooks-source-changed`, `ran-before-hooks-state`, `outside-narrowed-step` or `repeated` | why the step was run again after that run: `hooks-source-changed`, the rerun rule after `chat.useHooks`, Workspace Trust or an organisation policy changed after the hooks-state step, or after the hooks-state step read one of them off and P-01 put it right; `ran-before-hooks-state`, the rerun rule after a step of group 4 ran before the hooks-state step; `outside-narrowed-step`, the run was a try outside the step's Do as narrowed by an approved revision of this change, and the step ran again within the narrowed Do (added for defect D-058); `repeated`, any other reason (P-01 ran the step again) |
+| `defect` | a defect ID of this change, e.g. `D-058`; only with the cause `outside-narrowed-step` | the defect whose revision narrowed the step |
+| `tracked_by` | a change-qualified defect ID, e.g. `CHG-001 D-034`; only with the cause `outside-narrowed-step` | the open defect that tracks the behaviour the try showed |
+| `note` | text, optional; for the cause `outside-narrowed-step`, the evidence below | what happened in that run; for a `failed` run, what failed |
 
 An earlier `passed` run never refuses. An earlier `failed` run is **excused** only when the rerun
-rule repeated the step, which the record shows by all of these:
+rule repeated the step, or when it was a try outside a narrowed step (below); the rerun rule shows by
+all of these:
 
 1. its `cause` is `hooks-source-changed` and the step is the restore step or a step of group 3 or 4
    of the step index, or its `cause` is `ran-before-hooks-state` and the step is a step of group 4;
@@ -528,9 +531,44 @@ rule repeated the step, which the record shows by all of these:
    `cause` is P-01's statement, which the check does not verify (below), so counting only some
    causes would add no assurance.
 
-Every other earlier `failed` run is binding: the release check refuses the record (ERR-REL-004, `failed
-in an earlier run not repeated under the rerun rule`), also when the step's last run passed, and a
-releasable record then needs a new run of the checklist, recorded under a later date (C002-REQ-618).
+**Tries outside a narrowed step** (added for defect D-058; P-01's answers of 2026-11-13 to
+Q-t050-vsc20-01 … 03, "Retype in VSC-31 (Recommended)", "Revision for VSC-20 (Recommended)" and
+"Listed cause + known gap (Recommended)"; critic CR-209, CR-211, CR-212). An approved revision of
+this change may narrow a step after a run began, so that a try of the step made earlier in the run
+no longer meets the step's Do (the first case: the free-text half of VSC-20 typed after gate G1 of
+the toy change was approved, when no phase was open; C002-T-050 run 4). The try stays in the step's
+`earlier_results`, under the cause `outside-narrowed-step`, with the keys `defect` and `tracked_by`.
+An earlier `failed` run with this cause is excused only when both parts hold:
+
+- **Machine part** (the release check, §5 step check rule 6): its `defect` key is a defect ID of the
+  form `D-<NNN>` and its `tracked_by` key a change-qualified defect ID of the form `CHG-<NNN> D-<NNN>`
+  (revised for critic CR-219; the check does not verify that the defects exist); and, as for every listed step, the step's last `result` is `passed`
+  (rule 3).
+- **Review part** (the record review, C002-TS-618 and C002-TS-711, and P-01's sign-off of the record), with the
+  evidence for each condition named in the entry's `note`:
+  (a) the try was made before the revision that narrowed the step was approved, shown by times, since
+  the Gate log and `approvals.json` hold dates only: the try's timestamp from the run's chat session
+  file or hooks log, and the commit time of the commit that recorded the approval (`git log -1
+  --format=%cI <commit>`, the commit of `sdd gate approve --commit`) (revised for plan critic CR-216);
+  (b) the revision narrows the step's scenario (its Given or its Examples, approved at gate G2) and
+  the checklist's Do, and changes no file of the package: the record's candidate is the try's
+  candidate (the candidate commit named);
+  (c) the try's only failing expectation fails because of the circumstance that the revision
+  excludes (the expectation named, with what the try showed);
+  (d) the same run then ran the step within the narrowed Do, and that run is the step's result;
+  (e) the behaviour the try showed is tracked by the open defect that `tracked_by` names.
+
+A `failed` run with this cause that lacks `defect` or `tracked_by`, or gives either empty, refuses
+(ERR-REL-004, `failed in an earlier run outside a narrowed step without defect and tracked_by`). The
+release check does not verify the conditions (a) … (e), nor that the defects exist; it checks that
+the entry names them, so that the try cannot be dropped silently and a later passing run cannot hide
+it, and the review and the sign-off cover the conditions, as they cover every `cause` (below). A
+try that does not meet them is recorded under `repeated`, which stays binding.
+
+Every other earlier `failed` run is binding, a `repeated` one included: the release check refuses the
+record (ERR-REL-004, `failed in an earlier run not repeated under the rerun rule`), also when the
+step's last run passed, and a releasable record then needs a new run of the checklist, recorded under
+a later date (C002-REQ-618).
 An earlier run whose `result` is neither `passed` nor `failed`, an entry that is not a mapping, and an
 `earlier_results` that is not a list refuse as well (§5 step check rule 6). The rule binds every
 listed step, the injection steps and the steps of the other mode included. The release check does
@@ -738,15 +776,19 @@ that applies, with the `<result>` of `errors.md` §3 (every value without quotes
 5. It is a step of the other mode, not an injection step, recorded `passed`: `passed, but its mode
    is <mode>`, `<mode>` being the step's Mode in the step index.
 6. Its earlier runs (§4) hold one that refuses; the first such run, oldest first, gives `failed in an
-   earlier run not repeated under the rerun rule` for an earlier `failed` run that §4 does not
-   excuse, and `<earlier result> in an earlier run` for an earlier run whose `result` is neither
+   earlier run outside a narrowed step without defect and tracked_by` for an earlier `failed` run
+   whose `cause` is `outside-narrowed-step` and whose `defect` or `tracked_by` is missing or empty
+   (revised for defect D-058), `failed in an earlier run not repeated under the rerun rule` for any
+   other earlier `failed` run that §4 does not excuse (by the rerun rule, or as a try outside a
+   narrowed step with both keys), and `<earlier result> in an earlier run` for an earlier run whose `result` is neither
    `passed` nor `failed` (`<earlier result>` that result as text, or `not recorded` when the run has
    no `result`, when its entry is not a mapping or when `earlier_results` is not a list).
 
 Then, in the order of the step index, each step of the package's mode, the injection steps excepted,
 that the record does not list gives `not recorded`. Rules 2, 4 and 5 and the `not recorded` lines
 need the step index; with an unreadable index (ERR-REL-009 `checklist`) they do not apply, and rule
-6 excuses no earlier `failed` run, since the groups and the restore step are unknown. A `failed`
+6 excuses no earlier `failed` run by the rerun rule, since the groups and the restore step are
+unknown; a try outside a narrowed step with both keys needs no index and stays excused. A `failed`
 injection step gives its rule-3 line besides ERR-REL-002 (C002-REQ-618).
 
 **Hooks-state check** (ERR-REL-010; revised for Q-release-hooks-01). For the checklist record of the

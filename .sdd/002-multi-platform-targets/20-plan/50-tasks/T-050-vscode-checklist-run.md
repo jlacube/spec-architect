@@ -6,10 +6,10 @@ phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
 status: todo
-depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082, C002-T-083, C002-T-084]
+depends_on: [C002-T-046, C002-T-054, C002-T-071, C002-T-076, C002-T-077, C002-T-078, C002-T-079, C002-T-080, C002-T-081, C002-T-082, C002-T-083, C002-T-084, C002-T-085]
 implements: []
 satisfies_ac: [C002-AC-327.1, C002-AC-504.1, C002-AC-510.1, C002-AC-614.1, C002-AC-615.1, C002-AC-616.1, C002-AC-618.1]
-verified_by: [C002-TS-358, C002-TS-508, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TC-358, C002-TC-508, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901]
+verified_by: [C002-TS-358, C002-TS-508, C002-TS-516, C002-TS-617, C002-TS-618, C002-TS-619, C002-TS-621, C002-TS-711, C002-TC-358, C002-TC-508, C002-TC-516, C002-TC-617, C002-TC-618, C002-TC-619, C002-TC-621, C002-TC-901, C002-TC-937]
 components: [C002-COMP-011]
 risk_refs: [C002-RISK-026, C002-RISK-030, C002-RISK-031, C002-RISK-032, C002-RISK-041, C002-RISK-043, C002-RISK-044, C002-RISK-045]
 estimate: S
@@ -19,6 +19,23 @@ report: { commit: null, completed_at: null, notes: null }
 # C002-T-050 — Run the manual VS Code checklist and record it (the conductor for P-01, defect D-050)
 
 ## Intent
+
+**Run 4 of 2026-11-13 and its record (defect D-058).** Run 4 (started 2026-11-13 05:58 in
+`C:\Sandbox\runs\t050f`, on C002-T-084's candidate 7b8414a, after C002-T-084 was done at fb7b9d2) is
+the **binding run**. Every step passed except VSC-20's free-text half at its first try: P-01 typed the
+answer after gate G1 was approved, when no phase of the toy change was open, as the checklist and run
+sheet then allowed ("during or after the VSC-30 rework"), and the conductor logged it nowhere. By
+P-01's answer to Q-t050-vsc20-01 ("Retype in VSC-31 (Recommended)") the half was retyped after VSC-31's
+revise (ideation `in-revision`), logged verbatim as Round 8, Q-export-01 of the toy ideation's
+questions log; VSC-54 then passed, and P-01's settings were restored (`FF55715DE862`). By P-01's answers
+to Q-t050-vsc20-02 ("Revision for VSC-20 (Recommended)") and Q-t050-vsc20-03 ("Listed cause + known gap
+(Recommended)"; `../questions-log.md`, round "2026-11-13 — C002-T-050 run 4, VSC-20 free-text half")
+there is no new run: the conductor gap the first try showed is CHG-001 defect D-034 on C001-REQ-210, a
+known gap of 0.1.0; C002-T-085 adds the cause `outside-narrowed-step` to the release check's step check,
+narrows VSC-20's Do to an open phase (C002-TS-317 as revised) and brings the record template and the
+run sheet to C002-IF-009 §4 Earlier runs (Tries outside a narrowed step). The **record of run 4 is
+rewritten after C002-T-085 is done** (step 0.5 below), with VSC-20 `passed` from its retake during
+VSC-31 and the first try in VSC-20's `earlier_results` under `outside-narrowed-step`.
 
 **Run 3 of 2026-11-12 and run 4 (defects D-056, D-057).** Run 3 (started 2026-11-12
 07:19 in `C:\Sandbox\runs\t050e`, on e89dae8, after C002-T-083) passed every step except two findings
@@ -78,7 +95,9 @@ defects D-051 … D-053, fixed by C002-T-077 … C002-T-080 and packed by C002-T
 **again, in full and clean, as a later run**, on the 0.1.0 packages of C002-T-081's candidate
 (C002-T-082's since revision D-054), with the revised checklist, record template and run sheet of C002-T-080. The executor split and the
 session allowance below are unchanged; **P-01's end batch gains VSC-20's free-text half**
-(C002-TS-317, critic CR-157): during or after the VSC-30 rework P-01 asks the conductor for one
+(C002-TS-317, critic CR-157): during or after the VSC-30 rework (since revision D-058: only while a
+phase of the toy change is open, during the VSC-30 rework or after VSC-31's revise, never after an
+approval; C002-T-085) P-01 asks the conductor for one
 interview round (for example "ask me one question about the export scope"), since the phase is in
 review by then, and types "Keep the CSV export out of v1" without selecting an option; the questions
 log must hold it verbatim. The `chat.autoReply` half of VSC-20 stays with the conductor; VSC-20 passes
@@ -135,11 +154,16 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 | Kind | Target | Change |
 |---|---|---|
-| add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record; since revision D-056, D-057 the record of run 4, `vscode-<date of run 4>-0.1.0.md` |
-| modify | `docs/runsheets/T-050-vscode-checklist.md` | run 4: the banner, the run folder `C:\Sandbox\runs\t050f`, the Package line and the step-11 statement are C002-T-084's; this task fills the `<commit>` of step 11 with C002-T-084's done commit before the run starts. Before, revision after the run of 2026-11-12: the banner, the run folder `C:\Sandbox\runs\t050e`, the conductor-copy method and the step-11 statement are C002-T-083's; this task only fills the `<commit>` of step 11 with C002-T-083's done commit before the run starts. Earlier, revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
+| add | `docs/checklists/records/vscode-<YYYY-MM-DD>-<version>.md` | the checklist record; since revision D-056, D-057 the record of run 4, `vscode-<date of run 4>-0.1.0.md`; since revision D-058 the untracked draft `vscode-2026-11-13-0.1.0.md` (written before the approvals, with a sign-off that does not count) is rewritten from C002-T-085's template after C002-T-085 is done (step 0.5) |
+| modify | `docs/runsheets/T-050-vscode-checklist.md` | revision D-058: the run-4 banner, the batch order and steps 9 and 11 are C002-T-085's; this task fills in the first try's date and time. Before, run 4: the banner, the run folder `C:\Sandbox\runs\t050f`, the Package line and the step-11 statement are C002-T-084's; this task fills the `<commit>` of step 11 with C002-T-084's done commit before the run starts. Before, revision after the run of 2026-11-12: the banner, the run folder `C:\Sandbox\runs\t050e`, the conductor-copy method and the step-11 statement are C002-T-083's; this task only fills the `<commit>` of step 11 with C002-T-083's done commit before the run starts. Earlier, revision D-054: the banner, the run folder `C:\Sandbox\runs\t050d` and the step-11 statement are C002-T-082's; this task only fills the `<commit>` of step 11 with C002-T-082's done commit before the run starts (earlier: banner, run folder and statement for the run after C002-T-081, critic CR-163, CR-164) |
 
 ## Preconditions
 
+- **Record of run 4 after revision D-058**: the G2 and G3 approvals of the revision for D-058,
+  **C002-T-085 done** (the step check excusing `outside-narrowed-step` with `defect` and `tracked_by`;
+  VSC-20 in an open phase; the template's keys and `open_phase`; the run sheet's steps 9 and 11), and
+  CHG-001 defect D-034 open on C001-REQ-210. Run 4's steps are not run again; only its record is
+  rewritten, from run 4's results.
 - **Run 4 after run 3** (supersedes the candidate and the run folder of the next item): the G2 and
   G3 approvals of the revision for D-056 and D-057, and **C002-T-084 done**: its candidate packed, the
   local tag `v0.1.0` moved to it, its dry run refusing on ERR-REL-003 only, and its file and line
@@ -238,6 +262,42 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
       its dry run gives no checklist error, the conductor closes D-054 (VSC-18 of run 4), D-055
       (VSC-15 of run 4), D-056 (VSC-01, both halves, of run 4) and D-057 (VSC-12 and VSC-13 of run 4
       with Context7 and DeepWiki `ok`) with `sdd defect close`.
+   5. **Record of run 4 after revision D-058** (P-01's answers to Q-t050-vsc20-01, Q-t050-vsc20-02
+      and Q-t050-vsc20-03, "Listed cause + known gap (Recommended)"; plan critic CR-214). Run 4 ran
+      in full. The untracked draft `docs/checklists/records/vscode-2026-11-13-0.1.0.md` was written
+      and signed before the approvals: it is no record, and its sign-off does not count. After the
+      G2 and G3 approvals of revision D-058 and after C002-T-085 is done, the conductor rewrites it
+      from C002-T-085's template, by item 2 and these rules:
+      - **VSC-20** is `passed` from its `chat.autoReply` half of group 4 and its free-text half
+        retyped inside VSC-31 after the revise. Its `free_text_half` has `open_phase:
+        00-ideation in-revision` and `questions_log`: Round 8, Q-export-01 of the toy ideation's
+        questions log, `Keep the CSV export out of v1` verbatim. VSC-20 is listed at the position of
+        that last half, after VSC-31 and before VSC-54.
+      - VSC-20 has `earlier_results: [ { result: failed, cause: outside-narrowed-step, defect: D-058,
+        tracked_by: "CHG-001 D-034", note: … } ]` for the **first try**, typed after gate G1 was
+        approved, with no phase open, and logged in no questions log. The `note` gives the evidence
+        for conditions (a) … (e) of C002-IF-009 §4 Earlier runs (Tries outside a narrowed step), in
+        the spec's wording:
+        - (a) the try's timestamp (2026-11-13 about 08:05, from the chat session file of session
+          d24a4058), and the commit time of the commit that recorded the G2 approval of the revision
+          for D-058 (`git log -1 --format=%cI <commit>`), the try being the earlier (critic CR-216);
+        - (b) the narrowed Given of C002-TS-317 and the narrowed Do of the VSC-20 free-text half, no
+          package file changed, and candidate 7b8414a for both the try and the record;
+        - (c) "the try's only failing expectation fails because of the circumstance that the revision
+          excludes" (plan critic CR-212): the expectation "the questions log records the text
+          verbatim" failed because no phase of the toy change was open;
+        - (d) the later try of the same run within the narrowed Do (inside VSC-31), which is the
+          step's `result`;
+        - (e) the open defect CHG-001 D-034 tracks the behaviour the try showed.
+      - The record's Notes do not carry the try; they keep run 3 and the stopped runs as item 2 says.
+        Every other step keeps its run-4 result.
+      - The review entry of C002-TC-618 and C002-TC-937 (C002-TS-711) and P-01's sign-off are dated
+        after the G2 and G3 approvals of revision D-058; the conductor records the sign-off under
+        P-01's standing waiver of 2026-10-19.
+
+      Then step 11's dry run: VSC-20 gives no ERR-REL-004 line. Then item 4's close rules, with
+      **D-058** closed too: the revision approved at G2 and G3, C002-T-085 done, and the record
+      listing VSC-20's first try under `outside-narrowed-step` with the dry run accepting it.
    A failed step of run 4 is handled as step 3 says; a refuted assumption is a spec defect.
 1. **P-01 step:** install the Copilot package from `dist/architect-copilot-<version>.zip` and
    `architect-sdd` from the local tarball in VS Code 1.145.2's default profile (stable, not Insiders;
@@ -315,9 +375,10 @@ backed up before VSC-01 and restored after the run, so the `chat.useHooks` steps
 
 ## Done when
 
-- [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that the rerun rule does not excuse, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
+- [ ] Record committed in the format of C002-IF-009 §4: every step of the mode in use passed, each listed once at the position of its last run in the run order (the three C002-TC-516 rows with the restore between the hooks-off rows and the true-and-trusted row, no hook-decided step before the hooks-state step), the other mode's steps absent or `not-applicable`, earlier runs in `earlier_results` with their `cause` and none that neither the rerun rule nor the rule for tries outside a narrowed step excuses, a restricted-mode row that VS Code refused `passed` with its `VS Code refused: ` note, `hooks_state: enabled` with `hooks_sources` reading
       `on`, `trusted` and `none`, `models_used` with the key `sdd-conductor`, the assumption outcomes and P-01's name; with D-050, `executed_by` names the conductor too and lists P-01's steps (C002-TS-618)
 - [ ] **Run 4:** the record's run started after C002-T-084 was done, in `C:\Sandbox\runs\t050f`, on C002-T-084's candidate packages, from step 0; VSC-01 passes (both halves) with the entries shown before the install, VSC-12 and VSC-13 pass with Context7 and DeepWiki `ok`; its Notes name run 3 (2026-11-12 07:19, `t050e`, e89dae8; VSC-01 twin half D-056, VSC-12 D-057; no record) beside the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design), and C002-T-084's done commit (filled into run-sheet step 11 before the run), with the run's start time
-- [ ] D-054 (VSC-18), D-055 (VSC-15), D-056 (VSC-01) and D-057 (VSC-12, VSC-13) closed by the conductor on the results of run 4's record and its dry run (step 0.4)
+- [ ] **Revision D-058:** the record of run 4 is rewritten from C002-T-085's template after the G2 and G3 approvals and after C002-T-085 was done (the draft's sign-off not counted); VSC-20 is `passed` from its retake inside VSC-31 (`open_phase` `00-ideation in-revision`, Round 8, Q-export-01), listed after VSC-31, with the first try in `earlier_results` as `failed`, `outside-narrowed-step`, `defect: D-058`, `tracked_by: "CHG-001 D-034"` and a `note` with the evidence for (a) … (e) and candidate 7b8414a; the review of C002-TC-618 and C002-TC-937 and P-01's sign-off are dated after the approvals; the dry run gives VSC-20 no ERR-REL-004 line (step 0.5)
+- [ ] D-054 (VSC-18), D-055 (VSC-15), D-056 (VSC-01), D-057 (VSC-12, VSC-13) and D-058 (VSC-20) closed by the conductor on the results of run 4's record and its dry run (steps 0.4, 0.5)
 - [ ] (Superseded by run 4 above) The record's run started after C002-T-083 was done, in `C:\Sandbox\runs\t050e`, on C002-T-082's candidate packages (e89dae8); its Notes state that it is the binding run of C002-T-050 after the stopped runs of 2026-11-11 (VSC-14, D-054) and 2026-11-12 (VSC-15, test design) and after C002-T-083 was done (<commit>, filled into run-sheet step 11 before the run), with the run's start time; the findings passes of 2026-11-11 and 2026-11-12 and both stopped runs appear in no record (before this revision the item named C002-T-082's done commit c8c1d10 and `t050d`; before revision D-054, C002-T-081's done commit 579c39b)
 - [ ] Progress reported: `sdd task set C002-T-050 --status done --commit <sha>`
