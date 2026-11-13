@@ -13,8 +13,8 @@ the toy change to G3 on cfg-full (58.17 USD, §5) the total is **409.12 USD noti
 `npm run check` exit 0 in all four shell and Node runs, `sdd lint 001` 0 findings, DOD-G-04 review recorded,
 D-023 closed (41c3466). Toy change to G3 on cfg-full done 2026-11-08 (§5; cfg-bare deferred by D-028).
 **TC-1102's timed run waived** (defect D-031, 2026-11-10: C001-NFR-602 and the timed part of C001-DOD-018; §3). **Closed 2026-11-10:** D-031 approved and
-closed (405239b); local tag `v0.1.0` at `9eb56c0` (annotated, not pushed; `plugins/architect/` unchanged since, so the
-CHG-002 cross-change condition CR-123 holds); follow-up change "Cost and token efficiency" created as **CHG-004**
+closed (405239b); local tag `v0.1.0` at `9eb56c0` (annotated, not pushed), since moved by CHG-002 to `7b8414a`, whose
+`plugins/architect/` differs from `9eb56c0`'s (corrected 2026-11-13 for defect D-033; §10); follow-up change "Cost and token efficiency" created as **CHG-004**
 (CHG-003 is the OpenCode release); C001-T-072 reported done.
 
 ## 0. Run decisions
@@ -1426,3 +1426,50 @@ ships in the same version. Method: a read-only comparison script (task scratch f
 
 **Verdict:** the public interfaces match their contracts, with one minor documentation deviation in C001-IF-10 §1 that
 has no behaviour impact (§7). DOD-G-04 is met; the conductor decides how to settle the deviation.
+
+## 10. Correction after CHG-002: the tagged commit (defect D-033)
+
+Corrected 2026-11-13 (CHG-001 defect D-033 on C001-REQ-1110; CHG-002 hand-off, "CHG-001 impact" and
+"Local tag `v0.1.0` and the CHG-001 release record"). The status line above said that
+`plugins/architect/` was unchanged since `9eb56c0`. That stopped being true when CHG-002 fixed defects
+found by its VS Code checklist runs in the shared plugin source.
+
+- **Tag moves (local, annotated, not pushed):** `9eb56c0` (C001-T-072) → `54b83ff` (C002-T-081) →
+  `e89dae8` (C002-T-082) → `0a20c4e` → **`7b8414a`** (C002-T-084, done at `fb7b9d2`). Both hosts release
+  0.1.0 from `7b8414a` (P-01's answer to Q-t050-doctor-02, "Fix shared source (Recommended)"; CHG-002
+  plan critic CR-201). Pushing the tag stays P-01's.
+- **Shared plugin changes since `9eb56c0`** (`git diff 9eb56c0 7b8414a -- plugins/architect/`, the
+  Copilot and OpenCode mapping tables under `targets/` aside, which no Claude Code package stages):
+  - `scripts/sdd.mjs` (`e8279e1`, C002-T-078): the session-start brief is printed as a JSON
+    `hookSpecificOutput` object only under `--host copilot`; under Claude Code the output is unchanged.
+  - `commands/doctor.md`, `commands/init.md`, `skills/code-discovery/SKILL.md`,
+    `agents/sdd-researcher.md` and `README.md` (`0a20c4e`, `7b8414a`, C002-T-084, CHG-002 defect D-057):
+    the Context7 and DeepWiki probe calls of the doctor and of `/architect:init` move from the
+    cartographer, which holds neither server's tools, to `sdd-researcher`; the cartographer records the
+    outcome; the rows read `ok`, `unreachable` (a probe call failed) or `untested` (no call reached the
+    server).
+- **Evidence on the changed text.** The doctor and init sessions of §4 (C001-TS-1112, C001-TS-1111 with
+  `doctor-no-ripwire`, C001-TS-1124, C001-TS-1015, the cartographer cases) ran on the earlier text, whose
+  Context7 and DeepWiki rows read `unreachable` in every run. C002-T-084 step 8 retook the Claude Code
+  doctor and init rows on the changed text (`--auth subscription`, label `c002-t084`): 19 rows, among
+  them C001-TC-1112 (`bare`, `node18`, and `deepwiki-down`, which now expects DeepWiki `untested` with
+  the `not offered` fix), C001-TC-1124 and `doctor-no-ripwire`. 17 passed at `0a20c4e`; the two
+  `deepwiki-down` rows failed on one cause and passed at `7b8414a` after a one-sentence fix of the
+  researcher's probe line, with the two rows where a tool is not offered repeated there (23 sessions,
+  7.76 USD notional; `docs/releases/copilot/0.1.0/T-084-candidate-report.md`). The researcher cases of §4
+  (`INJ-08` … `INJ-12`, the research rows) are not retaken: the probe line applies to doctor and init
+  probe briefs only (C002-T-084 step 7, line comparison).
+- **Packages at `7b8414a`** (`npm run package`, Node 22.22.3; copies with their `SHA256SUMS` kept in the
+  run folder `t050f\7b8414a` on P-01's machine):
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `dist/architect-0.1.0.zip` (marketplace) | 266,764 | `d6ec19120f5ba77bd6cbcc745da4798815d48554cc2c45e0dd6fdb9905cc50dc` |
+| `dist/architect-0.1.0-plugin.zip` (plugin, upload) | 259,579 | `064f7d870af7d3719392afa3af8b971f2ec4b770f0d7ef50191c7fef58b100a7` |
+| `dist/architect-copilot-0.1.0.zip` | 298,931 | `0d5b1c63f5535f6cf7d6f8c99f5802b8760d61086548461446f9eb5538681bdf` |
+| `dist/architect-sdd-0.1.0.tgz` | 371,392 | `802e236341529ded82c62e3bd2ecdf840e115b0c732770f15aeda9b345beb56d` |
+
+- **Known gap shipped in 0.1.0 on both hosts:** CHG-001 defect D-034 (C001-REQ-210): an interview answer
+  that arrives after a gate approval and before the next phase starts is logged in no questions log
+  (P-01's answer to Q-t050-vsc20-03, "Listed cause + known gap (Recommended)").
+- **Still to run on the rebuilt plugin:** C001-T-073 and C001-T-074 (dogfoods), then C001-T-075.
