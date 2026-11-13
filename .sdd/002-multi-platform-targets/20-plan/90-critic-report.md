@@ -1736,3 +1736,25 @@ Plan side of the re-review (spec side and CR-216, CR-218, CR-219 in `10-spec/90-
 
 **Verdict of the re-review:** approvable for G3; no finding open.
 
+
+### Correction check of the D-058 revision (2026-11-13)
+
+Plan side of the correction (spec side and CR-221 in `10-spec/90-critic-report.md`): the C002-T-085 task file, duplicated by a faulty text replacement before G2, restored from its intact copy with the CR-219 edit re-applied (one Targets table; regexes `^D-\d{3}$`, `^CHG-\d{3} D-\d{3}$`); focused check: well-formed; two leftovers.
+
+#### CR-222 — Strategy and hand-off still stated the "non-empty" rule, and the TC-668 row listed only empty-value supporting rows
+- **Severity:** minor
+- **Refs:** strategy §2 D-058 row, hand-off D-058 section, C002-TC-668
+- **Evidence:** "only when both keys are non-empty" — `10-strategy.md:110`; "only with non-empty `defect` and `tracked_by`" — `handoff.md:593`; the TC-668 row named only empty `defect` or `tracked_by` — `60-test-plan.md:1370`.
+- **Why it matters:** the plan described a weaker check than the spec and the code.
+- **Suggested fix:** name the forms; add the malformed-value rows.
+- **Status:** resolved: strategy and hand-off name the forms; the TC-668 row lists the malformed values (`D-58`, `D-034` as `tracked_by`)
+
+#### CR-223 — T-085's template guidance kept date-only evidence for condition (a)
+- **Severity:** minor
+- **Refs:** C002-T-085 Targets (record template), C002-IF-009 §4 (a)
+- **Evidence:** "the try's date and the approval date in the Gate log" — `50-tasks/T-085-checklist-vsc20-open-phase-d058.md:60`, against §4 (a) (timestamp and the approval commit's time, CR-216).
+- **Why it matters:** the guidance would steer records to evidence that is not enough.
+- **Suggested fix:** the try's timestamp and the approval commit's time.
+- **Status:** resolved: reworded as suggested (the template that T-085 wrote already asks for them)
+
+**Verdict of the check:** approvable for G3.

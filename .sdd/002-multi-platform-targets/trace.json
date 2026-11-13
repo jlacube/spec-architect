@@ -1,6 +1,6 @@
 {
   "change": "CHG-002",
-  "generated_at": "2026-11-13T08:45:01.732Z",
+  "generated_at": "2026-11-13T09:42:34.396Z",
   "nodes": [
     {
       "id": "C002-AC-101.1",
@@ -952,7 +952,7 @@
       "file": "10-spec/20-capabilities/CAP-06-cross-target-verification/acceptance.md",
       "line": 767,
       "title": "Each completed run leaves a record with its fields",
-      "content_hash": "sha256:121605feabd348e7e8ab0a479ee17786f61398f4620f7d4d7356cfcad548bc47"
+      "content_hash": "sha256:717dd3e7a9271433427cbdcc2fda74f141b2ef583103ca7f6761ff46c79256aa"
     },
     {
       "id": "C002-AC-616.1",
@@ -4728,7 +4728,7 @@
       "file": "20-plan/50-tasks/T-085-checklist-vsc20-open-phase-d058.md",
       "line": 1,
       "title": "Fix for revision D-058: the cause outside-narrowed-step in the release check's step check, VSC-20's free-text half while a phase of the toy change is open, the record template and the T-050 run sheet",
-      "content_hash": "sha256:3bb13e30ef1802a6e8bb6ec7bd58151e909ebe235d9ddd4e99d7871adaa3aa38",
+      "content_hash": "sha256:0222005e31276ce0ff19bcc3bf98f099a26cf1db5466e976b7806da9c7c0e76d",
       "status": "todo"
     },
     {
@@ -6825,7 +6825,7 @@
       "file": "20-plan/60-test-plan.md",
       "line": 1370,
       "title": "C002-TS-668",
-      "content_hash": "sha256:d11711e30b82e6dfbd5db6ffe140783e80c9c4e67f9fb1fd654d23c8fe48abdc"
+      "content_hash": "sha256:7cc5bac4c019a03f3f75c74a7b4e7d6142909a5bd80b5665cc3438d3e42e99b0"
     },
     {
       "id": "C002-TC-669",
@@ -43073,17 +43073,7 @@
     {
       "from": "C002-T-085",
       "to": "C002-AC-311.1",
-      "relation": "references"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-AC-311.1",
       "relation": "satisfies"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-AC-614.1",
-      "relation": "references"
     },
     {
       "from": "C002-T-085",
@@ -43093,17 +43083,7 @@
     {
       "from": "C002-T-085",
       "to": "C002-AC-615.1",
-      "relation": "references"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-AC-615.1",
       "relation": "satisfies"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-AC-618.1",
-      "relation": "references"
     },
     {
       "from": "C002-T-085",
@@ -43137,18 +43117,8 @@
     },
     {
       "from": "C002-T-085",
-      "to": "C002-REQ-311",
-      "relation": "references"
-    },
-    {
-      "from": "C002-T-085",
       "to": "C002-REQ-614",
       "relation": "implements"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-REQ-614",
-      "relation": "references"
     },
     {
       "from": "C002-T-085",
@@ -43188,11 +43158,6 @@
     {
       "from": "C002-T-085",
       "to": "C002-TC-317",
-      "relation": "references"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-TC-317",
       "relation": "verified-by"
     },
     {
@@ -43244,11 +43209,6 @@
       "from": "C002-T-085",
       "to": "C002-TS-317",
       "relation": "verified-by"
-    },
-    {
-      "from": "C002-T-085",
-      "to": "C002-TS-617",
-      "relation": "references"
     },
     {
       "from": "C002-T-085",

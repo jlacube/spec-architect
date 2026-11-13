@@ -558,7 +558,7 @@ An earlier `failed` run with this cause is excused only when both parts hold:
   (d) the same run then ran the step within the narrowed Do, and that run is the step's result;
   (e) the behaviour the try showed is tracked by the open defect that `tracked_by` names.
 
-A `failed` run with this cause that lacks `defect` or `tracked_by`, or gives either empty, refuses
+A `failed` run with this cause that lacks `defect` or `tracked_by`, or gives either not of its form, refuses
 (ERR-REL-004, `failed in an earlier run outside a narrowed step without defect and tracked_by`). The
 release check does not verify the conditions (a) … (e), nor that the defects exist; it checks that
 the entry names them, so that the try cannot be dropped silently and a later passing run cannot hide
@@ -777,7 +777,7 @@ that applies, with the `<result>` of `errors.md` §3 (every value without quotes
    is <mode>`, `<mode>` being the step's Mode in the step index.
 6. Its earlier runs (§4) hold one that refuses; the first such run, oldest first, gives `failed in an
    earlier run outside a narrowed step without defect and tracked_by` for an earlier `failed` run
-   whose `cause` is `outside-narrowed-step` and whose `defect` or `tracked_by` is missing or empty
+   whose `cause` is `outside-narrowed-step` and whose `defect` or `tracked_by` is missing or not of its form (`defect` `D-<NNN>`, `tracked_by` `CHG-<NNN> D-<NNN>`)
    (revised for defect D-058), `failed in an earlier run not repeated under the rerun rule` for any
    other earlier `failed` run that §4 does not excuse (by the rerun rule, or as a try outside a
    narrowed step with both keys), and `<earlier result> in an earlier run` for an earlier run whose `result` is neither

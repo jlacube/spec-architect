@@ -808,8 +808,8 @@ Scenario: C002-TS-711 — record review of a try outside a narrowed step
 
 The review checks the conditions (a) … (e) of C002-IF-009 §4 Earlier runs (Tries outside a narrowed
 step) from the evidence that the entry's `note` names (revised for defect D-058, P-01's answer to
-Q-t050-vsc20-03; critic CR-212); the release check reads only that `defect` and `tracked_by` are
-present and non-empty (C002-TS-668). An entry whose note lacks the evidence for one condition fails
+Q-t050-vsc20-03; critic CR-212); the release check reads only that `defect` and `tracked_by` are of
+the forms `D-<NNN>` and `CHG-<NNN> D-<NNN>` (C002-TS-668). An entry whose note lacks the evidence for one condition fails
 the review, and the try is then recorded under `repeated`, which stays binding.
 
 ## C002-REQ-616

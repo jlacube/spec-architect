@@ -1967,3 +1967,17 @@ After P-01's answer to Q-t050-vsc20-03 ("Listed cause + known gap (Recommended)"
 
 **Verdict of the re-review:** approvable for G2 once CR-216 is fixed; CR-216, CR-218 and CR-219 are resolved.
 
+
+### Correction check of the D-058 revision (2026-11-13)
+
+After the approvals of the D-058 revision, C002-T-085's implementer found the C002-T-085 task file duplicated by a faulty text replacement and §5 rule 6, ERR-REL-004 and the C002-TS-711 notes still reading the keys as "present and non-empty" while §4's machine part (CR-219) requires their forms. Spec and plan were reopened for the correction (Gate log "Revise" rows); §5 rule 6, ERR-REL-004 (and the `scripts/release/errors.ts` mirror) and the TS-711 notes now say a key "is missing or not of its form". Focused check: consistent; one leftover.
+
+#### CR-221 — One sentence of §4 still gave the old rule
+- **Severity:** minor
+- **Refs:** C002-IF-009 §4 (Tries outside a narrowed step)
+- **Evidence:** "A `failed` run with this cause that lacks `defect` or `tracked_by`, or gives either empty, refuses" — `50-interfaces/verification-records.md:561`, against the machine part at `:543-545` and §5 rule 6.
+- **Why it matters:** the paragraph stated two rules for the same check.
+- **Suggested fix:** "or gives either not of its form".
+- **Status:** resolved: reworded as suggested
+
+**Verdict of the check:** approvable for G2.

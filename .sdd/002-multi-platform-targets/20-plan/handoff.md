@@ -590,7 +590,7 @@ its first try was typed after gate G1 was approved, when no phase of the toy cha
 conductor logged it in no questions log (CHG-001 defect D-034, below). Order:
 1. **C002-T-085** (S, conductor):
    - the release check's step check (`scripts/release/evidence.ts` rule 6) excuses an earlier
-     `failed` run under `outside-narrowed-step` only with non-empty `defect` and `tracked_by`;
+     `failed` run under `outside-narrowed-step` only with `defect` of the form `D-<NNN>` and `tracked_by` of the form `CHG-<NNN> D-<NNN>`;
    - the ERR-REL-004 catalogue row is mirrored, and the two new C002-TS-668 rows are added;
    - VSC-20's free-text half runs while a phase is `draft`, `in-review` or `in-revision` (during the
      VSC-30 rework, or inside VSC-31);
