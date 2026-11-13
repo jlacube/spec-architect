@@ -133,7 +133,7 @@ code chat -r -m sdd-conductor -a <package folder>\prompts\<name>.prompt.md "Foll
 - Node 22.22.3 first on PATH:
   `$env:Path = "C:\Users\jerom\AppData\Local\Author Software\nvm\installs\v22.22.3;" + $env:Path`.
 - **Package:** `dist\architect-copilot-0.1.0.zip` and `dist\architect-sdd-0.1.0.tgz`, packed at
-  C002-T-084's release-candidate commit **<C002-T-084 candidate commit, filled at its step 7>** (history:
+  C002-T-084's release-candidate commit **0a20c4e** (history:
   e89dae8 of C002-T-082, used by the stopped run of 2026-11-12 and by run 3, C002-T-083 changing no
   package input; the candidate 54b83ff of the run stopped at VSC-14, 9eb56c0 by revision D-047, b481e82 before that). The enforcement mode is **`sdd-mcp-server`**.
 - **Spend:** about 25 VS Code chat sessions with `code chat` (defect D-050; about 13 before), or about 50
