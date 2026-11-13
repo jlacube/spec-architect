@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-084]
 implements: [C002-REQ-311, C002-REQ-614, C002-REQ-615, C002-REQ-618]
 satisfies_ac: [C002-AC-311.1, C002-AC-614.1, C002-AC-615.1, C002-AC-618.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-317, C002-TS-617, C002-TS-618, C002-TS-668, C002-TS-711, C
 components: [C002-COMP-011]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 383ade1, completed_at: 2026-11-13, notes: null }
 ---
 
 # C002-T-085 — Fix for revision D-058: the cause outside-narrowed-step in the release check's step check, VSC-20's free-text half while a phase of the toy change is open, the record template and the T-050 run sheet
