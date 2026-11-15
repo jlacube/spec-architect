@@ -131,16 +131,19 @@ Read the record:
 node -e "const r=require('./docs/releases/copilot/0.1.0/release.json');console.log(r.outcome,r.enforcement_mode,JSON.stringify(r.tested_versions),'exception:',JSON.stringify(r.exception),'refusals:',r.refusals.length)"
 ```
 
-Expect `released sdd-mcp-server`, the tested versions (VS Code 1.145.2, GitHub Copilot Chat 0.73.0, Copilot CLI
-1.0.98), `exception: null` and `refusals: 0`.
+Expect `released sdd-mcp-server`, the tested versions `{"vscode":"1.145.2","copilot-chat":"0.73.0"}`,
+`exception: null` and `refusals: 0`. The Copilot CLI version (1.0.98) is in the record's injection evidence,
+not in `tested_versions`.
 
-Write the zip's hash:
+Write the zip's hash, with a Unix line ending so that `sha256sum -c` works on every system:
 
 ```powershell
-"$((Get-FileHash dist\architect-copilot-0.1.0.zip -Algorithm SHA256).Hash.ToLower())  architect-copilot-0.1.0.zip" | Set-Content docs\releases\copilot\0.1.0\zip.sha256
+[IO.File]::WriteAllText("docs\releases\copilot\0.1.0\zip.sha256", "$((Get-FileHash dist\architect-copilot-0.1.0.zip -Algorithm SHA256).Hash.ToLower())  architect-copilot-0.1.0.zip`n")
 ```
 
-With a POSIX shell: `sha256sum dist/architect-copilot-0.1.0.zip | sed 's# dist/# #' > docs/releases/copilot/0.1.0/zip.sha256`.
+With a POSIX shell: `(cd dist && sha256sum -t architect-copilot-0.1.0.zip) > docs/releases/copilot/0.1.0/zip.sha256`.
+
+Check it: `cd dist; sha256sum -c ../docs/releases/copilot/0.1.0/zip.sha256; cd ..` prints `OK`.
 
 Then:
 1. Share `dist/architect-copilot-0.1.0.zip` through `<your-release-channel>`, the same way as the Claude Code zips.
