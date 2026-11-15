@@ -191,3 +191,31 @@ C001-SC-01 and C001-SC-07. Figures from its Gate log, `approvals.json`, `sdd tra
 - **Machine configuration (C001-NFR-304):** the only toolchain record is the constitution's
   (`.sdd/_constitution/toolchain.md`, 2026-10-13, at `/architect:init`); it lists tool versions but no
   machine line, so the machine configuration of each CHG-002 phase is "not recorded".
+
+## 2026-11-15 — Superpowers execution on the voice-notes plan (C001-T-074, steps 2–3; C001-TC-621)
+
+- **Record (C001-TC-621):** 2026-11-15, Claude Code 2.1.325, Superpowers 7.0.2 (`superpowers@claude-plugins-official`),
+  Architect plugin disabled for the session, model Sonnet 5.5, one session from 02:22:57 to 02:52:44 +01:00, no
+  subagents. Repository `C:\Sandbox\dogfood\voice-notes`, branch `chg-001-impl` (created by Superpowers).
+- **First task started:** C001-T-001, the first entry of the hand-off's Ordered task list. The session read
+  `handoff.md`, then the T-001 … T-003 task files, then started T-001.
+- **Questions asked:** none. Missing-info questions (C001-SC-04): **0**. **Result: pass**, with the deviation below.
+- **Deviation (P-01, 2026-11-15):** TC-621 step 3 asks for the plain message
+  `execute the plan in .sdd/<NNN>-<slug>/20-plan/handoff.md`; P-01 sent it as the argument of
+  `/superpowers:executing-plans` with "do T-001 to T-003" appended. C001-T-074 asks for one milestone; P-01
+  stopped after T-001 … T-003 of C001-M-01 "Foundations and spikes" (9 tasks), because T-004 … T-009 are GPU
+  spikes with multi-GB model downloads, estimated at 1–2M more tokens and 4–8 hours. The C001-SC-04 data
+  therefore covers three tasks (sizes M, S, S), not a whole milestone.
+- **Outcome:** three commits, one per task (`a120d1f`, `ef5ebbb`, `3e47e2e`); 50 tests passed, 1 skipped (it
+  needs the T-009 pin list); `ruff check` and `ruff format --check` clean. The task statuses were then set done
+  with the Architect CLI (`0a2aa23`), and `sdd lint --cwd C:\Sandbox\dogfood\voice-notes` ends with 0 errors.
+- **Usage:** 126,898 tokens (input 66, cache creation 96,475, output 30,357; cache read 3,448,484 not counted),
+  33 assistant messages.
+- **Findings:**
+  - **D-035 (C001-REQ-617):** the hand-off defines `sdd` as `node <plugin-root>/scripts/sdd.mjs`. With the
+    Architect plugin disabled there is no plugin root, so Superpowers could not run `sdd task set` and left the
+    three tasks at `todo`. It said so in its final report rather than asking.
+  - Superpowers' own task-start and task-done scripts expect "Task N" headings, so it skipped them and kept
+    its ledger by hand in a git-ignored `.superpowers/` folder.
+  - It listed its own rulings (where test logic lives, licence rows marked "to verify", `.gitignore` order) with
+    their cost, which is the kind of decision the plan's task files left open.
