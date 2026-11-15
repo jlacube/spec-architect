@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-003, C002-T-023, C002-T-047, C002-T-048, C002-T-050, C002-T-054, C002-T-071, C002-T-075, C002-T-076, C002-T-081]
 implements: []
 satisfies_ac: [C002-AC-502.1, C002-AC-617.1, C002-AC-619.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-503, C002-TS-620, C002-TS-622, C002-TC-503, C002-TC-620, C
 components: [C002-COMP-006, C002-COMP-010]
 risk_refs: [C002-RISK-031]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: c302406, completed_at: 2026-11-16, notes: null }
 ---
 
 # C002-T-055 — P-01: release the Copilot target
