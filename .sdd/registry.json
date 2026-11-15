@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-15T23:27:37Z",
+  "generated_at": "2026-11-15T23:29:26Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -357,9 +357,9 @@
           "summary": "For a later change (P-01 2026-11-12: log separately): asked in plain words without the /architect:new command ('Start a new change titled Toy change', VS Code 1.145.2, C002-T-050 run of 2026-11-12 01:33, question tools available), the conductor ran sdd change new with the CLI defaults (full, greenfield) and asked no profile question. C001-REQ-116 binds only WHEN /architect:new runs, so the natural-language path has no profile round; decide whether the conductor must run the new-change procedure for any request to create a change (shared agent text, both hosts).",
           "reporter": "jerome.lacube",
           "date": "2026-11-12",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Known gap of 0.1.0 (released 2026-11-15, P-01 route B 'go with B'); fix carried to CHG-005 '0.1.1 fixes'.",
+          "closed_at": "2026-11-16"
         },
         {
           "id": "D-033",
@@ -377,9 +377,9 @@
           "summary": "C002-T-050 run 4 (2026-11-13, Copilot VS Code, candidate 7b8414a; shared conductor text, Claude Code too): an interview answer that arrives after a gate approval and before the next phase starts is logged in no questions log (the conductor will not edit the approved phase's files); run 3 logged a similar answer in a new 10-spec/questions-log.md. C001-REQ-210 requires every answer verbatim in the phase's questions log. P-01 (Q-t050-vsc20-03, 'Listed cause + known gap (Recommended)'): known gap of 0.1.0, conductor fix in a later change.",
           "reporter": "Jerome LACUBE",
           "date": "2026-11-13",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Known gap of 0.1.0 (released 2026-11-15, P-01 route B 'go with B'); fix carried to CHG-005 '0.1.1 fixes'.",
+          "closed_at": "2026-11-16"
         },
         {
           "id": "D-035",
@@ -387,9 +387,9 @@
           "summary": "Hand-off reporting commands need the Architect plugin root: handoff.md defines sdd as node <plugin-root>/scripts/sdd.mjs, so an implementer without the Architect plugin (Superpowers 7.0.2, C001-T-074 dogfood, TS-621 environment) cannot run sdd task set and leaves task status todo",
           "reporter": "Jerome LACUBE",
           "date": "2026-11-15",
-          "status": "open",
-          "resolution": null,
-          "closed_at": null
+          "status": "closed",
+          "resolution": "Known gap of 0.1.0 (released 2026-11-15, P-01 route B 'go with B'); fix carried to CHG-005 '0.1.1 fixes'.",
+          "closed_at": "2026-11-16"
         }
       ],
       "waivers": [
