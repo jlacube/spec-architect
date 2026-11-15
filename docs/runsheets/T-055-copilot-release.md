@@ -69,7 +69,7 @@ npm view architect-sdd@0.1.0 version
 npm whoami
 ```
 ```powershell
-npm publish dist/architect-sdd-0.1.0.tgz
+npm publish ./dist/architect-sdd-0.1.0.tgz
 ```
 
 7. Check that the published version is `0.1.0`.

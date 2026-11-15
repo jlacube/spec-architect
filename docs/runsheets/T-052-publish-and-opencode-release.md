@@ -76,7 +76,7 @@ npm view architect-sdd
 5. **Publish. You do this yourself.** npm asks for your 2FA code. The conductor never publishes.
 
 ```powershell
-npm publish dist/architect-sdd-0.1.0.tgz
+npm publish ./dist/architect-sdd-0.1.0.tgz
 ```
 
 6. Check that the published version is `0.1.0` and that its integrity equals the local tarball's.
