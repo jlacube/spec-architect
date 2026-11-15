@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
-status: in-progress
+status: done
 depends_on: [C001-T-072, C001-T-073]
 implements: []
 satisfies_ac: [C001-AC-617.2, C001-AC-314.1, C001-AC-410.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-621, C001-TS-315, C001-TS-412, C001-TC-621, C001-TC-315, C
 components: [C001-COMP-01, C001-COMP-02]
 risk_refs: [C001-RISK-003, C001-RISK-013]
 estimate: L
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 42c284f, completed_at: 2026-11-15, notes: "Deviation (P-01, 2026-11-15): Superpowers executed C001-M-01 T-001..T-003 only, not the whole milestone; TC-621 pass; D-035 opened" }
 ---
 
 # C001-T-074 — Dogfood: brownfield change CHG-002 and Superpowers execution in the greenfield dogfood repository
