@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
-status: in-progress
+status: done
 depends_on: [C001-T-072]
 implements: []
 satisfies_ac: [C001-AC-805.1, C001-AC-202.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-805, C001-TS-202, C001-TC-805, C001-TC-202]
 components: [C001-COMP-01, C001-COMP-02]
 risk_refs: [C001-RISK-013]
 estimate: M
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 815c525, completed_at: 2026-11-15, notes: null }
 ---
 
 # C001-T-073 — Dogfood: greenfield change in its own repository through G1–G3
