@@ -5,7 +5,7 @@ change: CHG-002
 phase: 20-plan
 artifact: plan/task
 milestone: C002-M-07
-status: todo
+status: done
 depends_on: [C002-T-003, C002-T-023, C002-T-050, C002-T-071, C002-T-074, C002-T-076, C002-T-081]
 implements: [C002-REQ-501, C002-REQ-502, C002-REQ-509]
 satisfies_ac: [C002-AC-501.1, C002-AC-502.1, C002-AC-509.1]
@@ -13,7 +13,7 @@ verified_by: [C002-TS-501, C002-TC-501]
 components: [C002-COMP-006]
 risk_refs: [C002-RISK-017, C002-RISK-018, C002-RISK-019]
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: 7347b42, completed_at: 2026-11-16, notes: null }
 ---
 
 # C002-T-075 — P-01: publish architect-sdd at the release version, apart from any target release

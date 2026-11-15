@@ -29,7 +29,7 @@ Read `NNN-slug/20-plan/handoff.md` and report progress as described there.
 | Change | Title | Phase | Status | Tasks done | Open defects | Updated |
 |---|---|---|---|---|---|---|
 | 001 | Architect agent suite | 20-plan | approved | 65/66 | 3 | 2026-11-15 |
-| 002 | Multi-platform targets | 20-plan | approved | 80/82 | 1 | 2026-11-13 |
+| 002 | Multi-platform targets | 20-plan | approved | 81/82 | 1 | 2026-11-16 |
 | 003 | OpenCode release | 00-ideation | not-started | 0/1 | 0 | — |
 | 004 | Cost and token efficiency | 00-ideation | not-started | 0/1 | 0 | — |
 | 005 | 0.1.1 fixes | 00-ideation | not-started | 0/1 | 0 | — |
