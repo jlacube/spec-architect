@@ -163,3 +163,31 @@ cells hold the same figures taken a minute or so before each approval; the G2 re
   the words and as the usage.
 - A spec revision chosen during the plan phase was recorded as a G2 Revise row followed by a second G2
   approval, as designed; its usage is not separable from the plan's.
+
+## 2026-11-15 — CHG-002 brownfield dogfood figures (C001-T-074, step 1)
+
+CHG-002 ("Multi-platform targets"), taken through G1–G3 in this repository, is the brownfield dogfood of
+C001-SC-01 and C001-SC-07. Figures from its Gate log, `approvals.json`, `sdd trace 002` and
+`node plugins/architect/scripts/sdd.mjs lint 002`, taken on 2026-11-15.
+
+| Gate | First approval | Gate log rows to date | Current approved hash | Approver |
+|---|---|---|---|---|
+| G1 (ideation) | 2026-10-14 05:26:18 +02:00, "Approve" | 1 Approved | `sha256:9770ce05…` (16 files, 2026-10-14) | Jerome LACUBE (the registry holds an earlier git identity) |
+| G2 (spec) | 2026-10-15 22:48:20 +02:00, "Approve with waivers" | 36 Approved with waivers, 35 Revise | `sha256:49ffb9e3…` (47 files, 2026-11-13) | Jerome LACUBE |
+| G3 (plan) | 2026-10-16 15:04:01 +02:00, "Approve" | 39 Approved, 29 Revise | `sha256:0d7582c2…` (109 files, 2026-11-13) | Jerome LACUBE |
+
+- **Revisions:** 140 Gate log rows. After the first G3, defects found while implementing and verifying
+  (D-001 onwards) reopened the spec and plan 35 and 29 times; each revision ended in a re-approval.
+  The G2 approvals carry the standing waivers (C002-REQ-211, 212, 213, 503 … 507, 601, then DOD-G-01).
+- **Size:** 121 REQs at the first G3, 143 today (16 NFRs, 33 US, 82 tasks). Outside the 5–40 range, so
+  C001-NFR-106 and C001-SC-08 do not apply and neither does RISK-013's trigger.
+- **Tokens:** the Gate log Usage cells read "unavailable"; the upper-bound estimate for G1–G3 is in the
+  2026-11-13 entry above (15,203,384 tokens, input + cache creation + output; 457,125,286 with cache
+  reads), cited for C001-SC-06.
+- **Delta (C001-SC-07):** the requirement Delta fields read 135 ADDED, 11 MODIFIED, 0 REMOVED.
+  `sdd lint 002` reports no TR-09 finding: every MODIFIED requirement has its evidence. The lint exits
+  1 on 9 LINT-DELTA-001 errors, all in CHG-002 capabilities covered by the standing G2 waivers.
+- **Traceability:** `sdd trace 002` reports 100 % for TR-01 … TR-08 and an acyclic task graph (TR-11).
+- **Machine configuration (C001-NFR-304):** the only toolchain record is the constitution's
+  (`.sdd/_constitution/toolchain.md`, 2026-10-13, at `/architect:init`); it lists tool versions but no
+  machine line, so the machine configuration of each CHG-002 phase is "not recorded".
