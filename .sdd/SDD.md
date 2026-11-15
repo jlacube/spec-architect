@@ -32,4 +32,5 @@ Read `NNN-slug/20-plan/handoff.md` and report progress as described there.
 | 002 | Multi-platform targets | 20-plan | approved | 80/82 | 1 | 2026-11-13 |
 | 003 | OpenCode release | 00-ideation | not-started | 0/1 | 0 | — |
 | 004 | Cost and token efficiency | 00-ideation | not-started | 0/1 | 0 | — |
+| 005 | 0.1.1 fixes | 00-ideation | not-started | 0/1 | 0 | — |
 <!-- sdd:status:end -->
