@@ -103,3 +103,63 @@ removes the October subagent files; C001-T-074 cites it.
   With cache reads: 457,125,286.
 - **C001-NFR-106 does not apply:** CHG-002 had 121 REQs at its first G3, above the medium-feature range
   (5–40 REQs) of C001-NFR-106 and C001-SC-08, so the figures serve cost visibility (C001-SC-06) only.
+
+## 2026-11-15 — CHG-001 greenfield dogfood "Voice dictation to Markdown notes" (C001-T-073)
+
+The released suite (0.1.0, installed from the local marketplace) took one greenfield change through
+G0–G3 in its own repository, with P-01 as spec owner driving `claude --agent architect:sdd-conductor`.
+No dogfood artifact is copied here; the figures come from the dogfood's Gate log, `approvals.json`,
+critic reports and session transcripts.
+
+- **Repository:** `C:\Sandbox\dogfood\voice-notes` on P-01's machine, change
+  `001-voice-dictation-to-markdown-notes` (full profile, greenfield), commit `aa45a77` at G3. Keep it
+  at that path until C001-T-075 is done; C001-T-074 runs a Superpowers milestone on its plan.
+- **Input:** P-01's pre-ideation brief on a local speech stack (`docs/input/` of the dogfood repository).
+
+| Gate | Date | Decision | Approved hash | Approver |
+|---|---|---|---|---|
+| G0 (constitution) | 2026-11-14 | Approved | — | Jerome LACUBE |
+| G1 (ideation) | 2026-11-14 | Approved | `sha256:8f9a88f1…` (26 files) | Jerome LACUBE |
+| G2 (spec) | 2026-11-14 | Approved, then Revise (focused revision of spec minors chosen during the plan), then Approved | `sha256:979668a2…` (55 files) | Jerome LACUBE |
+| G3 (plan) | 2026-11-15 | Approved | `sha256:b5715d55…` (81 files) | Jerome LACUBE |
+
+**Usage per phase.** Assistant-message usage, deduplicated by message ID, over the dogfood
+repository's transcripts with subagents (`%USERPROFILE%\.claude\projects\C--Sandbox-dogfood-voice-notes`),
+cut at the change's creation (2026-11-14 01:40:09 +01:00) and the gate commits. The Gate log Usage
+cells hold the same figures taken a minute or so before each approval; the G2 re-approval cell reads
+"unavailable" and its revision is inside the plan window.
+
+| Window | Input | Cache creation | Cache read | Output | Total (input + cache creation + output) |
+|---|---:|---:|---:|---:|---:|
+| init + G0 | 69 | 126,391 | 1,221,129 | 18,119 | 144,579 |
+| 00-ideation → G1 | 471 | 1,235,018 | 21,705,125 | 444,970 | 1,680,459 |
+| 10-spec → first G2 | 1,492 | 4,590,402 | 110,019,789 | 1,327,136 | 5,919,030 |
+| 20-plan → G3, with the G2 revision | 2,662 | 6,737,394 | 246,985,524 | 2,019,888 | 8,759,944 |
+| **Change (G1–G3)** | **4,625** | **12,562,814** | **378,710,438** | **3,791,994** | **16,359,433** |
+
+- **C001-NFR-106 not met:** 16,359,433 tokens for the change against ≤ 3,000,000 (target
+  ≤ 2,000,000), about 5.5×. RISK-013's trigger is reached. The CHG-002 upper-bound estimate above
+  (15,203,384) is of the same order, so the overrun is the process, not this change. Output and cache
+  creation dominate, driven by critic reviews and re-reviews (ideation 15 findings, spec 26, plan 22).
+  Input for CHG-004 ("Cost and token efficiency").
+- **REQ count at G2:** 40 (NFR 10), inside 5–40, so the C001-SC-08 and C001-NFR-106 figures apply.
+  The cap shaped the spec: the critic's singularity fixes would have exceeded it (spec CR-2) and P-01
+  kept ≤ 40 with labelled sub-rules.
+- **Time to G2 (wall clock, P-01's answering time included):** 15 h 01 min from the change's creation
+  to the first G2 approval (2026-11-14 16:41:08 +01:00); 22 h 10 min to the G2 re-approval after the
+  revision (23:49:56). G3 followed at 2026-11-15 01:12:12. The plan has 50 tasks.
+- **Critic validity (C001-SC-03, blockers and majors, judged by P-01):** no blockers at any gate.
+  G1: 9 majors, 9 valid. G2: 10 majors, 10 valid. G3: 7 majors, 7 valid. Minors open at the gate: G2
+  nine (six of them fixed by the focused revision), G3 two.
+- **Dogfood lint:** `node plugins/architect/scripts/sdd.mjs lint --cwd C:\Sandbox\dogfood\voice-notes`
+  ends with exit 0, "0 errors, 0 warnings, 0 info" (LINT-GATE-001 included).
+
+**Findings for the suite**
+
+- The G0 approval committed nothing: the constitution stayed uncommitted until P-01 committed it by hand
+  after G2 (`448741a`), and the G1–G3 gate commits do not stage `.sdd/_constitution/`.
+- Typing "Approve" alone leaves the Usage cell "unavailable"; the gate dialog has no "Approve with a
+  note" choice, so P-01 typed the usage through "Enter something", which the conductor recorded both as
+  the words and as the usage.
+- A spec revision chosen during the plan phase was recorded as a G2 Revise row followed by a second G2
+  approval, as designed; its usage is not separable from the plan's.
