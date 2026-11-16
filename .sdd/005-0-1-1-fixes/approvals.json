@@ -1,0 +1,10 @@
+{
+  "00-ideation": {
+    "hash": "sha256:874c9db6ae403caba4fea1f4e24e9704ebd9287f4140aaef1e5637c5dcf86e12",
+    "approved_at": "2026-11-17",
+    "files": 5,
+    "ids": {
+      "C005-R-001": "sha256:2125dcf6a182ff41da5e0a85806e594caa6316f0bab3ee188b21bcc92e11203c"
+    }
+  }
+}

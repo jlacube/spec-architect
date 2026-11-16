@@ -1,0 +1,115 @@
+{
+  "change": "CHG-005",
+  "generated_at": "2026-11-16T23:41:54.613Z",
+  "nodes": [
+    {
+      "id": "C005-AC-101.1",
+      "type": "AC",
+      "file": "10-spec/spec.md",
+      "line": 37,
+      "title": "0.1.1 fixes",
+      "content_hash": "sha256:16b442212ed423522968335143e4e52c7f3d245044398695b4c0cc4bee61602a"
+    },
+    {
+      "id": "C005-R-001",
+      "type": "R",
+      "file": "00-ideation/research/R-001-sdd-without-plugin.md",
+      "line": 1,
+      "title": "",
+      "content_hash": "sha256:2125dcf6a182ff41da5e0a85806e594caa6316f0bab3ee188b21bcc92e11203c",
+      "status": "draft"
+    },
+    {
+      "id": "C005-REQ-101",
+      "type": "REQ",
+      "file": "10-spec/spec.md",
+      "line": 27,
+      "title": "0.1.1 fixes",
+      "content_hash": "sha256:81126e4d6443d00f0dedc98849fa65eac9d865b6bc7c16102a15ecadc1331975"
+    },
+    {
+      "id": "C005-T-001",
+      "type": "T",
+      "file": "20-plan/plan.md",
+      "line": 14,
+      "title": "0.1.1 fixes",
+      "content_hash": "sha256:00eff503e4bbf122f32274d9a2a41c9c30fe9e8735d109abe792a59a4b692449"
+    },
+    {
+      "id": "C005-TC-001",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 28,
+      "title": "C005-TS-101",
+      "content_hash": "sha256:20a05717f496a5464dfcf3b51ee8dd9bcaca13aeba294654137485d7559fe0b0"
+    },
+    {
+      "id": "C005-TS-101",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 39,
+      "title": "0.1.1 fixes",
+      "content_hash": "sha256:1b5f270349030be1c4c4a1ac1f1af6f436989ec90503dbec8ebb4748faf5bc13"
+    },
+    {
+      "id": "C005-US-101",
+      "type": "US",
+      "file": "10-spec/spec.md",
+      "line": 16,
+      "title": "0.1.1 fixes",
+      "content_hash": "sha256:da57bd5b430643ef0d74546079b16afbd71f69ecab2795264cf74bd932786555"
+    }
+  ],
+  "edges": [
+    {
+      "from": "C005-AC-101.1",
+      "to": "C005-REQ-101",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-101.1",
+      "to": "C005-TS-101",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-101.1",
+      "to": "C005-TS-101",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C005-REQ-101",
+      "to": "C005-AC-101.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C005-REQ-101",
+      "to": "C005-US-101",
+      "relation": "story-of"
+    },
+    {
+      "from": "C005-T-001",
+      "to": "C005-AC-101.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C005-T-001",
+      "to": "C005-REQ-101",
+      "relation": "implements"
+    },
+    {
+      "from": "C005-T-001",
+      "to": "C005-TC-001",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-001",
+      "to": "C005-TS-101",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-TC-001",
+      "to": "C005-TS-101",
+      "relation": "references"
+    }
+  ]
+}
