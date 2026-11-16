@@ -1,0 +1,75 @@
+---
+id: GLOSSARY
+artifact: constitution/glossary
+updated: 2026-11-16
+---
+# Glossary
+
+## Domain terms
+| Term | Definition |
+|---|---|
+| Architect | The plugin and agent suite specified by CHG-001 |
+| Workspace | The `.sdd/` folder of a repository and everything in it |
+| Change | A unit of specification work with its own folder `NNN-slug/` |
+| Phase | One of `00-ideation`, `10-spec`, `20-plan` of a change |
+| Gate | Human approval point at a phase exit: G0 constitution, G1 ideation, G2 spec, G3 plan |
+| Profile | `full` (multi-file layout) or `lite` (reduced file set, same rules) |
+| Capability | A cohesive area of behaviour grouping stories and requirements (`CAP-nn`) |
+| Living spec | Current-truth specification of a capability in `_living/` |
+| Capability inventory | An `inventory_only` living-spec stub listing entry points, modules and tests without requirements |
+| Delta | `ADDED`, `MODIFIED`, `REMOVED` or `RENAMED` tag of a requirement relative to the living spec |
+| Evidence entry | A recorded code claim with path, symbol, layer, confidence and disclosures |
+| Evidence layer | The tool that produced an evidence entry: ripwire, serena, lsp, grep or ast-grep |
+| Marker | Inline tag `[NEEDS CLARIFICATION: …]`, `[ASSUMPTION: …]` or `[WAIVED: …]` |
+| Waiver | Recorded acceptance of a known gap at a gate |
+| Stale | Status of an approved phase whose content or predecessor changed after approval |
+| Approval hash | SHA-256 of a phase's normalised content stored at approval (C001-IF-13 §2) |
+| Gate summary | The report shown before a gate decision (C001-IF-13 §1) |
+| Hand-off | The `handoff.md` contract where Architect stops and an implementer starts |
+| Defect (spec defect) | An implementer-reported error in a specification item (`D-<seq>`) |
+| Unattended drafting | Conductor mode that applies recommended options to non-blocking questions until the next gate |
+| Interview round | One ask of 1–4 questions: a question-tool call, or its plain-text form when the session offers no question tool (C001-IF-05 `questions.md` §3) |
+| Question tool | The tool through which the conductor asks P-01: AskUserQuestion on Claude Code, or its counterpart on a generated target (C001-IF-05 `questions.md` §3) |
+| Specialist hand-back | The final message a specialist returns to the conductor, with its optional `questions` block (C001-IF-05) |
+| Options analysis | Scored comparison of 4–5 candidates for a decision (`OA`) |
+| Reference machine | REF-WIN: the Windows 11 configuration used for NFR measurement |
+| Isolated Claude profile | The clean-profile environment of C001-TS-1102 and C001-NFR-602: a process environment (manual form: one PowerShell window) whose Claude Code configuration, home and roaming data folders point into a new empty folder (defined in C001-SPEC-NFR) |
+
+## System names (allowed after `THE` in EARS statements)
+| Name | Component |
+|---|---|
+| plugin | The installed `architect` Claude Code plugin as a whole |
+| plugin's MCP configuration | The plugin's `.mcp.json` |
+| repository | The Architect source repository (this repo) |
+| build | The bundling and license-check step producing `scripts/sdd.mjs` |
+| plugin structure check | The checks of C001-IF-08 §3 run by `npm run check` |
+| unit tests | The `node --test` suite of the repository |
+| distributed plugin | The plugin as installed by a user (no dev dependencies) |
+| README | The repository's `README.md` |
+| sdd CLI | `scripts/sdd.mjs` and its subcommands |
+| lint | The `sdd lint` subcommand and rule engine |
+| path guard | The PreToolUse hook checking write targets |
+| bash guard | The PreToolUse hook checking shell commands |
+| guard | Either the path guard or the bash guard |
+| session-start hook | The SessionStart hook emitting the status brief |
+| conductor | Agent A0 `sdd-conductor` (main session) |
+| researcher | Agent A1 `sdd-researcher` |
+| cartographer | Agent A2 `sdd-cartographer` |
+| options-analyst | Agent A3 `sdd-options-analyst` |
+| spec-writer | Agent A4 `sdd-spec-writer` |
+| test-designer | Agent A5 `sdd-test-designer` |
+| architect | Agent A6 `sdd-architect` |
+| planner | Agent A7 `sdd-planner` |
+| critic | Agent A8 `sdd-critic` |
+| auditor | Agent A9 `sdd-auditor` |
+| specialist | Any of agents A1–A9 |
+| author agent | Any of spec-writer, test-designer, architect, planner |
+| Architect agent | Any of agents A0–A9 |
+| agent | Any Architect agent (used in NFRs) |
+| agent definitions | The markdown files under the plugin's `agents/` |
+| definitions of | Prefix: a subset of the agent definitions named after "of" |
+| `sdd-conductor` definition | `agents/sdd-conductor.md` |
+| skills preloaded by any one agent | The `skills` list of one agent definition |
+| suite | All Architect components acting together (used in NFRs) |
+| Ordered task list section of `handoff.md` | The hand-off section listing tasks topologically |
+| commands in `hooks/hooks.json` | The hook command lines declared by the plugin |

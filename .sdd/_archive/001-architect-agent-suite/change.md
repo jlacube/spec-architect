@@ -54,6 +54,7 @@ waivers:
   - { item: C001-DOD-015, gate: 10-spec, date: 2026-11-10, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'" }
   - { item: C001-NFR-602, gate: 10-spec, date: 2026-11-10, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'" }
   - { item: C001-DOD-018, gate: 10-spec, date: 2026-11-10, note: "Standing approval (2026-10-24, renewed 2026-10-28): i give you approval for the usual gates. ask me only when problems or big bugs arise; waiver of the timed clean-profile run by P-01's instruction of 2026-11-10: 'agreed on all points. waive and continue autonomously until you reach some significant that requires my inputs'" }
+status: archived
 ---
 # CHG-001 — Architect agent suite
 

@@ -96,6 +96,6 @@ test("generated files contribute neither definitions nor edges", () => {
 test("loadWorkspace finds the change folders of .sdd/", () => {
   const ws = loadWorkspace(join(repoRoot(), ".sdd"));
   const folders = readdirSync(join(repoRoot(), ".sdd")).filter((n) => /^\d{3}-/.test(n)).map((n) => n.slice(0, 3)).sort();
-  assert.ok(folders.includes("001"));
+  assert.ok(folders.length > 0, "the repository has at least one active change");
   assert.deepEqual(ws.changes.map((c) => c.change).sort(), folders);
 });

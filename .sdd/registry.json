@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-15T23:29:26Z",
+  "generated_at": "2026-11-15T23:33:08Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -8,7 +8,7 @@
       "title": "Architect agent suite",
       "kind": "greenfield",
       "profile": "full",
-      "status": "active",
+      "status": "archived",
       "phase": "20-plan",
       "phases": {
         "00-ideation": {
@@ -31,14 +31,14 @@
         }
       },
       "implementation": {
-        "status": "in-progress",
+        "status": "done",
         "tasks": {
           "total": 66,
-          "done": 65,
+          "done": 66,
           "blocked": 0,
           "in_progress": 0
         },
-        "last_report": "2026-11-15T00:00:00Z"
+        "last_report": "2026-11-16T00:00:00Z"
       },
       "defects": [
         {

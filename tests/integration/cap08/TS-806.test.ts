@@ -2,8 +2,9 @@
 // this repository's approved G1, G2 and G3 hashes as golden values.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { cpSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
 import { idHashes, phaseHash } from "../../../src/gate/hash.ts";
 import { splitFrontmatter } from "../../../src/model/frontmatter.ts";
 import { repoRoot } from "../../helpers.ts";
@@ -21,10 +22,17 @@ test("the 00-ideation hash of CHG-001 at G1 equals the G1 value", () => {
 
 test("`sdd hash` reproduces every approved_hash of CHG-001 (G1, G2, G3)", () => {
   const phases = splitFrontmatter(readFileSync(join(dir, "change.md"), "utf8")).data?.["phases"] as Record<string, { approved_hash: string }>;
-  for (const phase of ["00-ideation", "10-spec", "20-plan"]) {
-    const r = runBundled(["hash", "001", phase], { cwd: repoRoot() });
-    assert.equal(r.code, 0, r.stderr);
-    assert.equal(r.stdout.trim(), phases[phase]!.approved_hash, phase);
+  // `sdd hash` reads active changes only; after `sdd archive 001` the change is copied into a scratch workspace.
+  const ws = mkdtempSync(join(tmpdir(), "sdd-hash-001-"));
+  try {
+    cpSync(dir, join(ws, ".sdd", basename(dir)), { recursive: true });
+    for (const phase of ["00-ideation", "10-spec", "20-plan"]) {
+      const r = runBundled(["hash", "001", phase], { cwd: ws });
+      assert.equal(r.code, 0, r.stderr);
+      assert.equal(r.stdout.trim(), phases[phase]!.approved_hash, phase);
+    }
+  } finally {
+    rmSync(ws, { recursive: true, force: true });
   }
 });
 

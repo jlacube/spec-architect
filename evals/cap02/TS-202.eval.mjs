@@ -1,13 +1,13 @@
 // C001-TC-202 — verifies C001-TS-202 (C001-AC-202.1, C001-REQ-202): orientation on a workspace with
 // two changes. fx-bootstrap is this repository's workspace; CHG-001's phase is read from its
 // change.md at run time (the scenario was written when CHG-001 was in 10-spec).
-import { cpSync, readdirSync, readFileSync } from "node:fs";
+import { cpSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { checker, firstReply, toolCalls } from "../harness/assert.mjs";
 import { ROOT } from "../harness/fixtures.mjs";
 import { edit, git, sdd } from "../harness/workspaces.mjs";
 
-const CHG1_PHASE = /^phase:\s*(\S+)/m.exec(readFileSync(join(ROOT, ".sdd", "001-architect-agent-suite", "change.md"), "utf8"))[1];
+const CHG1_PHASE = /^phase:\s*(\S+)/m.exec(readFileSync(existsSync(join(ROOT, ".sdd", "001-architect-agent-suite")) ? join(ROOT, ".sdd", "001-architect-agent-suite", "change.md") : join(ROOT, ".sdd", "_archive", "001-architect-agent-suite", "change.md"), "utf8"))[1];
 
 export default {
   id: "TS-202",

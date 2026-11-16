@@ -6,14 +6,25 @@ import YAML from "yaml";
 
 export const REPO = join(fileURLToPath(new URL(".", import.meta.url)), "..", "..");
 
+/** The CHG-001 folder: the active `.sdd/001-*`, else the archived `.sdd/_archive/001-*` (after `sdd archive 001`). */
+function chg001(repo) {
+  for (const dir of [join(repo, ".sdd"), join(repo, ".sdd", "_archive")]) {
+    if (!existsSync(dir)) continue;
+    const name = readdirSync(dir, { withFileTypes: true }).find((e) => e.isDirectory() && e.name.startsWith("001-"))?.name;
+    if (name !== undefined) return join(dir, name);
+  }
+  return join(repo, ".sdd", "001-architect-agent-suite");
+}
+
 /** Check context: repository root, plugin root and the CHG-001 interfaces folder. */
 export function context(overrides = {}) {
   const repo = overrides.repo ?? REPO;
+  const change = overrides.interfaces !== undefined && overrides.tasks !== undefined ? undefined : chg001(repo);
   return {
     repo,
     plugin: overrides.plugin ?? join(repo, "plugins", "architect"),
-    interfaces: overrides.interfaces ?? join(repo, ".sdd", "001-architect-agent-suite", "10-spec", "50-interfaces"),
-    tasks: overrides.tasks ?? join(repo, ".sdd", "001-architect-agent-suite", "20-plan", "50-tasks"),
+    interfaces: overrides.interfaces ?? join(change, "10-spec", "50-interfaces"),
+    tasks: overrides.tasks ?? join(change, "20-plan", "50-tasks"),
   };
 }
 

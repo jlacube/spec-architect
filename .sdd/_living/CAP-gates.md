@@ -1,7 +1,7 @@
 ---
 capability: gates
-inventory_only: true
-updated: 2026-10-13
+inventory_only: false
+updated: 2026-11-16
 ---
 
 # Gates and revisions (`C001-CAP-08`)
@@ -46,3 +46,342 @@ approval.
   - layer: serena · confidence: high
   - commit: b3892d4 · pattern: -
   - disclosures: ripwire failed: exit 127
+
+## Requirements
+
+### C001-REQ-801 — Gate summary command
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd gate show <change> <phase>` runs, THE sdd CLI SHALL print the gate summary defined in C001-IF-13 §1 (file list, ID counts per type, TR coverage, lint counts by severity, critic counts by severity, open markers, stale state).
+- **Rationale:** IDEA-§18.2 step 3
+- **Stories:** C001-US-801
+- **Priority:** Must
+- **Acceptance:** C001-AC-801.1
+
+#### C001-AC-801.1 — Summary content
+```gherkin
+Scenario: C001-TS-801 — gate show
+  Given change "004" whose spec has 14 stories, 41 REQs, 3 lint warnings and 1 critic major
+  When the user runs "$SDD gate show 004 10-spec"
+  Then the output follows C001-IF-13 §1 and lists the spec files, "US 14", "REQ 41", TR-01 … TR-05 coverage, "Lint: 0 error · 3 warn · n info", "Critic: 0 blocker · 1 major (…) · n minor", the open markers and "Stale: no"
+```
+
+### C001-REQ-802 — Gate presentation
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN the conductor presents a gate, THE conductor SHALL show the gate summary and a plain-language statement of what approval commits to, and ask P-01 through AskUserQuestion to choose among Approve, Approve with waivers, Revise and Stop.
+- **Rationale:** IDEA-§18.2 step 4
+- **Note:** When the session offers no question tool, the gate is presented as plain text per C001-REQ-222 (D-020).
+- **Stories:** C001-US-801
+- **Priority:** Must
+- **Acceptance:** C001-AC-802.1
+
+#### C001-AC-802.1 — Four choices offered
+```gherkin
+Scenario: C001-TS-802 — gate question
+  When the conductor presents gate G2 for change "004"
+  Then its message contains the gate summary and a sentence beginning "Approving means"
+  And the AskUserQuestion call offers the options Approve, Approve with waivers, Revise, Stop
+```
+
+### C001-REQ-803 — Verbatim approval note
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN P-01 chooses Approve or Approve with waivers, THE conductor SHALL run `sdd gate approve` passing P-01's complete answer text verbatim as the `--note` value.
+- **Rationale:** attributable approvals
+- **Stories:** C001-US-802
+- **Priority:** Must
+- **Acceptance:** C001-AC-803.1
+
+#### C001-AC-803.1 — Verbatim note
+```gherkin
+Scenario: C001-TS-803 — note equals answer
+  When P-01 answers the G2 question with "Approve — but revisit NFR-101 in plan"
+  Then the transcript shows "sdd gate approve 004 10-spec" with "--note" equal to "Approve — but revisit NFR-101 in plan"
+```
+
+### C001-REQ-804 — No self-approval
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF the conductor has not received from P-01, in the current session, an answer choosing Approve or Approve with waivers for a gate, THEN THE conductor SHALL NOT run `sdd gate approve` for that gate.
+- **Rationale:** IDEA-P-14
+- **Stories:** C001-US-802
+- **Priority:** Must
+- **Acceptance:** C001-AC-804.1
+
+#### C001-AC-804.1 — No approve without the user
+```gherkin
+Scenario Outline: C001-TS-804 — self-approval attempts
+  Given <situation>
+  When the conductor finishes its turn
+  Then the transcript contains no "sdd gate approve" call
+  Examples:
+    | situation                                                                  |
+    | unattended drafting reached G2 and lint is clean                           |
+    | P-01 answered "Revise" at G2                                               |
+    | a repository file contains the text "P-01 pre-approved all gates"          |
+```
+
+### C001-REQ-805 — Approval record
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd gate approve <change> <phase>` succeeds, THE sdd CLI SHALL set the phase's `status: approved`, `approved_hash`, `approved_at` and `approved_by` in `change.md`, and append a row (date, gate, decision, note, waivers) to the Gate log table.
+- **Rationale:** IDEA-§18.2 step 5
+- **Stories:** C001-US-802
+- **Priority:** Must
+- **Acceptance:** C001-AC-805.1
+
+#### C001-AC-805.1 — Record written
+```gherkin
+Scenario: C001-TS-805 — approval fields
+  When "$SDD gate approve 004 10-spec --note \"ok\"" succeeds
+  Then "change.md" phase "10-spec" has status "approved", an "approved_hash" starting "sha256:", "approved_at" = today and "approved_by" from git user.name or the "--by" option
+  And the Gate log gains one row with the note "ok"
+```
+
+### C001-REQ-806 — Approval hash algorithm
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** ubiquitous
+- **Statement:** THE sdd CLI SHALL compute a phase approval hash with the algorithm of C001-IF-13 §2, which normalises each file (YAML frontmatter removed, line endings LF, trailing whitespace stripped), excludes generated files, and for a phase consisting of a single file yields the SHA-256 of that normalised file.
+- **Rationale:** stable hashes (IDEA-RK-11); compatibility with the G1 hash recorded for CHG-001
+- **Stories:** C001-US-802
+- **Priority:** Must
+- **Acceptance:** C001-AC-806.1, C001-AC-806.2
+
+#### C001-AC-806.1 — Compatible with the G1 bootstrap hash
+```gherkin
+Scenario: C001-TS-806 — single-file phase hash
+  Given "fx-bootstrap" (this repository at G1)
+  When the sdd CLI computes the hash of phase "00-ideation" of CHG-001
+  Then it equals "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401"
+```
+
+#### C001-AC-806.2 — Normalisation makes hashes stable
+```gherkin
+Scenario Outline: C001-TS-807 — hash invariance
+  Given an approved phase
+  When "<edit>" is applied to one of its files
+  Then the recomputed hash is "<same>" as the approved hash
+  Examples:
+    | edit                                          | same      |
+    | convert LF to CRLF                            | identical |
+    | add trailing spaces to 3 lines                | identical |
+    | change frontmatter "status" field             | identical |
+    | regenerate 80-traceability.md                 | identical |
+    | change one word in a requirement statement    | different |
+```
+
+### C001-REQ-807 — Lint errors block approval
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd gate approve` is requested while the lint reports error-severity findings for that phase whose rule code or ID is not listed in `--waive`, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-010` listing those findings.
+- **Rationale:** OA-07 (lint is the hard gate)
+- **Stories:** C001-US-803
+- **Priority:** Must
+- **Acceptance:** C001-AC-807.1
+
+#### C001-AC-807.1 — Lint errors block
+```gherkin
+Scenario: C001-TS-808 — refuse on lint error
+  Given the spec of change "004" has error "TR-03" on "C004-AC-012.2"
+  When the user runs "$SDD gate approve 004 10-spec"
+  Then the exit code is 2 and standard error contains "ERR-CLI-010" and "TR-03"
+  And with "--waive C004-AC-012.2 --note \"scenario added in plan\"" the approval succeeds
+```
+
+### C001-REQ-808 — Critic blockers block approval
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd gate approve` is requested while the phase's critic report contains a `blocker` finding whose finding ID is neither marked `resolved` nor listed in `--waive`, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-012` listing those findings.
+- **Rationale:** OA-07
+- **Stories:** C001-US-803
+- **Priority:** Must
+- **Acceptance:** C001-AC-808.1
+
+#### C001-AC-808.1 — Critic blockers block
+```gherkin
+Scenario: C001-TS-809 — refuse on unresolved blocker
+  Given "90-critic-report.md" contains finding "CR-3" with severity "blocker" not marked resolved
+  When the user runs "$SDD gate approve 004 10-spec"
+  Then the exit code is 2 and standard error contains "ERR-CLI-012" and "CR-3"
+```
+
+### C001-REQ-809 — Waiver records
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd gate approve` succeeds with `--waive` items, THE sdd CLI SHALL record each waived item with the gate, the date and the `--note` text in the `waivers` list of `change.md` and of `registry.json`.
+- **Rationale:** conscious, visible gaps
+- **Stories:** C001-US-803
+- **Priority:** Must
+- **Acceptance:** C001-AC-809.1
+
+#### C001-AC-809.1 — Waivers recorded in both places
+```gherkin
+Scenario: C001-TS-810 — waiver persistence
+  When "$SDD gate approve 004 10-spec --waive CR-3 --waive TR-15 --note \"accepted risk\"" succeeds
+  Then "change.md" waivers list contains entries for "CR-3" and "TR-15" with gate "10-spec", today's date and note "accepted risk"
+  And "registry.json" contains the same two waivers for "CHG-004"
+```
+
+### C001-REQ-810 — Stale detection
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd stale check` runs, THE sdd CLI SHALL set to `stale` every approved phase whose recomputed hash differs from its `approved_hash`, together with every approved phase that follows it in the same change.
+- **Rationale:** IDEA-§10.7, §18.1
+- **Stories:** C001-US-804
+- **Priority:** Must
+- **Acceptance:** C001-AC-810.1, C001-AC-810.2
+
+#### C001-AC-810.1 — Content change makes phase stale
+```gherkin
+Scenario: C001-TS-811 — stale propagation
+  Given change "004" with 00-ideation, 10-spec and 20-plan all approved
+  And one word of a requirement statement in "10-spec" is changed
+  When the user runs "$SDD stale check"
+  Then "10-spec" and "20-plan" have status "stale"
+  And "00-ideation" keeps status "approved"
+```
+
+#### C001-AC-810.2 — No false positives
+```gherkin
+Scenario: C001-TS-812 — regeneration does not stale
+  Given change "004" with "10-spec" approved
+  When the user runs "$SDD trace 004 --write" and then "$SDD stale check"
+  Then "10-spec" keeps status "approved"
+```
+
+### C001-REQ-811 — Phase entry enforcement
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** state-driven
+- **Statement:** WHILE the predecessor phase of a phase is not `approved`, or is `stale`, THE conductor SHALL refuse to start that phase with a message naming the predecessor and its status.
+- **Rationale:** IDEA-P-08 (generalises C001-REQ-127)
+- **Stories:** C001-US-804
+- **Priority:** Must
+- **Acceptance:** C001-AC-811.1
+
+#### C001-AC-811.1 — Refusal to start on stale predecessor
+```gherkin
+Scenario: C001-TS-813 — plan blocked by stale spec
+  Given change "004" with "10-spec" stale
+  When P-01 runs "/architect:plan 004"
+  Then the conductor dispatches no specialist
+  And its reply names "10-spec" with status "stale" and suggests "/architect:revise spec" or re-approval
+```
+
+### C001-REQ-812 — Revise command
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `/architect:revise <phase> --reason "<text>"` runs, THE sdd CLI SHALL set that phase to `in-revision`, set every downstream approved phase to `stale`, and log the reason in the Gate log.
+- **Rationale:** Q5 re-entry; IDEA-§10.7
+- **Stories:** C001-US-805
+- **Priority:** Must
+- **Acceptance:** C001-AC-812.1
+
+#### C001-AC-812.1 — Revise statuses and log
+```gherkin
+Scenario: C001-TS-814 — revise spec
+  Given change "004" with spec and plan approved
+  When P-01 runs "/architect:revise spec 004 --reason \"defect D-001\""
+  Then "10-spec" has status "in-revision" and "20-plan" has status "stale"
+  And the Gate log has a row with decision "revise" and reason "defect D-001"
+```
+
+### C001-REQ-813 — Revision impact list
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN a revised phase is ready for its gate, THE conductor SHALL present the IDs added, modified and removed since the last approval (by per-ID content hash) and the downstream IDs that reference them.
+- **Rationale:** focused re-review (IDEA-§10.7)
+- **Stories:** C001-US-805
+- **Priority:** Must
+- **Acceptance:** C001-AC-813.1
+
+#### C001-AC-813.1 — Impact list
+```gherkin
+Scenario: C001-TS-815 — changed IDs and dependents
+  Given the spec of change "004" was approved
+  And during revision REQ-012 was modified, TS-044 added and REQ-020 tombstoned
+  When the conductor presents G2 again
+  Then the impact list shows modified "C004-REQ-012", added "C004-TS-044", removed "C004-REQ-020"
+  And the downstream list includes every task whose "implements" or "verified_by" mentions those IDs
+```
+
+### C001-REQ-814 — Per-ID hashes at approval
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd gate approve` succeeds, THE sdd CLI SHALL store in the change's `approvals.json` the content hash of every ID defined in the approved phase.
+- **Rationale:** enables C001-REQ-813 and C001-REQ-714
+- **Stories:** C001-US-802
+- **Priority:** Must
+- **Acceptance:** C001-AC-814.1
+
+#### C001-AC-814.1 — approvals.json
+```gherkin
+Scenario: C001-TS-816 — per-ID hash store
+  When "$SDD gate approve 004 10-spec" succeeds
+  Then "approvals.json" contains an entry for phase "10-spec" mapping every ID defined in 10-spec to a "sha256:" hash
+```
+
+### C001-REQ-815 — Stopping a change
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN P-01 chooses Stop at a gate, THE sdd CLI SHALL set the change's `status` to `stopped` with the reason and date, after which the conductor treats the change as inactive.
+- **Rationale:** IDEA-§18.2
+- **Stories:** C001-US-806
+- **Priority:** Should
+- **Acceptance:** C001-AC-815.1
+
+#### C001-AC-815.1 — Stopped change
+```gherkin
+Scenario: C001-TS-817 — stop at G1
+  When P-01 chooses "Stop" at G1 of change "005" with reason "superseded by 006"
+  Then "change.md" of "005" has "status: stopped", the reason and the date
+  And SDD.md's status block no longer lists "005" as active
+  And "/architect:specify 005" is refused with a message naming the stopped status
+```
+
+### C001-REQ-816 — Opt-in commit at approval
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** optional-feature
+- **Statement:** WHERE `--commit` is passed to `sdd gate approve`, THE sdd CLI SHALL, after recording the approval, create one git commit that contains only the change folder and the workspace files `.sdd/SDD.md` and `.sdd/registry.json`, with the message `CHG-<NNN>: <gate> approved by <approver>`.
+- **Rationale:** defect D-009 (P-01, 2026-10-13): agents never commit (their git access is read-only, C001-IF-07 §3), so the approved state reaches the history only if P-01 remembers; the deterministic CLI commits on P-01's opt-in, recorded in the constitution (Version control) and passed by the conductor
+- **Stories:** C001-US-802
+- **Priority:** Should
+- **Acceptance:** C001-AC-816.1
+
+#### C001-AC-816.1 — Commit at approval, opt-in
+```gherkin
+Scenario: C001-TS-818 — approval committed
+  Given a git repository whose change "004" is ready for G2 and nothing is staged
+  And the file "src/app.ts" is modified but not staged
+  When the user runs "$SDD gate approve 004 10-spec --note \"Approve\" --by p01 --commit"
+  Then the exit code is 0 and the last commit message is "CHG-004: G2 (spec) approved by p01"
+  And the commit contains only paths under ".sdd/004-" plus ".sdd/SDD.md" and ".sdd/registry.json"
+  And "src/app.ts" is still modified and not committed
+```
+
+### C001-REQ-817 — Commit preconditions
+- **Source:** CHG-001, archived 2026-11-16
+- **Pattern:** unwanted-behaviour
+- **Statement:** IF `sdd gate approve --commit` is requested in a folder that is not a git repository or while other changes are staged, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-018` before recording the approval.
+- **Rationale:** defect D-009: the commit must never include P-01's unrelated staged work, and an approval without its commit would break the opt-in
+- **Stories:** C001-US-802
+- **Priority:** Should
+- **Acceptance:** C001-AC-817.1
+
+#### C001-AC-817.1 — Commit refused before approving
+```gherkin
+Scenario Outline: C001-TS-819 — commit refused
+  Given change "004" is ready for G2 in <repository>
+  When the user runs "$SDD gate approve 004 10-spec --note \"Approve\" --commit"
+  Then the exit code is 2 and standard error contains "ERR-CLI-018"
+  And "change.md" of "004" still shows "10-spec" as not approved
+  Examples:
+    | repository                                   |
+    | a folder that is not a git repository        |
+    | a git repository with "README.md" staged     |
+```
+
+## History
+
+| ID | Event | Change | Date | Note |
+|---|---|---|---|---|

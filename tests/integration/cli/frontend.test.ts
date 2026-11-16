@@ -177,7 +177,7 @@ test("lint on a copy of this repository's workspace: every change whose current 
     // A change in a draft phase may have open findings (work in progress); approved phases may not.
     const reg = JSON.parse(readFileSync(join(root, ".sdd", "registry.json"), "utf8")) as { changes: { id: string; phase: string; status: string; phases: Record<string, { status: string }> }[] };
     const approved = reg.changes.filter((c) => c.status !== "archived" && c.phases[c.phase]?.status === "approved").map((c) => c.id.slice(4));
-    assert.ok(approved.includes("001"), "CHG-001 is approved");
+    assert.ok(approved.length > 0, "at least one active change is approved");
     for (const nnn of approved) {
       // Findings waived at a gate (`waivers` of change.md, by code or by ID) are accepted (C002-T-053);
       // lint still reports them, so its exit code is 1 when a waived error remains.

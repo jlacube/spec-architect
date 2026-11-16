@@ -5,7 +5,7 @@ change: CHG-001
 phase: 20-plan
 artifact: plan/task
 milestone: C001-M-7
-status: todo
+status: done
 depends_on: [C001-T-073, C001-T-074, C001-T-053]
 implements: []
 satisfies_ac: [C001-AC-920.1, C001-AC-914.1]
@@ -13,7 +13,7 @@ verified_by: [C001-TS-921, C001-TS-915, C001-TC-921, C001-TC-915]
 components: [C001-COMP-06]
 risk_refs: []
 estimate: S
-report: { commit: null, completed_at: null, notes: null }
+report: { commit: dfa2af9, completed_at: 2026-11-16, notes: "Set before sdd archive 001: the archive precondition (C001-REQ-913) requires every task done, the archive task included; archive applied on P-01 confirmation. Self-blocking precondition recorded for CHG-005." }
 ---
 
 # C001-T-075 — Archive CHG-001 into living specs
