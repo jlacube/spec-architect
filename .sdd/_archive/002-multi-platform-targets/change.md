@@ -3,7 +3,7 @@ id: "CHG-002"
 title: "Multi-platform targets"
 kind: "brownfield"
 profile: "full"
-status: active
+status: archived
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:9770ce05ad4ecb704e4ad27cc4acbc3045b73317b1c2d10462d7c21f56e83de1", approved_at: 2026-10-14, approved_by: jerome.lacube }

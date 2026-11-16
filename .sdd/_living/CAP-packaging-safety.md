@@ -156,67 +156,15 @@ Scenario Outline: C001-TS-1105 — normalisation
   And ".sdd/link-to-src" is a symbolic link to "C:/repo/src" in the fixture
 ```
 
-### C001-REQ-1106 — Bash allowlist
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-503 — Allowlist with a bare `sdd` command and `node --version`
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN an Architect agent requests a Bash or PowerShell command, THE bash guard SHALL allow it only if it matches an entry of the allowlist in C001-IF-07 §3, and deny it otherwise with rule `GUARD-BASH-001`.
-- **Rationale:** IDEA-§17.2
-- **Stories:** C001-US-1103
+- **Statement:** WHEN an Architect agent requests a Bash or PowerShell command, THE bash guard SHALL allow it only if it matches an entry of the allowlist in C001-IF-07 §3, in which the sdd CLI entry also accepts a bare `sdd …` command and the tool-versions entry also accepts `node --version`, and deny it otherwise with rule `GUARD-BASH-001`.
+- **Rationale:** C002-DEC-007 (Consequences); C002-GOAL-04, C002-GOAL-05; closes D-011 of CHG-001 once implemented. Scope of the D-011 fix (ideation §11, owner spec-writer): `node --version` only, because every other probe already uses `--version`; `node -v` stays. A bare `sdd` runs the `sdd` that PATH resolves, the same trust as the `git` and `ripwire` entries. C001-REQ-1107 applies unchanged, so `sdd status > file` stays denied. The rows "sdd CLI" and "tool versions" of C001-IF-07 §3 and the `ALLOWED` message change with it (current-state §2 item 5)
+- **Stories:** C002-US-502
 - **Priority:** Must
-- **Acceptance:** C001-AC-1106.1
-
-#### C001-AC-1106.1 — Allowlist decisions
-```gherkin
-Scenario Outline: C001-TS-1107 — bash guard
-  Given an Architect agent requests the command "<cmd>"
-  When the bash guard evaluates it
-  Then the exit code is <code>
-  Examples:
-    | cmd                                                      | code |
-    | node C:/p/scripts/sdd.mjs lint --json                    | 0    |
-    | ripwire . --for="payment method" --token-budget=4000     | 0    |
-    | ripwire . --callers=createIntent --limit=50              | 0    |
-    | ripwire . --max-tokens=4000                              | 0    |
-    | ripwire . --test-gate=src/checkout/payments.ts --limit=50 | 0   |
-    | git log --oneline -20                                    | 0    |
-    | ast-grep run --pattern 'app.get($A, $B)'                 | 0    |
-    | git commit -m x                                          | 2    |
-    | npm install                                              | 2    |
-    | rm -rf src                                               | 2    |
-    | ast-grep run --pattern 'x' --rewrite 'y' -U              | 2    |
-    | ripwire .                                                | 2    |
-```
-
-```gherkin
-Scenario Outline: C001-TS-1125 — ripwire forms in the bash guard corpus
-  The rows below join the bash guard corpus "tests/guards/bash-corpus.json" (test data the
-  implementer writes, category "ripwire") and apply the ripwire forms of C001-IF-07 §3.1 (defect D-012).
-  The Examples table has 18 rows; `--max-tokens=N` is the only map bound.
-  Given an Architect agent requests the <tool> command "<cmd>"
-  When the bash guard evaluates it
-  Then the exit code is <code>
-  And standard error <stderr>
-  Examples:
-    | tool       | cmd                                                                  | code | stderr                     |
-    | Bash       | ripwire . --max-tokens=4000                                          | 0    | is empty                   |
-    | Bash       | ripwire --max-tokens=4000                                            | 0    | is empty                   |
-    | Bash       | ripwire . --max-tokens=4000 --json                                   | 0    | is empty                   |
-    | Bash       | ripwire . --test-gate=src/checkout/payments.ts --limit=50            | 0    | is empty                   |
-    | Bash       | ripwire . --test-gate=src/checkout/payments.ts --limit=50 \| head -n 40 | 0 | is empty                   |
-    | Bash       | ripwire --test-gate src/a.ts                                         | 0    | is empty                   |
-    | Bash       | ripwire . --token-budget=4000                                        | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --max-tokens=x                                             | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --max-tokens                                               | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --limit=50                                                 | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --json                                                     | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire a b --max-tokens=4000                                        | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --max-tokens=4000 --edit=src/a.ts:1-2                      | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --test-gate= --limit=50                                    | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --test-gate src/a.ts --limit=50                            | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --test-gate=src/a.ts --situ                                | 2    | contains "GUARD-BASH-001"  |
-    | Bash       | ripwire . --test-gate=a --test-gate=b                                | 2    | contains "GUARD-BASH-001"  |
-    | PowerShell | ripwire . --max-tokens=4000                                          | 2    | contains "GUARD-BASH-001"  |
-```
+- **Acceptance:** C002-AC-503.1
+- **Evidence:** current-state E-5 — `src/hooks/guard-bash.ts:119` › `sddCli` (accepts only `node <path>/sdd.mjs` or the plugin-root literal; a bare `sdd` is denied with `GUARD-BASH-001`; layer: serena); current-state E-6 — `src/hooks/guard-bash.ts:133` › `VERSION_PROBES` (`node -v` only; layer: grep)
 
 ### C001-REQ-1107 — Compound shell commands
 - **Source:** CHG-001, archived 2026-11-16
@@ -277,45 +225,25 @@ Scenario: C001-TS-1110 — research MCP scoping
   Then only "sdd-researcher" has "tools" entries starting with "mcp__plugin_architect_context7" or "mcp__plugin_architect_deepwiki"
 ```
 
-### C001-REQ-1110 — Doctor report
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-504 — Doctor table per host
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN `/architect:doctor` runs, THE conductor SHALL print a table with, for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7 and DeepWiki, its status (ok, missing, unreachable or error), version, fallback and, for non-ok tools, the install or fix command from C001-IF-10 §3.
-- **Rationale:** C001-SC-09
-- **Stories:** C001-US-1105
+- **Statement:** WHEN the doctor command runs, THE conductor SHALL print a table with, for each of node, git, the host it runs on (Claude Code, OpenCode, or VS Code with GitHub Copilot Chat), ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI, its status (ok, missing, unreachable, error or untested), version (for VS Code with GitHub Copilot Chat: the VS Code version and the GitHub Copilot Chat version), fallback and, for rows other than ok, the install or fix command from the doctor remedies table (C001-IF-10 §3).
+- **Rationale:** C002-US-503; on Claude Code the rows are those of today (C002-GOAL-05); status `untested`: C002-REQ-508 for the host rows, C002-REQ-522 for Context7 and DeepWiki; both versions are pinned for Copilot VS Code (glossary: tested version), so the host row shows both (C002-IF-006 §2). The status and fix of the Context7 and DeepWiki rows follow C002-REQ-522 (defect D-057; critic CR-186: in a requirement of its own)
+- **Stories:** C002-US-503
 - **Priority:** Must
-- **Acceptance:** C001-AC-1110.1
+- **Acceptance:** C002-AC-504.1
+- **Evidence:** current-state E-14 — `plugins/architect/commands/doctor.md:17` › `Report` (columns Tool, Status, Version, Fallback, Fix; eight tools; no host or sdd CLI row; layer: grep); current-state E-15 — `plugins/architect/commands/doctor.md:29` › `Install / fix command` (remedies table; layer: grep); current-state E-23 — `src/hooks/guard-bash.ts:133` › `VERSION_PROBES` (probes the Claude Code doctor needs; layer: grep)
 
-#### C001-AC-1110.1 — Doctor table
-```gherkin
-Scenario: C001-TS-1111 — doctor on cfg-no-ripwire
-  Given machine configuration "cfg-no-ripwire"
-  When P-01 runs "/architect:doctor"
-  Then the reply contains a table with 8 rows (node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki)
-  And the ripwire row shows status "missing", the fallback, and the install command from C001-IF-10 §3
-```
-
-### C001-REQ-1111 — Doctor never fails on optional tools
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-505 — Doctor failure conditions
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF an optional tool is missing or a remote MCP server is unreachable, THEN THE conductor SHALL report it in the doctor table and complete the doctor run, reporting failure only when node is missing or older than version 20.
-- **Rationale:** IDEA-P-10
-- **Stories:** C001-US-1105
+- **Statement:** IF an optional tool is missing or a remote MCP server is unreachable or untested, THEN THE conductor SHALL report it in the doctor table and complete the doctor run, reporting failure only when node is missing or older than version 20, or when the sdd CLI is not reachable on a generated target.
+- **Rationale:** on a generated target no agent works without the sdd CLI (C002-GOAL-04); under sdd MCP server enforcement an unreachable CLI also leaves the conductor without a command tool. A remote MCP server row is `untested` when the researcher made no probe call to it (C002-REQ-522, defect D-057); like `unreachable`, it is a warning, never a failure (critic CR-189)
+- **Stories:** C002-US-503
 - **Priority:** Must
-- **Acceptance:** C001-AC-1111.1
-
-#### C001-AC-1111.1 — Only node is fatal
-```gherkin
-Scenario Outline: C001-TS-1112 — doctor outcome
-  Given "<situation>"
-  When P-01 runs "/architect:doctor"
-  Then the doctor run reports "<outcome>"
-  Examples:
-    | situation                                  | outcome |
-    | DeepWiki endpoint unreachable              | completed with warnings |
-    | Serena and ast-grep missing                | completed with warnings |
-    | node 18 on PATH                            | failed: node ≥ 20 required |
-```
+- **Acceptance:** C002-AC-505.1
+- **Evidence:** current-state E-16 — `plugins/architect/commands/doctor.md:24` › `Outcome` (failure only when node is missing or older than 20; three outcome lines; no sdd CLI condition; layer: grep)
 
 ### C001-REQ-1112 — MIT license
 - **Source:** CHG-001, archived 2026-11-16
@@ -404,22 +332,39 @@ Scenario: C001-TS-1117 — eval inventory
   And each "must not route" prompt of the conductor declares one check that fails when its last reply contains the literal "claude --agent architect:sdd-conductor"
 ```
 
-### C001-REQ-1117 — Local check command
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-601 — Local check covers the target packages
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN `npm run check` runs in the repository, THE build SHALL run `claude plugin validate`, the unit tests, the lint fixture suite and the plugin structure checks of C001-IF-08 §3, and exit non-zero if any of them fails.
-- **Rationale:** IDEA-RK-12
-- **Stories:** C001-US-1107
+- **Statement:** WHEN `npm run check` runs in the repository, THE build SHALL run `claude plugin validate`, the unit tests, the lint fixture suite, the plugin structure checks of C001-IF-08 §3 and the target structure checks on target packages generated from the current source plugin, and exit non-zero if any of them fails.
+- **Rationale:** C002-SC-04, C002-SC-05; the checks of C001-IF-08 §3 stay unchanged, and PLG-VAR-001 and PLG-VER-001 join the plugin structure checks and run with them (C002-IF-005 §6); generating in the same run keeps the checked packages in step with the source plugin (C002-NFR-501)
+- **Stories:** C002-US-601
 - **Priority:** Must
-- **Acceptance:** C001-AC-1117.1
+- **Acceptance:** C002-AC-601.1
+- **Evidence:** current-state E-8 — `scripts/check/lib.mjs:10` › `context` (every check reads only `plugins/architect/` and two CHG-001 folders; `scripts/check.mjs:15-36` defines six steps with none for generated outputs; layer: grep)
 
-#### C001-AC-1117.1 — Check aggregates and fails
+#### C002-AC-601.1 — npm run check includes the target structure checks
 ```gherkin
-Scenario: C001-TS-1118 — npm run check
-  Given one lint fixture is altered so that its expected error no longer occurs
-  When the user runs "npm run check"
+Scenario: C002-TS-601 — clean checkout
+  Given a clean checkout of the repository
+  When P-01 runs "npm run check"
+  Then the output shows the results of "claude plugin validate", the unit tests, the lint fixture suite, the plugin structure checks and the target structure checks for "opencode" and "copilot"
+  And the exit code is 0
+```
+
+```gherkin
+Scenario: C002-TS-602 — a target check fails
+  Given "skills/gate-protocol/SKILL.md" gains a "Claude Code wiring" section that names AskUserQuestion in a sentence the Copilot variant does not replace
+  When P-01 runs "npm run check"
   Then the exit code is non-zero
-  And the output shows the results of plugin validate, unit tests, lint fixtures and structure checks
+  And the output names the target "copilot" and the failing file
+```
+
+```gherkin
+Scenario: C002-TS-603 — packages of an earlier run are not the ones checked
+  Given "dist/opencode/.opencode/agents/sdd-auditor.md" holds "${CLAUDE_PLUGIN_ROOT}" from an earlier generation
+  And the current source plugin generates a package without it
+  When P-01 runs "npm run check"
+  Then the target structure checks report no finding for "sdd-auditor.md"
 ```
 
 ### C001-REQ-1118 — Portable skills and templates
@@ -508,23 +453,15 @@ Scenario: C001-TS-1123 — duplicated procedure
   Then it reports "PLG-DUP-001" naming both files
 ```
 
-### C001-REQ-1123 — Minimum Claude Code version
-- **Source:** CHG-001, archived 2026-11-16
-- **Pattern:** unwanted-behaviour
-- **Statement:** IF the Claude Code version reported by `claude --version` is lower than 2.1.295, THEN THE conductor SHALL show Claude Code with status `error` and the update command from C001-IF-10 §3 in the doctor table.
-- **Rationale:** C001-AS-09, C001-AS-10; spike S-04 (Claude Code 2.0.76 passes no agent identity to hooks and fails on current models); replaces the guard fallback (former C001-REQ-1105), which hook input cannot support
-- **Stories:** C001-US-1105
+### C002-REQ-506 — Minimum Claude Code version on Claude Code only
+- **Source:** CHG-002, archived 2026-11-16
+- **Pattern:** complex
+- **Statement:** WHILE the conductor runs on Claude Code, IF the Claude Code version reported by `claude --version` is lower than 2.1.295, THEN THE conductor SHALL show Claude Code with status `error` and the update command from C001-IF-10 §3 in the doctor table.
+- **Rationale:** on a generated target the host row replaces the Claude Code row (C002-REQ-504) and the tested version applies (C002-REQ-508); the minimum version is unchanged
+- **Stories:** C002-US-503
 - **Priority:** Must
-- **Acceptance:** C001-AC-1123.1
-
-#### C001-AC-1123.1 — Outdated Claude Code reported
-```gherkin
-Scenario: C001-TS-1124 — Claude Code below the minimum version
-  Given "claude --version" reports "2.0.76 (Claude Code)"
-  When P-01 runs "/architect:doctor"
-  Then the Claude Code row shows status "error", version "2.0.76" and the update command from C001-IF-10 §3
-  And the doctor run reports "completed with warnings"
-```
+- **Acceptance:** C002-AC-506.1
+- **Evidence:** current-state E-17 — `plugins/architect/commands/doctor.md:21` › `Claude Code` (`error` below 2.1.295 from `claude --version`, unconditional today; layer: grep); current-state E-18 — `src/` › - (no code enforces the version, the prompt alone does; layer: grep)
 
 ### C001-REQ-1124 — Plugin files only through the CLI or skill bodies
 - **Source:** CHG-001, archived 2026-11-16
@@ -558,3 +495,8 @@ Note: one row per construct of C001-IF-08 §4. Each copy differs from the shippe
 
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
+| C001-REQ-1106 | superseded by C002-REQ-503 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-1110 | superseded by C002-REQ-504 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-1111 | superseded by C002-REQ-505 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-1123 | superseded by C002-REQ-506 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-1117 | superseded by C002-REQ-601 | CHG-002 | 2026-11-16 |  |

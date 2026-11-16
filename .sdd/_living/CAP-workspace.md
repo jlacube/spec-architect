@@ -362,39 +362,46 @@ Scenario: C001-TS-120 — constitution interview length
   Then the conductor issues at most 2 AskUserQuestion calls before writing "constitution.md"
 ```
 
-### C001-REQ-115 — Toolchain record
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-507 — Toolchain record per host
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN the baseline survey of `/architect:init` or `/architect:doctor` completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7 and DeepWiki: detected (yes/no), version, path or endpoint, and the fallback in use.
-- **Rationale:** IDEA-P-10; C001-CAP-10
-- **Stories:** C001-US-106
+- **Statement:** WHEN the baseline survey of the init command or of the doctor command completes, THE cartographer SHALL write `_constitution/toolchain.md` listing for each of node, git, the host it runs on, ripwire, Serena, ast-grep, Context7, DeepWiki and, on a generated target, the sdd CLI: detected (yes/no), version, path or endpoint, and the fallback in use, with Context7 and DeepWiki detected only when the one probe call that the researcher makes with that server's tools during the same command succeeds.
+- **Rationale:** same rows as the doctor table (C002-REQ-504); unchanged on Claude Code except the detection of Context7 and DeepWiki. Revised for defect D-057 (P-01, 2026-11-12: "Fix shared source (Recommended)"): the cartographer keeps writing the record, but it holds no tool of either remote server on any target, so it recorded both as not detected while both servers ran (`.sdd/_constitution/toolchain.md:22-23`: "no (this session)"); the two rows now take the result of the researcher's probe call, the call of C002-REQ-522 in the doctor command. The init command writes the same record through the same toolchain survey (current-state E-20, E-21) and uses the same researcher probe (conductor's decision within P-01's "Fix shared source (Recommended)"); otherwise its two rows would read "no" while both servers run
+- **Stories:** C002-US-503
 - **Priority:** Must
-- **Acceptance:** C001-AC-115.1
+- **Acceptance:** C002-AC-507.1
+- **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (cartographer writes `toolchain.md`, eight rows; layer: grep); current-state E-20 — `plugins/architect/commands/init.md:13` › `step 3` (toolchain record always written; layer: grep); current-state E-21 — `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` (row set and columns; Context7 and DeepWiki "detected when their tools load"; layer: grep); `plugins/architect/agents/sdd-cartographer.md:8` › `tools` (no Context7 or DeepWiki tool; layer: grep); `.sdd/_constitution/toolchain.md:22-23` › `Context7`, `DeepWiki` (detected "no (this session)"; layer: read)
 
-#### C001-AC-115.1 — Toolchain record covers all tools
+### C002-REQ-213 — Profile confirmation on the host's question tool
+- **Source:** CHG-002, archived 2026-11-16
+- **Pattern:** event-driven
+- **Statement:** WHEN the new-change command runs (`/architect:new` on Claude Code), THE conductor SHALL propose a profile (`lite` or `full`) with its size estimate (expected user stories, requirements and touched modules, compared with the constitution's profile thresholds) and obtain P-01's confirmation through the question tool of its host before creating the change.
+- **Rationale:** C002-GOAL-03; unchanged on Claude Code
+- **Stories:** C002-US-204, C002-US-304
+- **Priority:** Must
+- **Acceptance:** C002-AC-213.1
+- **Evidence:** current-state E-28 — `plugins/architect/commands/new.md:14` › `step 3` (one profile round, recommended profile first, no change folder before the answer; layer: grep); current-state E-24 — `plugins/architect/agents/sdd-conductor.md:7` › `tools` (AskUserQuestion; layer: grep)
+
+#### C002-AC-213.1 — Profile confirmed through the host's tool before the change exists
 ```gherkin
-Scenario: C001-TS-121 — toolchain.md on a machine without ripwire
-  Given ripwire is not on PATH and Serena is not installed
-  When "/architect:doctor" completes
-  Then "toolchain.md" has one row for each of node, git, Claude Code, ripwire, Serena, ast-grep, Context7, DeepWiki
-  And the ripwire row says detected "no" and fallback "serena → lsp → grep" or the next available layer
+@eval
+Scenario Outline: C002-TS-219 — profile round on Claude Code and OpenCode
+  Given "fx-bootstrap" with 1 change on <host>
+  When P-01 runs the new-change command with the title "Export to CSV"
+  Then one "<tool>" call offers a profile first, labelled "(Recommended)", with the expected user stories, requirements and touched modules compared with the constitution's thresholds
+  And no folder ".sdd/002-*" exists before the answer
+  Examples:
+    | host        | tool            |
+    | Claude Code | AskUserQuestion |
+    | OpenCode    | question        |
 ```
 
-### C001-REQ-116 — Profile suggestion
-- **Source:** CHG-001, archived 2026-11-16
-- **Pattern:** event-driven
-- **Statement:** WHEN `/architect:new` runs, THE conductor SHALL propose a profile (`lite` or `full`) with its size estimate (expected user stories, requirements and touched modules, compared with the constitution's profile thresholds) and obtain P-01's confirmation through AskUserQuestion before creating the change.
-- **Rationale:** Spec-Q1
-- **Stories:** C001-US-107
-- **Priority:** Must
-- **Acceptance:** C001-AC-116.1
-
-#### C001-AC-116.1 — Profile is proposed and confirmed
 ```gherkin
-Scenario: C001-TS-122 — lite suggestion for a small change
-  Given the constitution profile thresholds say lite when stories ≤ 3 and requirements ≤ 10 and touched modules ≤ 2
-  When P-01 runs "/architect:new \"Add --json flag to status\""
-  Then the conductor presents an AskUserQuestion offering "lite" first with the size estimate shown
+@manual-vscode
+Scenario: C002-TS-220 — profile round in VS Code
+  Given a fresh repository with an initialised ".sdd/" in VS Code
+  When P-01 runs the new-change prompt with the title "Toy change"
+  Then an "askQuestions" dialog proposes "lite" or "full" with its size estimate
   And no change folder exists until P-01 answers
 ```
 
@@ -605,3 +612,5 @@ Scenario: C001-TS-133 — G0 enforcement
 
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
+| C001-REQ-116 | superseded by C002-REQ-213 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-115 | superseded by C002-REQ-507 | CHG-002 | 2026-11-16 |  |

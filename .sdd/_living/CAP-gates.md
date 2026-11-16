@@ -66,22 +66,37 @@ Scenario: C001-TS-801 — gate show
   Then the output follows C001-IF-13 §1 and lists the spec files, "US 14", "REQ 41", TR-01 … TR-05 coverage, "Lint: 0 error · 3 warn · n info", "Critic: 0 blocker · 1 major (…) · n minor", the open markers and "Stale: no"
 ```
 
-### C001-REQ-802 — Gate presentation
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-212 — Gate question on the host's question tool
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN the conductor presents a gate, THE conductor SHALL show the gate summary and a plain-language statement of what approval commits to, and ask P-01 through AskUserQuestion to choose among Approve, Approve with waivers, Revise and Stop.
-- **Rationale:** IDEA-§18.2 step 4
-- **Note:** When the session offers no question tool, the gate is presented as plain text per C001-REQ-222 (D-020).
-- **Stories:** C001-US-801
+- **Statement:** WHEN the conductor presents a gate, THE conductor SHALL show the gate summary and a plain-language statement of what approval commits to, and ask P-01 through the question tool of its host to choose among Approve, Approve with waivers, Revise and Stop.
+- **Rationale:** C002-GOAL-03 (gates with P-01's verbatim words on every target); unchanged on Claude Code
+- **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
-- **Acceptance:** C001-AC-802.1
+- **Acceptance:** C002-AC-212.1
+- **Evidence:** current-state E-27 — `plugins/architect/skills/gate-protocol/SKILL.md:87` › `Claude Code wiring` (gate question with the four choices; layer: grep); current-state E-25 — `plugins/architect/agents/sdd-conductor.md:61` › `Hard rules` (approval only after the AskUserQuestion answer; layer: grep)
 
-#### C001-AC-802.1 — Four choices offered
+#### C002-AC-212.1 — Gate summary, commitment statement and the four choices
 ```gherkin
-Scenario: C001-TS-802 — gate question
-  When the conductor presents gate G2 for change "004"
-  Then its message contains the gate summary and a sentence beginning "Approving means"
-  And the AskUserQuestion call offers the options Approve, Approve with waivers, Revise, Stop
+@eval
+Scenario Outline: C002-TS-217 — gate question on Claude Code and OpenCode
+  Given change "002" of "fx-gate" has phase "10-spec" in review on <host>
+  When the conductor presents gate G2
+  Then the reply shows the "sdd gate show" summary and a statement starting "Approving means"
+  And one "<tool>" call offers exactly "Approve", "Approve with waivers", "Revise" and "Stop"
+  Examples:
+    | host        | tool            |
+    | Claude Code | AskUserQuestion |
+    | OpenCode    | question        |
+```
+
+```gherkin
+@manual-vscode
+Scenario: C002-TS-218 — gate question in VS Code
+  Given a toy change with phase "00-ideation" in review in VS Code
+  When the conductor presents gate G1
+  Then the chat shows the gate summary and the statement of what approval commits to
+  And one "askQuestions" dialog offers exactly "Approve", "Approve with waivers", "Revise" and "Stop"
 ```
 
 ### C001-REQ-803 — Verbatim approval note
@@ -385,3 +400,4 @@ Scenario Outline: C001-TS-819 — commit refused
 
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
+| C001-REQ-802 | superseded by C002-REQ-212 | CHG-002 | 2026-11-16 |  |

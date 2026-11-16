@@ -130,24 +130,48 @@ Scenario: C001-TS-205 — phase skill identity
   And no phase procedure text is duplicated between the command body and the conductor body (checked by the plugin lint rule "PLG-DUP-001")
 ```
 
-### C001-REQ-205 — Round size
-- **Source:** CHG-001, archived 2026-11-16
+### C002-REQ-211 — Round size on the host's question tool
+- **Source:** CHG-002, archived 2026-11-16
 - **Pattern:** event-driven
-- **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use AskUserQuestion with at most four questions per call.
-- **Rationale:** Q14
-- **Note:** When the session offers no question tool, the round is asked as plain text per C001-REQ-222 (D-020).
-- **Stories:** C001-US-203
+- **Statement:** WHEN the conductor asks P-01 for input, THE conductor SHALL use the question tool of its host (AskUserQuestion on Claude Code, `question` on OpenCode, `askQuestions` in the Local session type of VS Code and `ask_user` in Copilot CLI for the Copilot target package) with at most four questions per call.
+- **Rationale:** C002-GOAL-03; ideation §8 (Interviews and gates); defect D-051: the T-050 findings pass of 2026-11-11 on VS Code 1.145.2 refuted fact F-5 of spike S-08 (`docs/spikes/S-08-copilot-vscode.md §3.2`, found on VS Code Insiders 1.142), which named `ask_user` as the question tool of the local agent host: VS Code's question tool is `vscode_askQuestions`, reference name `askQuestions`, legacy names `vscode_askQuestions` and `vscode/askQuestions` (VS Code's tool metadata as read in the T-050 findings pass; `vscode/askQuestions` is nevertheless the only tools entry that grants the tool on VS Code 1.145.2, rechecked by every checklist run, C002-TS-216), while `ask_user` is a Copilot CLI tool; with `ask_user` alone in the conductor's tools every round fell back to plain text (C002-REQ-312), and with `askQuestions` and `vscode/askQuestions` added to a scratch tools list the dialogs worked, a request of five questions included (calls of four and one); defect D-054 (C002-T-050 binding run of 2026-11-11, VSC-14: `askQuestions` alone did not grant the tool; `vscode/askQuestions` does; C002-REQ-312); the Copilot target package therefore lists `ask_user`, `askQuestions` and `vscode/askQuestions` in the tools lists of the conductor and of the prompt files (C002-IF-001 §6.1, C002-IF-005 §3; Copilot CLI's acceptance of `vscode/askQuestions`: C002-IF-001 §6.1); no host documents a limit, so the four-question round stays Architect's own rule (C002-R-001 C-05, A-06, Implications); every round counts, the archive confirmation of `commands/archive.md:15` included (current-state E-28; tool name in bodies: C002-REQ-118); unchanged on Claude Code
+- **Stories:** C002-US-204, C002-US-304
 - **Priority:** Must
-- **Acceptance:** C001-AC-205.1
+- **Acceptance:** C002-AC-211.1
+- **Evidence:** current-state E-26 — `plugins/architect/skills/interview-protocol/SKILL.md:119` › `Claude Code wiring` (one AskUserQuestion call, 1–4 questions; layer: grep); current-state E-24 — `plugins/architect/agents/sdd-conductor.md:7` › `tools` (AskUserQuestion granted to the conductor; layer: grep); baseline survey E-1 and E-6 (same files, counts)
 
-#### C001-AC-205.1 — At most four questions per round
+#### C002-AC-211.1 — Rounds of at most four questions on each host's tool
 ```gherkin
-Scenario: C001-TS-206 — round size limit
-  Given an ideation where specialists returned 9 questions
-  When the conductor runs the interview
-  Then every AskUserQuestion call in the transcript has between 1 and 4 questions
-  And all 9 questions (after merging) appear across the calls
+@eval
+Scenario Outline: C002-TS-215 — round size on Claude Code and OpenCode
+  Given the conductor on <host> needs answers to <n> questions of one interview topic in "fx-bootstrap"
+  When the conductor asks P-01 for them
+  Then the transcript shows <calls> call(s) of "<tool>"
+  And no call carries more than 4 questions
+  Examples:
+    | host        | n | calls       | tool            |
+    | Claude Code | 4 | 1           | AskUserQuestion |
+    | OpenCode    | 4 | 1           | question        |
+    | OpenCode    | 5 | at least 2  | question        |
 ```
+
+```gherkin
+@manual-vscode
+Scenario: C002-TS-216 — round size in VS Code
+  Given the "tools" list of ".github/agents/sdd-conductor.agent.md", and of the prompt file when the step runs one, names "ask_user", "askQuestions" and "vscode/askQuestions"
+  And the conductor in VS Code needs answers to 5 questions of one interview topic
+  When the conductor asks P-01 for them
+  Then each question dialog comes from a "vscode_askQuestions" call of the conductor
+  And no "vscode_askQuestions" call shows more than 4 questions
+```
+
+In the VS Code Local session type the question tool is `askQuestions` (`vscode_askQuestions`);
+`ask_user` is the question tool of Copilot CLI (defect D-051; C002-IF-001 §6.1). Revised for defect
+D-054: in the C002-T-050 binding run of 2026-11-11 (VS Code 1.145.2, GitHub Copilot Chat 0.73.0),
+tools lists that named only `ask_user` and `askQuestions` offered no question tool and the rounds
+fell back to plain text (`VSC-14`); with `vscode/askQuestions` in the list the dialog came from a
+`vscode_askQuestions` call. The tools lists therefore name all three, and this scenario checks it
+(checklist step `VSC-18`).
 
 ### C001-REQ-206 — Option presentation
 - **Source:** CHG-001, archived 2026-11-16
@@ -531,3 +555,4 @@ Note: eval-level scenario; a session run for a C001-TS-226 row can be checked ag
 
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
+| C001-REQ-205 | superseded by C002-REQ-211 | CHG-002 | 2026-11-16 |  |

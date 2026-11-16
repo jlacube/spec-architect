@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-16T22:31:28Z",
+  "generated_at": "2026-11-16T22:34:25Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -449,7 +449,7 @@
       "title": "Multi-platform targets",
       "kind": "brownfield",
       "profile": "full",
-      "status": "active",
+      "status": "archived",
       "phase": "20-plan",
       "phases": {
         "00-ideation": {
