@@ -28,3 +28,5 @@ waivers: []
 
 ## Inherited scope (conductor's seed for ideation; not yet discussed with P-01)
 Created by the conductor on 2026-11-10 to reserve the number named in CHG-002 (P-01 answer to Q-opencode-scope-01, "Move to a new change (Recommended)"; defects D-035, D-036). It carries the OpenCode release dropped from CHG-002: C002-T-051 and C002-T-052, the OpenCode parts of C002-DOD-001, 002, 005, 008, 009, 019 and 021, and the INJ-21 fix (an OpenCode-capable early stop or a bounded INJ-21 case). The profile (lite) is provisional.
+
+Carried from CHG-005 (P-01, 2026-11-17, Q-opencode-01 "Carry to CHG-003 (Recommended)", `.sdd/005-0-1-1-fixes/10-spec/questions-log.md` round 5): scenario C005-TS-156, the OpenCode row of the new-change profile round restated from C002-TS-219, runs in this change; CHG-005 closes it with a DOD-G-01 waiver.
