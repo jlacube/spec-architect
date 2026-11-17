@@ -1,5 +1,6 @@
 // SDD.md, the workspace description file (C001-REQ-103): frontmatter, orientation sections and a
 // status block between markers. Only the status block is ever rewritten in place.
+import { VERSION } from "../version.ts";
 
 export const STATUS_BEGIN = "<!-- sdd:status:begin -->";
 export const STATUS_END = "<!-- sdd:status:end -->";
@@ -29,8 +30,9 @@ This folder holds the specifications for this repository. **Agents: read this fi
 5. Project rules: \`_constitution/constitution.md\`.
 
 ## If you are implementing a change
-Read \`NNN-slug/20-plan/handoff.md\` and report progress with
-\`node <plugin-root>/scripts/sdd.mjs task set <task-id> --status <status>\` as described there.
+Read \`NNN-slug/20-plan/handoff.md\`. Install the sdd CLI once with
+\`npm install -g architect-sdd@${VERSION}\`, then report progress with
+\`sdd task set <task-id> --status <status>\` as described there.
 
 ## Conventions
 - IDs: \`C<NNN>-<TYPE>-<seq>\` (e.g. \`C004-REQ-012\`); short forms (\`REQ-012\`) inside a change folder.

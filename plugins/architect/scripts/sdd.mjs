@@ -10500,8 +10500,9 @@ This folder holds the specifications for this repository. **Agents: read this fi
 5. Project rules: \`_constitution/constitution.md\`.
 
 ## If you are implementing a change
-Read \`NNN-slug/20-plan/handoff.md\` and report progress with
-\`node <plugin-root>/scripts/sdd.mjs task set <task-id> --status <status>\` as described there.
+Read \`NNN-slug/20-plan/handoff.md\`. Install the sdd CLI once with
+\`npm install -g architect-sdd@${VERSION}\`, then report progress with
+\`sdd task set <task-id> --status <status>\` as described there.
 
 ## Conventions
 - IDs: \`C<NNN>-<TYPE>-<seq>\` (e.g. \`C004-REQ-012\`); short forms (\`REQ-012\`) inside a change folder.

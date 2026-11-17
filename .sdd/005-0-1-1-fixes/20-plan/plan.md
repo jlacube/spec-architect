@@ -401,7 +401,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** LINT-HAND-003 and LINT-TASK-005 with fixtures; marker reader src/model/archive-task.ts; TS-122..125,144,145 pass; repo lint unchanged; check 10/10
 
 ### C005-T-005 — Lint engine: archived change selection and pre-phase questions log
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-004
 - **Implements:** C005-REQ-116, C005-REQ-126
@@ -430,10 +430,12 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The three test cases in Verified by pass (C005-TS-146: the `lint` rows)
   - [ ] The outcome of step 1 (lint change needed or not) is in the report note
   - [ ] Rebuilt bundle committed with the source
-- **Completed at:** —
+- **Completed at:** 2026-11-17
+- **Commit:** dd5919a
+- **Notes:** L1/L2/L4 lookup in lintWorkspace; REQ-126 needed no lint change (TS-111, TS-175 passed on the 0.1.0 engine); TS-146 lint rows pass
 
 ### C005-T-006 — `SDD.md` implementer section with the install line
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-005
 - **Implements:** C005-REQ-109, C005-REQ-111
@@ -459,6 +461,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The three test cases in Verified by pass
   - [ ] `tests/integration/cap01/TS-104.test.ts` passes unchanged
   - [ ] Rebuilt bundle committed with the source
+- **Completed at:** —
 
 ### C005-T-007 — Planning skill: versioned install line and archive-task marker
 - **Status:** todo
