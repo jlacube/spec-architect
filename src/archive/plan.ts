@@ -5,7 +5,9 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { CliError } from "../cli/errors.ts";
+import { ARCHIVE_TASK_FIELD, fullMarked, liteMarked } from "../model/archive-task.ts";
 import { parseBlocks } from "../model/blocks.ts";
+import { buildChangeGraph } from "../model/graph.ts";
 import { splitFrontmatter } from "../model/frontmatter.ts";
 import { findIds } from "../model/ids.ts";
 import { setTopLevel } from "../workspace/change-md.ts";
@@ -90,19 +92,40 @@ function frontmatter(path: string): Record<string, unknown> {
   return (splitFrontmatter(readFileSync(path, "utf8")).data ?? {}) as Record<string, unknown>;
 }
 
-/** The unmet preconditions of C001-REQ-913 (empty when the change can be archived). */
+/**
+ * Tasks of the archive preconditions (C005-IF-001): full profile, the files of `20-plan/50-tasks/` with their
+ * frontmatter status; lite profile, the task sections of `20-plan/plan.md` with their Status field, read as
+ * `task set` and the status block read them. A task without a status is `todo`.
+ */
+function preconditionTasks(changeDir: string, lite: boolean): { id: string; status: string; marked: boolean }[] {
+  if (lite) {
+    return buildChangeGraph(changeDir)
+      .nodes.filter((n) => n.type === "T" && n.form === "heading" && n.file === "20-plan/plan.md")
+      .map((n) => {
+        const field = (name: string) => n.fields.find((f) => f.name.toLowerCase() === name.toLowerCase())?.value;
+        return { id: n.id, status: field("Status")?.trim() || "todo", marked: liteMarked(field(ARCHIVE_TASK_FIELD)) };
+      });
+  }
+  const tasksDir = join(changeDir, "20-plan", "50-tasks");
+  if (!existsSync(tasksDir)) return [];
+  return readdirSync(tasksDir)
+    .filter((n) => n.endsWith(".md"))
+    .sort()
+    .map((f) => {
+      const t = frontmatter(join(tasksDir, f));
+      return { id: String(t["id"] ?? f), status: String(t["status"] ?? "todo"), marked: fullMarked(t) };
+    });
+}
+
+/** The unmet preconditions of C001-REQ-913 as modified by C005-REQ-112 and C005-REQ-113 (empty when the change can be archived). */
 export function archiveBlockers(changeDir: string): string[] {
   const fm = frontmatter(join(changeDir, "change.md"));
   const out: string[] = [];
   const plan = (fm["phases"] as Record<string, { status?: string }> | undefined)?.["20-plan"]?.status ?? "not-started";
   if (plan !== "approved") out.push(`G3 not approved (20-plan ${plan})`);
-  const tasksDir = join(changeDir, "20-plan", "50-tasks");
-  if (existsSync(tasksDir))
-    for (const f of readdirSync(tasksDir).filter((n) => n.endsWith(".md")).sort()) {
-      const t = frontmatter(join(tasksDir, f));
-      const status = String(t["status"] ?? "todo");
-      if (status !== "done" && status !== "dropped") out.push(`${String(t["id"] ?? f)} ${status}`);
-    }
+  // The task that carries the archive-task marker is skipped, whatever its status (C005-IF-002).
+  for (const t of preconditionTasks(changeDir, fm["profile"] === "lite"))
+    if (!t.marked && t.status !== "done" && t.status !== "dropped") out.push(`${t.id} ${t.status}`);
   for (const d of (fm["defects"] as Record<string, unknown>[] | undefined) ?? []) if (d["status"] === "open") out.push(`${String(d["id"])} open`);
   return out;
 }

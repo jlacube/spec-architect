@@ -435,7 +435,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** L1/L2/L4 lookup in lintWorkspace; REQ-126 needed no lint change (TS-111, TS-175 passed on the 0.1.0 engine); TS-146 lint rows pass
 
 ### C005-T-006 — `SDD.md` implementer section with the install line
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-005
 - **Implements:** C005-REQ-109, C005-REQ-111
@@ -461,7 +461,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The three test cases in Verified by pass
   - [ ] `tests/integration/cap01/TS-104.test.ts` passes unchanged
   - [ ] Rebuilt bundle committed with the source
-- **Completed at:** —
+- **Completed at:** 2026-11-17
+- **Commit:** 71588e1
+- **Notes:** SDD.md section of C005-IF-003 section 4 with the build version; TS-126..128 pass; check 10/10
 
 ### C005-T-007 — Planning skill: versioned install line and archive-task marker
 - **Status:** todo
@@ -496,7 +498,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Dev-run cost recorded in the one-line report note; a dev run that ended at the 0.50 USD session cap is named there (C005-ADR-002, Consequences)
 
 ### C005-T-008 — Archive preconditions: archive-task marker and lite task sections
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-004, C005-T-006
 - **Implements:** C005-REQ-112, C005-REQ-113
@@ -527,6 +529,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The seven test cases in Verified by pass
   - [ ] The existing cap09 archive tests and `tests/integration/faults.test.ts` pass unchanged
   - [ ] Rebuilt bundle committed with the source
+- **Completed at:** —
 
 ### C005-T-009 — CLI front-end: archived lookup for read-only and writing invocations
 - **Status:** todo

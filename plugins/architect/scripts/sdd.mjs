@@ -11602,18 +11602,27 @@ function requirements(reqText, accText, slug, kind, change, date) {
 function frontmatter(path) {
   return splitFrontmatter(readFileSync10(path, "utf8")).data ?? {};
 }
+function preconditionTasks(changeDir, lite) {
+  if (lite) {
+    return buildChangeGraph(changeDir).nodes.filter((n) => n.type === "T" && n.form === "heading" && n.file === "20-plan/plan.md").map((n) => {
+      const field = (name) => n.fields.find((f) => f.name.toLowerCase() === name.toLowerCase())?.value;
+      return { id: n.id, status: field("Status")?.trim() || "todo", marked: liteMarked(field(ARCHIVE_TASK_FIELD)) };
+    });
+  }
+  const tasksDir = join14(changeDir, "20-plan", "50-tasks");
+  if (!existsSync11(tasksDir)) return [];
+  return readdirSync7(tasksDir).filter((n) => n.endsWith(".md")).sort().map((f) => {
+    const t = frontmatter(join14(tasksDir, f));
+    return { id: String(t["id"] ?? f), status: String(t["status"] ?? "todo"), marked: fullMarked(t) };
+  });
+}
 function archiveBlockers(changeDir) {
   const fm = frontmatter(join14(changeDir, "change.md"));
   const out = [];
   const plan2 = fm["phases"]?.["20-plan"]?.status ?? "not-started";
   if (plan2 !== "approved") out.push(`G3 not approved (20-plan ${plan2})`);
-  const tasksDir = join14(changeDir, "20-plan", "50-tasks");
-  if (existsSync11(tasksDir))
-    for (const f of readdirSync7(tasksDir).filter((n) => n.endsWith(".md")).sort()) {
-      const t = frontmatter(join14(tasksDir, f));
-      const status2 = String(t["status"] ?? "todo");
-      if (status2 !== "done" && status2 !== "dropped") out.push(`${String(t["id"] ?? f)} ${status2}`);
-    }
+  for (const t of preconditionTasks(changeDir, fm["profile"] === "lite"))
+    if (!t.marked && t.status !== "done" && t.status !== "dropped") out.push(`${t.id} ${t.status}`);
   for (const d of fm["defects"] ?? []) if (d["status"] === "open") out.push(`${String(d["id"])} open`);
   return out;
 }

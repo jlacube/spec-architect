@@ -15,10 +15,21 @@ export interface Req {
   scenarios?: string[];
 }
 
+export interface TaskSpec {
+  status: string;
+  marked?: boolean;
+  title?: string;
+}
+
 export interface ArchiveFixture {
   living?: Record<string, string>;
   reqs?: Req[];
-  tasks?: string[];
+  /** Task statuses, or tasks with the archive-task marker (C005-IF-002) and a title. */
+  tasks?: (string | TaskSpec)[];
+  /** Lite profile: the tasks are sections of `20-plan/plan.md` (C005-REQ-113). */
+  lite?: boolean;
+  /** Sequence number of the first task (default 32). */
+  firstSeq?: number;
   defects?: { id: string; status: "open" | "closed" }[];
   planStatus?: string;
   glossary?: { terms: [string, string][]; systems?: [string, string][] };
@@ -84,12 +95,28 @@ export function archiveWorkspace(f: ArchiveFixture) {
     ".sdd/registry.json": REBUILD,
     ".sdd/004-x/change.md": changeMd({
       nnn: "004",
+      profile: f.lite ? "lite" : "full",
       phase: "20-plan",
       phases: { "00-ideation": approved, "10-spec": approved, "20-plan": f.planStatus ? { status: f.planStatus } : approved },
       defects: (f.defects ?? []).map((d) => ({ id: d.id, ref: "C004-REQ-012", summary: "s", reporter: "p01", date: "2026-10-05", status: d.status })),
     }).replace("kind: greenfield", "kind: brownfield"),
   };
-  (f.tasks ?? ["done", "dropped"]).forEach((s, i) => (files[`.sdd/004-x/20-plan/50-tasks/T-${String(32 + i).padStart(3, "0")}-t.md`] = taskMd("004", 32 + i, s, s === "done" ? "2026-10-06" : null)));
+  const specs = (f.tasks ?? ["done", "dropped"]).map((t) => (typeof t === "string" ? { status: t } : t));
+  const first = f.firstSeq ?? 32;
+  if (f.lite) {
+    files[".sdd/004-x/20-plan/plan.md"] = [
+      "---", 'id: "C004-PLAN"', "artifact: plan/lite", 'change: "CHG-004"', "phase: 20-plan", "status: draft", "---", "# CHG-004 — Plan (lite)", "", "## Tasks", "",
+      ...specs.flatMap((t, i) => {
+        const id = `C004-T-${String(first + i).padStart(3, "0")}`;
+        return [`### ${id} — ${t.title ?? `Task ${first + i}`}`, `- **Status:** ${t.status}`, ...(t.marked ? ["- **Archive task:** true"] : []), "- **Implements:** C004-REQ-012", "- **Estimate:** S", ""];
+      }),
+    ].join("\n");
+  } else
+    specs.forEach((t, i) => {
+      const seq = first + i;
+      const md = taskMd("004", seq, t.status, t.status === "done" ? "2026-10-06" : null);
+      files[`.sdd/004-x/20-plan/50-tasks/T-${String(seq).padStart(3, "0")}-t.md`] = t.marked ? md.split("\n---\n#").join("\narchive_task: true\n---\n#") : md;
+    });
   const caps = [...new Set((f.reqs ?? []).map((r) => r.cap))];
   caps.forEach((cap, i) => {
     const rs = f.reqs!.filter((r) => r.cap === cap);

@@ -7,9 +7,9 @@ This command runs in the `architect:sdd-conductor` main session. If you are not 
 
 Arguments: `$ARGUMENTS` — the change number and an optional `--dry-run`. Load the sdd-conventions skill.
 
-1. **Preview.** Run `sdd archive <NNN> --dry-run`. On `ERR-CLI-009` (G3 not approved, tasks not
-   done or dropped, open defects, a cited requirement missing from `_living/`), show the list and
-   stop: archiving needs every item resolved first.
+1. **Preview.** Run `sdd archive <NNN> --dry-run`. On `ERR-CLI-009` (G3 not approved, tasks not done or dropped, open
+   defects, a cited requirement missing from `_living/`), show the list and stop. The task marked as the archive
+   task (`archive_task: true`, lite `- **Archive task:** true`) never blocks; every other item needs resolving first.
 2. Show P-01 the planned operations as returned (living file, operation, ID). With `--dry-run`,
    stop here.
 3. **Confirm** in one AskUserQuestion round: "Apply the archive of CHG-<NNN>?" with the options
