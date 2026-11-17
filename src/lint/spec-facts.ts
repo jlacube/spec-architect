@@ -75,5 +75,9 @@ export function gatherSpecFacts(sddDir: string, graph: ChangeGraph): SpecFacts {
   const planStatus = phases?.["20-plan"]?.status;
   const planStarted = typeof planStatus === "string" ? planStatus !== "not-started" : [...docs.keys()].some((p) => p.startsWith("20-plan/"));
 
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces, planStarted };
+  return {
+    kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield",
+    personas, systems, sections, docs, interfaces, planStarted,
+    planStatus: typeof planStatus === "string" ? planStatus : null,
+  };
 }

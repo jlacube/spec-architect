@@ -1,6 +1,7 @@
 // Parsing helpers over the gathered spec facts, shared by the spec-phase rules (C001-T-020): ID
 // lists with ranges, DoD rows, coverage tables, gherkin scenarios and multi-line fields. Pure.
 import { findIds, formatId, parseId } from "../model/ids.ts";
+import { ARCHIVE_TASK_FIELD, fullMarked, liteMarked } from "../model/archive-task.ts";
 import type { GraphNode } from "../model/graph.ts";
 import type { LintChange, SpecDoc } from "./types.ts";
 
@@ -285,6 +286,8 @@ export interface TaskInfo {
   commit: string;
   /** Lite tasks live as sections of `20-plan/plan.md`. */
   lite: boolean;
+  /** The task carries the archive-task marker (C005-IF-002). */
+  archiveTask: boolean;
   /** The task's text: the whole task file, or the lite section (1-based line range in `doc`). */
   doc: SpecDoc | undefined;
   from: number;
@@ -310,7 +313,7 @@ export function tasks(c: LintChange): TaskInfo[] {
         dependsOn: idList(fm["depends_on"], c.change), implements: idList(fm["implements"], c.change), satisfiesAc: idList(fm["satisfies_ac"], c.change),
         verifiedBy: idList(fm["verified_by"], c.change), components: idList(fm["components"], c.change),
         commit: report["commit"] === null || report["commit"] === undefined ? "" : String(report["commit"]).trim(),
-        lite: false, doc, from: 1, to: doc?.lines.length ?? 0,
+        lite: false, archiveTask: fullMarked(fm), doc, from: 1, to: doc?.lines.length ?? 0,
       });
     } else if (n.form === "heading" && n.file === "20-plan/plan.md") {
       const doc = c.spec.docs.get(n.file);
@@ -319,7 +322,8 @@ export function tasks(c: LintChange): TaskInfo[] {
         id: n.id, path: n.file, line: n.line, status: field("Status").toLowerCase(),
         dependsOn: idList(field("Depends on"), c.change), implements: idList(field("Implements"), c.change), satisfiesAc: idList(field("Satisfies AC"), c.change),
         verifiedBy: idList(field("Verified by"), c.change), components: idList(field("Components"), c.change), commit: field("Commit"),
-        lite: true, doc, from: n.line, to: doc ? doc.blocks.sectionEnd(n.line) : n.line,
+        lite: true, archiveTask: liteMarked(n.fields.find((f) => f.name.toLowerCase() === ARCHIVE_TASK_FIELD.toLowerCase())?.value),
+        doc, from: n.line, to: doc ? doc.blocks.sectionEnd(n.line) : n.line,
       });
     }
   }

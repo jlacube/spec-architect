@@ -56,6 +56,8 @@ export interface SpecFacts {
   interfaces: ReadonlyMap<string, string | null>;
   /** The plan phase has started (`phases.20-plan.status` other than `not-started`); plan rules run only then. */
   planStarted: boolean;
+  /** `phases.20-plan.status` of change.md, or null when change.md gives none. */
+  planStatus: string | null;
 }
 
 export interface SpecDoc {

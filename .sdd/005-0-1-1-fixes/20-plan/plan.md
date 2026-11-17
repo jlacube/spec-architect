@@ -323,7 +323,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** 20-plan stale under 0.1.1 rule, re-approved 66fad5b, stays approved after task set; D-001 recorded
 
 ### C005-T-003 — Versioned install line in the hand-off templates
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-002
 - **Implements:** C005-REQ-105, C005-REQ-106, C005-REQ-111
@@ -358,10 +358,12 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] `tests/unit/workspace/templates.test.ts` and `tests/integration/npm-build/tarball-check.test.ts` pass without edits to their expectations
   - [ ] No `<plugin-root>` remains in `plugins/architect/templates/`
   - [ ] Rebuilt bundle committed with the source
-- **Completed at:** —
+- **Completed at:** 2026-11-17
+- **Commit:** 703c866
+- **Notes:** Install line block in both hand-off templates; renderer fills VERSION; TS-114..119 pass; check 10/10
 
 ### C005-T-004 — Lint rules LINT-HAND-003 and LINT-TASK-005
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-003
 - **Implements:** C005-REQ-108, C005-REQ-115
@@ -394,6 +396,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] `tests/unit/lint/fixtures.test.ts` passes with the two new fixture folders
   - [ ] Repository lint shows no new error-severity finding
   - [ ] Rebuilt bundle committed with the source
+- **Completed at:** —
 
 ### C005-T-005 — Lint engine: archived change selection and pre-phase questions log
 - **Status:** todo

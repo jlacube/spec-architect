@@ -7745,6 +7745,16 @@ function findIds(line, change) {
   return hits;
 }
 
+// src/model/archive-task.ts
+var ARCHIVE_TASK_KEY = "archive_task";
+var ARCHIVE_TASK_FIELD = "Archive task";
+function fullMarked(frontmatter2) {
+  return frontmatter2?.[ARCHIVE_TASK_KEY] === true;
+}
+function liteMarked(value2) {
+  return typeof value2 === "string" && value2.replace(/[*`]/g, "").trim().toLowerCase() === "true";
+}
+
 // src/lint/spec.ts
 function specDocs(c) {
   return [...c.spec.docs].filter(([p]) => p.startsWith("10-spec/"));
@@ -7938,6 +7948,7 @@ function tasks(c) {
         components: idList(fm["components"], c.change),
         commit: report["commit"] === null || report["commit"] === void 0 ? "" : String(report["commit"]).trim(),
         lite: false,
+        archiveTask: fullMarked(fm),
         doc,
         from: 1,
         to: doc?.lines.length ?? 0
@@ -7957,6 +7968,7 @@ function tasks(c) {
         components: idList(field("Components"), c.change),
         commit: field("Commit"),
         lite: true,
+        archiveTask: liteMarked(n.fields.find((f) => f.name.toLowerCase() === ARCHIVE_TASK_FIELD.toLowerCase())?.value),
         doc,
         from: n.line,
         to: doc ? doc.blocks.sectionEnd(n.line) : n.line
@@ -8542,6 +8554,35 @@ var hand002 = {
           if (dl !== void 0 && dl > at) out.push({ path, line: at, ids: [t.id, d], message: `Ordered task list out of dependency order: ${t.id} is listed before its dependency ${d}` });
         }
       }
+    }
+    return out;
+  }
+};
+
+// src/lint/rules/hand-003.ts
+var HANDOFF3 = "20-plan/handoff.md";
+var OPEN = ["draft", "in-review", "in-revision"];
+var INSTALL_LINE = /^npm install -g architect-sdd@\d+\.\d+\.\d+$/;
+var hand003 = {
+  code: "LINT-HAND-003",
+  severity: "error",
+  fix: "Add the install line with the version that `sdd --version` prints",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const doc = c.spec.docs.get(HANDOFF3);
+      if (!doc || !OPEN.includes(c.spec.planStatus ?? "")) continue;
+      const rp = sectionByName(doc, "Reporting protocol", 2);
+      if (!rp) continue;
+      const lines2 = textWithoutComments(doc, rp.line + 1, rp.end).split("\n");
+      if (lines2.some((l) => INSTALL_LINE.test(l.trim()))) continue;
+      out.push({
+        path: `${c.folder}/${HANDOFF3}`,
+        line: rp.line,
+        message: "Reporting protocol has no install line `npm install -g architect-sdd@<major>.<minor>.<patch>`"
+      });
     }
     return out;
   }
@@ -9256,6 +9297,31 @@ var task004 = {
   }
 };
 
+// src/lint/rules/task-005.ts
+var task005 = {
+  code: "LINT-TASK-005",
+  severity: "error",
+  fix: "Keep the marker only on the task that runs `sdd archive` for this change",
+  scope: "file",
+  phase: "20-plan",
+  check(ctx) {
+    const out = [];
+    for (const c of ctx.changes) {
+      const marked = tasks(c).filter((t) => t.archiveTask).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+      if (marked.length < 2) continue;
+      const first = marked[0];
+      const ids2 = marked.map((t) => t.id);
+      out.push({
+        path: `${c.folder}/${first.path}`,
+        line: first.line,
+        ids: ids2,
+        message: `${marked.length} tasks carry the archive-task marker: ${ids2.join(", ")}; a change has at most one archive task`
+      });
+    }
+    return out;
+  }
+};
+
 // src/lint/rules/tc-001.ts
 var TEST_PLAN = "20-plan/60-test-plan.md";
 var LITE_PLAN2 = "20-plan/plan.md";
@@ -9895,11 +9961,13 @@ var RULES = [
   task002,
   task003,
   task004,
+  task005,
   tc001,
   risk001,
   roll001,
   hand001,
   hand002,
+  hand003,
   obs001,
   gate001
 ];
@@ -10664,7 +10732,16 @@ function gatherSpecFacts(sddDir, graph) {
   const phases = fm["phases"];
   const planStatus = phases?.["20-plan"]?.status;
   const planStarted = typeof planStatus === "string" ? planStatus !== "not-started" : [...docs.keys()].some((p) => p.startsWith("20-plan/"));
-  return { kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield", personas, systems, sections, docs, interfaces, planStarted };
+  return {
+    kind: typeof fm["kind"] === "string" ? fm["kind"] : "greenfield",
+    personas,
+    systems,
+    sections,
+    docs,
+    interfaces,
+    planStarted,
+    planStatus: typeof planStatus === "string" ? planStatus : null
+  };
 }
 
 // src/lint/engine.ts

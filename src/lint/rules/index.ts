@@ -19,6 +19,7 @@ import { evd001 } from "./evd-001.ts";
 import { gate001 } from "./gate-001.ts";
 import { hand001 } from "./hand-001.ts";
 import { hand002 } from "./hand-002.ts";
+import { hand003 } from "./hand-003.ts";
 import { ide001 } from "./ide-001.ts";
 import { if001 } from "./if-001.ts";
 import { if002 } from "./if-002.ts";
@@ -38,6 +39,7 @@ import { task001 } from "./task-001.ts";
 import { task002 } from "./task-002.ts";
 import { task003 } from "./task-003.ts";
 import { task004 } from "./task-004.ts";
+import { task005 } from "./task-005.ts";
 import { tc001 } from "./tc-001.ts";
 import { tr01 } from "./tr-01.ts";
 import { tr02 } from "./tr-02.ts";
@@ -67,5 +69,5 @@ export const RULES: readonly LintRule[] = [
   us001, us002, req001, ears001, ears002, ears003, word001,
   ts001, cov001, cov002, nfr001, dod001, delta001,
   res001, res002, oa001, ide001, arch001, arch002, arch003, arch004, arch005, if001, if002, err001, con001, evd001,
-  plan001, task001, task002, task003, task004, tc001, risk001, roll001, hand001, hand002, obs001, gate001,
+  plan001, task001, task002, task003, task004, task005, tc001, risk001, roll001, hand001, hand002, hand003, obs001, gate001,
 ];
