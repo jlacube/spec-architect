@@ -14017,8 +14017,33 @@ function gateRecord(ctx) {
 }
 function changeOfId(ctx, id) {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
-  const folder = nnn ? changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : void 0;
-  return folder ? join32(ctx.root, ".sdd", folder) : null;
+  if (nnn === void 0) return null;
+  if (ctx.name === "defect add") {
+    const folder = changeFolders2(ctx.root).find((f) => f.startsWith(`${nnn}-`));
+    return folder ? join32(ctx.root, ".sdd", folder) : null;
+  }
+  return lookupChange(ctx, nnn);
+}
+function isWriting(ctx) {
+  const when = COMMANDS.find((c) => c.name === ctx.name)?.writes ?? null;
+  if (when === "always") return true;
+  if (when === "with-write") return ctx.values["write"] === true;
+  if (when === "unless-dry-run") return ctx.values["dry-run"] !== true;
+  return false;
+}
+function lookupChange(ctx, nnn) {
+  const active = changeFolders2(ctx.root).filter((f) => f.startsWith(nnn + "-"));
+  if (active.length === 1) return join32(ctx.root, ".sdd", active[0]);
+  if (active.length > 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+  const archived = archivedFolders(ctx.root).filter((f) => f.startsWith(nnn + "-"));
+  if (archived.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+  if (isWriting(ctx)) throw new CliError("ERR-CLI-014", { NNN: nnn, "stopped|archived": "archived" });
+  return join32(ctx.root, ".sdd", "_archive", archived[0]);
+}
+function archivedFolders(root) {
+  const dir2 = join32(root, ".sdd", "_archive");
+  if (!existsSync21(dir2)) return [];
+  return readdirSync10(dir2).filter((n) => /^\d{3}-/.test(n) && statSync13(join32(dir2, n)).isDirectory()).sort();
 }
 function refreshRegistry(ctx) {
   const sdd = join32(ctx.root, ".sdd");
@@ -14113,9 +14138,7 @@ function resolveChange(ctx, nnn) {
   const folders = changeFolders2(ctx.root);
   if (nnn !== void 0) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
-    const match = folders.filter((f) => f.startsWith(nnn + "-"));
-    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join32(ctx.root, ".sdd", match[0]);
+    return lookupChange(ctx, nnn);
   }
   const inside = folders.find((f) => isInside(join32(ctx.root, ".sdd", f), ctx.cwd));
   if (inside) return join32(ctx.root, ".sdd", inside);

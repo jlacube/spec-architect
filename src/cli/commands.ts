@@ -200,11 +200,55 @@ function gateRecord(ctx: CommandContext): number {
   return 0;
 }
 
-/** The change folder owning a full ID (`C004-…` → `.sdd/004-*`), or null. */
+/**
+ * The change folder owning a full ID (`C004-…`), by the lookup of C005-IF-001; null when the ID carries
+ * no change number. `defect add` keeps the 0.1.0 lookup among `.sdd/<NNN>-*` only: its own check gives
+ * ERR-CLI-008 for an ID of an archived change (C001-REQ-908).
+ */
 function changeOfId(ctx: CommandContext, id: string): string | null {
   const nnn = /^C(\d{3})-/.exec(id)?.[1];
-  const folder = nnn ? changeFolders(ctx.root).find((f) => f.startsWith(`${nnn}-`)) : undefined;
-  return folder ? join(ctx.root, ".sdd", folder) : null;
+  if (nnn === undefined) return null;
+  if (ctx.name === "defect add") {
+    const folder = changeFolders(ctx.root).find((f) => f.startsWith(`${nnn}-`));
+    return folder ? join(ctx.root, ".sdd", folder) : null;
+  }
+  return lookupChange(ctx, nnn);
+}
+
+/**
+ * Whether this invocation writes, from `WRITING_COMMANDS` only (C005-CON-01): `always`; `with-write` and
+ * `--write` given; `unless-dry-run` and no `--dry-run`.
+ */
+function isWriting(ctx: CommandContext): boolean {
+  const when = COMMANDS.find((c) => c.name === ctx.name)?.writes ?? null;
+  if (when === "always") return true;
+  if (when === "with-write") return ctx.values["write"] === true;
+  if (when === "unless-dry-run") return ctx.values["dry-run"] !== true;
+  return false;
+}
+
+/**
+ * Change lookup of C005-IF-001 for a change named by number: L1 the one folder `.sdd/<NNN>-*`; L2 a
+ * read-only invocation, the one folder `.sdd/_archive/<NNN>-*`; L3 a writing invocation on such a folder,
+ * ERR-CLI-014 before anything is written; L4 otherwise ERR-CLI-002.
+ */
+function lookupChange(ctx: CommandContext, nnn: string): string {
+  const active = changeFolders(ctx.root).filter((f) => f.startsWith(nnn + "-"));
+  if (active.length === 1) return join(ctx.root, ".sdd", active[0]!);
+  if (active.length > 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+  const archived = archivedFolders(ctx.root).filter((f) => f.startsWith(nnn + "-"));
+  if (archived.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
+  if (isWriting(ctx)) throw new CliError("ERR-CLI-014", { NNN: nnn, "stopped|archived": "archived" });
+  return join(ctx.root, ".sdd", "_archive", archived[0]!);
+}
+
+/** Change folders under `.sdd/_archive/`. */
+function archivedFolders(root: string): string[] {
+  const dir = join(root, ".sdd", "_archive");
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((n) => /^\d{3}-/.test(n) && statSync(join(dir, n)).isDirectory())
+    .sort();
 }
 
 function refreshRegistry(ctx: CommandContext): void {
@@ -333,9 +377,7 @@ export function resolveChange(ctx: CommandContext, nnn: string | undefined): str
   const folders = changeFolders(ctx.root);
   if (nnn !== undefined) {
     if (!/^\d{3}$/.test(nnn)) throw usage(ctx.name, `--change must have three digits: ${nnn}`);
-    const match = folders.filter((f) => f.startsWith(nnn + "-"));
-    if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: nnn });
-    return join(ctx.root, ".sdd", match[0]!);
+    return lookupChange(ctx, nnn);
   }
   const inside = folders.find((f) => isInside(join(ctx.root, ".sdd", f), ctx.cwd));
   if (inside) return join(ctx.root, ".sdd", inside);
