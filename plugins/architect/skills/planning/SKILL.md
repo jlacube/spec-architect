@@ -41,6 +41,10 @@ modify, delete, rename; Target `path › symbol`; Change) · **Preconditions** �
 - Every REQ is implemented by at least one task (TR-06); every task links a REQ/AC and a TS/TC
   (TR-07).
 - `depends_on` forms an acyclic graph (TR-11); allocate IDs with `sdd id next T --change <NNN>`.
+- **Archive task.** The task whose steps run `sdd archive <NNN>` for this change, and only that task,
+  carries the optional key `archive_task: true` (lite: the field `- **Archive task:** true`), so its own
+  status does not block the archive. A task that builds an archive feature of the product is not it. At
+  most one per change (LINT-TASK-005).
 
 ## Work breakdown (`40-work-breakdown.md`)
 
@@ -79,14 +83,20 @@ Sections, in this order of importance (all required):
 - **Ordered task list** — every non-dropped task exactly once, in a topological order of
   `depends_on` (no task before a task it depends on), each line `ID — title — path` with the path
   relative to the repository root (`.sdd/<NNN>-<slug>/20-plan/50-tasks/T-…md`).
-- **Reporting protocol** — the commands `sdd task set <T-ID> --status … --commit <sha>`,
-  `sdd defect add --ref <ID> --summary "…"`, and the frontmatter fallback for implementers who
-  cannot run the CLI (edit `status` and `report` in the task file).
+- **Reporting protocol** — one sentence naming the first command a one-time install (Node.js 20 or
+  later), then one block of these five lines, in this order, with no comment line:
+  `npm install -g architect-sdd@<version>`, `sdd task set <task-id> --status in-progress`,
+  `sdd task set <task-id> --status done --commit <sha> --note "<summary>"`,
+  `sdd task set <task-id> --status blocked --reason "<why>"`, `sdd defect add --ref <ID> --summary "<what is wrong>"`.
+  `<version>` is what `sdd --version` prints in this session: run it and write that version (a
+  template read with `sdd template show` holds `{{VERSION}}`; replace it the same way). Then the
+  frontmatter fallback for implementers who cannot run the CLI (edit `status` and `report` in the
+  task file). LINT-HAND-003 checks the install line while the plan is open.
 - **Definition of change done** — all tasks done, DoD evidence filled, no open defect.
 
 ## Lite plan (`20-plan/plan.md`)
 
 One file with the sections **Strategy**, **Tasks** (one `### <T-ID> — <title>` sub-section per
 task carrying the task fields above as a list: Status, Depends on, Implements, Satisfies AC,
-Verified by, Estimate, Targets, Verification, Done when), **Test mapping** (TS → TC table) and
+Verified by, Estimate, Targets, Verification, Done when; the archive task adds `Archive task: true`), **Test mapping** (TS → TC table) and
 **Risks**; plus `handoff.md`. No `50-tasks/` folder.
