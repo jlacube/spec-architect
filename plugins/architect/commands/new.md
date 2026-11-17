@@ -7,15 +7,7 @@ This command runs in the `architect:sdd-conductor` main session. If you are not 
 
 Arguments: `$ARGUMENTS` — the change title in quotes, optional `--kind`.
 
-1. Without a title, ask P-01 for one and stop. Without `.sdd/`, propose `/architect:init` and stop.
-2. Read the **Profile thresholds** of `.sdd/_constitution/constitution.md` (defaults when
-   absent: lite when expected user stories ≤ 3, requirements ≤ 10 and touched modules ≤ 2). For a
-   brownfield or mixed change, look at the repository (read-only) to estimate the touched modules.
-3. Estimate expected user stories, requirements and touched modules from the title and the
-   conversation. Ask **one** interview round (interview-protocol skill) whose question offers the
-   proposed profile first, labelled "(Recommended)", with the estimate and the thresholds in
-   its description; the other profile second. Ask about the kind in the same round when
-   `--kind` was not given and the repository has code.
-4. Only after P-01 answers: `sdd change new "<title>" --profile <lite|full> --kind <kind>`, then
-   `sdd status --write`. No change folder exists before the answer.
-5. Reply with the change ID, folder, profile and the next action (`/architect:ideate <NNN>`).
+1. Load the phase-ideation skill and run its section **New change** with the title above and, when
+   given, the `--kind` of this command (P-01's own answer: the kind is then not asked again).
+2. End as that section ends: the change ID, folder and profile, and the next action
+   (`/architect:ideate <NNN>`).

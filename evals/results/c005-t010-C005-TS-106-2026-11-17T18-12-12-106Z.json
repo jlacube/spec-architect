@@ -1,0 +1,167 @@
+{
+  "scenario": "C005-TS-106",
+  "title": "Profile and kind passed to sdd change new",
+  "tier": "dev",
+  "label": "c005-t010",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-17T18:14:46.536Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.23304360000000002,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "expected exactly one sdd change new call, got 2"
+      ],
+      "metrics": {
+        "cost_usd": 0.23304360000000002,
+        "session_ms": 153311,
+        "api_ms": 22849,
+        "turns": 14,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 16,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001258
+          },
+          "claude-opus-5-5": {
+            "input": 20,
+            "output": 2108,
+            "cache_read": 214029,
+            "cache_write": 18484,
+            "cost_usd": 0.23291780000000004
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 2108,
+              "cache_read": 214029,
+              "cache_write": 18484
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bfkbblpcn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bl0dv5ild",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "bvm8x6r58",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Glob": 2,
+          "Read": 4,
+          "Skill": 1,
+          "Bash": 4,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 309
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 76
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 82
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 67
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 805
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 52065
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 61
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 53
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 40
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 402
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 41382
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 31635
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-106-2026-11-17T18-12-12-106Z-run1.json"
+    }
+  ]
+}

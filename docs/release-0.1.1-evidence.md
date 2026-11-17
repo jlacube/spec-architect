@@ -36,3 +36,24 @@ CHG-005 00-ideation: approved (hash matches)
 CHG-005 10-spec: approved (hash matches)
 CHG-005 20-plan: approved (hash matches)
 ```
+
+## Sizes
+
+C005-DOD-004 (constitution, NFR defaults, Skill size: 24,000 characters per SKILL.md body, 64,000 per agent). Bodies as
+PLG-SIZE-001 counts them (frontmatter removed, code points); the Copilot conductor as TGT-SIZE-001 counts it (the
+inlined `## Skill:` sections of `npm run generate -- --target copilot`).
+
+| Measure | Before C005-T-010 | After C005-T-010 |
+|---|---|---|
+| conductor body | 4656 | 4947 |
+| phase-ideation SKILL.md body | 9296 | 11820 |
+| interview-protocol SKILL.md body | 7270 | 7270 |
+| conductor preloaded skills total | 43534 | 46058 |
+| copilot inlined sdd-conventions | 9089 | 9089 |
+| copilot inlined interview-protocol | 9148 | 9148 |
+| copilot inlined options-analysis | 3716 | 3716 |
+| copilot inlined gate-protocol | 8114 | 8114 |
+| copilot inlined phase-ideation | 9294 | 11818 |
+| copilot inlined phase-spec | 6300 | 6300 |
+| copilot inlined phase-plan | 2087 | 2087 |
+| copilot conductor inlined total | 47748 | 50272 |

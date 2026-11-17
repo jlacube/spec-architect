@@ -28,17 +28,20 @@ The CLI is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (written `sdd` below).
    defines that ID (`spec` for 10-spec IDs, `plan` for 20-plan IDs, `ideation` for 00-ideation).
    If the repository has no `.sdd/`, propose `/architect:init` as the only next action and do
    nothing else: no files, no specialists.
-2. **Check entry conditions** with the gate-protocol skill: a phase starts only when its
+2. **Create a change only through the New change section** of the phase-ideation skill, on every
+   create-change request (the new-change command or plain words; a feature, a bug fix or an
+   enhancement): the profile and kind round comes first, and `sdd change new` never runs on defaults.
+3. **Check entry conditions** with the gate-protocol skill: a phase starts only when its
    predecessor is `approved` and not stale. Otherwise say what is missing and stop.
-3. **Plan the phase** as a task list made of the steps of the phase skill (phase-ideation,
+4. **Plan the phase** as a task list made of the steps of the phase skill (phase-ideation,
    phase-spec, phase-plan): one `TaskCreate` per step, then `TaskUpdate` to mark each step in
    progress and completed as you go. If the session has no task tools, list the steps with their
    status in your message each time a step changes.
-4. **Run the phase procedure** from the phase skill. Do not improvise steps it does not list.
-5. **Interview** with the interview-protocol skill whenever the procedure or a specialist needs
+5. **Run the phase procedure** from the phase skill. Do not improvise steps it does not list.
+6. **Interview** with the interview-protocol skill whenever the procedure or a specialist needs
    P-01's input: collect the specialists' `questions` blocks, merge duplicates, ask in rounds,
    log every round.
-6. **Close the phase** with the gate-protocol skill: auditor (lint, trace), critic, fixes, then
+7. **Close the phase** with the gate-protocol skill: auditor (lint, trace), critic, fixes, then
    the gate presentation. Record only P-01's own decision, in P-01's own words.
 
 # Delegation

@@ -1,0 +1,113 @@
+{
+  "scenario": "C005-TS-103",
+  "title": "A request that creates no change starts no profile round",
+  "tier": "dev",
+  "label": "c005-t010",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-17T18:08:53.728Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.1570076,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.1570076,
+        "session_ms": 23041,
+        "api_ms": 17366,
+        "turns": 8,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1173,
+            "output": 15,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001248
+          },
+          "claude-opus-5-5": {
+            "input": 10,
+            "output": 1643,
+            "cache_read": 92514,
+            "cache_write": 13185,
+            "cost_usd": 0.15688280000000002
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 10,
+              "output": 1643,
+              "cache_read": 92514,
+              "cache_write": 13185
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Glob": 1,
+          "Read": 5
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 527
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 240
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 77
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 51
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 80
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 40
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 12,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-103-2026-11-17T18-08-29-010Z-run1.json"
+    }
+  ]
+}

@@ -159,9 +159,9 @@ for (const t of TARGETS) {
       // $ARGUMENTS — commands/new.md line 8
       assert.ok(sourceLine("commands/new.md", 8).includes("$ARGUMENTS"));
       assert.ok(at("commands/new.md", 8).includes(replaceOf(table, "arguments", mode)), where);
-      // architect: agent reference — agents/sdd-conductor.md line 46
-      assert.ok(sourceLine("agents/sdd-conductor.md", 46).includes("`architect:sdd-researcher`"));
-      assert.ok(at("agents/sdd-conductor.md", 46).includes(`\`${replaceOf(table, "agent-reference", mode)}sdd-researcher\``), where);
+      // architect: agent reference — agents/sdd-conductor.md line 49
+      assert.ok(sourceLine("agents/sdd-conductor.md", 49).includes("`architect:sdd-researcher`"));
+      assert.ok(at("agents/sdd-conductor.md", 49).includes(`\`${replaceOf(table, "agent-reference", mode)}sdd-researcher\``), where);
       // claude --agent guard line — commands/specify.md line 6 (drop_line)
       assert.ok("drop_line" in construct(table, "guard-line").action);
       assert.match(sourceLine("commands/specify.md", 6), /claude --agent/);
@@ -275,8 +275,8 @@ for (const [command, line, target] of [
 
 // --- C002-TC-131 ---
 for (const [file, lines, target] of [
-  ["agents/sdd-conductor.md", [61, 66], "opencode"],
-  ["agents/sdd-conductor.md", [61, 66], "copilot"],
+  ["agents/sdd-conductor.md", [64, 69], "opencode"],
+  ["agents/sdd-conductor.md", [64, 69], "copilot"],
   ["commands/archive.md", [15], "opencode"],
   ["commands/archive.md", [15], "copilot"],
 ] as const) {
@@ -333,8 +333,8 @@ test("a planted unmapped body construct stops generation; every place is reporte
     const r = run(["--source", src, "--out", out]);
     assert.equal(r.code, 1);
     const expected = [
-      ["agents/sdd-conductor.md", 61, "copilot"],
-      ["agents/sdd-conductor.md", 66, "copilot"],
+      ["agents/sdd-conductor.md", 64, "copilot"],
+      ["agents/sdd-conductor.md", 69, "copilot"],
       ["agents/sdd-critic.md", plantedLine, "copilot"],
       ["agents/sdd-critic.md", plantedLine, "opencode"],
       ["commands/archive.md", 15, "copilot"],
@@ -361,7 +361,7 @@ test("a replace entry without the run's mode, or a construct in a context it is 
   const r = translateBodies({ source: source.source, table, target: "opencode", mode: "sdd-mcp-server" });
   assert.ok(r.diagnostics.length > 0);
   assert.ok(r.diagnostics.every((d) => d.code === "ERR-GEN-001" && d.construct === "Bash" && d.message.endsWith("has no entry for mode sdd-mcp-server in the opencode mapping table")));
-  assert.ok(r.diagnostics.some((d) => d.file === "agents/sdd-conductor.md" && d.line === 60));
+  assert.ok(r.diagnostics.some((d) => d.file === "agents/sdd-conductor.md" && d.line === 63));
   // AskUserQuestion is translated in bodies only: in a description it is a leak.
   const d = scanText(tables.copilot, "copilot", "sdd-mcp-server", "agents/x.md", "Asks through AskUserQuestion.", "frontmatter");
   assert.deepEqual(d.map((x) => [x.code, x.line, x.construct]), [["ERR-GEN-001", 1, "AskUserQuestion"]]);

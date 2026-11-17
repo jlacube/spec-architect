@@ -1,0 +1,170 @@
+{
+  "scenario": "C005-TS-107",
+  "title": "Answers equal to the CLI defaults are passed as options",
+  "tier": "dev",
+  "label": "c005-t010",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-17T18:17:52.975Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.22888900000000004,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.22888900000000004,
+        "session_ms": 184673,
+        "api_ms": 22515,
+        "turns": 15,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1178,
+            "output": 16,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0001258
+          },
+          "claude-opus-5-5": {
+            "input": 20,
+            "output": 2025,
+            "cache_read": 207796,
+            "cache_write": 18328,
+            "cost_usd": 0.22876320000000003
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 20,
+              "output": 2025,
+              "cache_read": 207796,
+              "cache_write": 18328
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "buyjw1vt3",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b4xeragap",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b813m47ma",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 4,
+          "Glob": 2,
+          "Read": 5,
+          "Skill": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 780
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 438
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 184
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 324
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 158
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 1867
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 61813
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 78
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 62
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 34
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 56186
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 37204
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-107-2026-11-17T18-14-46-537Z-run1.json"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: phase-ideation
-description: Procedure of the ideation phase (00-ideation) of an SDD change — entry checks (constitution gate G0), restating the idea, parallel research and discovery, interview rounds, options and decisions, the ideation document with its required sections, readiness review and gate G1. Use when starting or continuing the ideation of a change.
+description: Procedure of the ideation phase (00-ideation) of an SDD change, and its New change section that creates a change (profile and kind round, then sdd change new) on every create-change request — entry checks (constitution gate G0), restating the idea, parallel research and discovery, interview rounds, options and decisions, the ideation document with its required sections, readiness review and gate G1. Use when a change is to be created, or when starting or continuing the ideation of a change.
 ---
 
 # Ideation phase (00-ideation)
@@ -13,6 +13,43 @@ Files (full profile): `00-ideation/ideation.md`, `questions-log.md`, `research/R
 `options/OA-*.md`, `decisions/DEC-*.md`, `evidence/` (brownfield or mixed), `critic-report.md`.
 Lite profile: `ideation.md` and `questions-log.md` only; research, options and decisions become
 sections of `ideation.md`.
+
+## New change
+
+Run this section on every create-change request: the new-change command, or a request in plain words
+to create, open or start a change, for a feature, a bug fix or an enhancement alike. It is not a step of
+the ideation and ends before Step 1. A question about an existing change (its status, its next action)
+is no create-change request: answer it and create nothing.
+
+1. Take the title from the command or the request; when it names no work, ask P-01 for a title and stop
+   until it comes. Without `.sdd/`, propose `/architect:init` and stop.
+2. Read the **Profile thresholds** of `.sdd/_constitution/constitution.md` (defaults when absent: lite
+   when expected user stories ≤ 3, requirements ≤ 10 and touched modules ≤ 2). Look at the repository
+   (read-only) to estimate the touched modules.
+3. Estimate the expected user stories, requirements and touched modules from the title and the
+   conversation.
+4. Ask **one** interview round (interview-protocol skill) through the question tool of the host, also
+   when the request asks for defaults or for no questions:
+   - **Profile:** the proposed profile first, labelled "(Recommended)", with the estimate and the
+     thresholds in its description; the other profile second.
+   - **Kind**, in the same round, unless the new-change command gave `--kind` (P-01's own answer, not
+     asked again): the options `greenfield`, `brownfield` and `mixed`, your recommendation first (for
+     example `greenfield` in a repository without code).
+
+   No change folder exists before P-01 answers.
+5. Read the answers:
+   - An answer that declines the change ("stop", "do not create it", "cancel"), in this round or a
+     further one, ends the section: create nothing, ask nothing more, and say so.
+   - A kind answer, option or free text, that names exactly one of `greenfield`, `brownfield` and
+     `mixed` gives the kind.
+   - A kind answer that names none of them, or more than one, and does not decline: ask for the kind
+     again in a further round (one question, the three options). Never derive the kind yourself;
+     repeat while an answer names no single kind.
+6. Only with the profile P-01 confirmed and the kind from P-01 or `--kind`: run
+   `sdd change new "<title>" --profile <profile> --kind <kind>`, always with both options, also when
+   they equal the CLI's defaults; then `sdd status --write`.
+7. Reply with the change ID, folder and profile, and propose `/architect:ideate <NNN>` as the next
+   action. Do not start Step 1 in the same turn.
 
 ## Step 1 — Check entry
 

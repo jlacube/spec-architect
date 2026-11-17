@@ -1,0 +1,166 @@
+{
+  "scenario": "C005-TS-105",
+  "title": "Request to skip the questions still gets the profile round",
+  "tier": "dev",
+  "label": "c005-t010",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-17T18:12:12.105Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.23844499999999996,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.23844499999999996,
+        "session_ms": 123671,
+        "api_ms": 23490,
+        "turns": 14,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1190,
+            "output": 16,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.00012700000000000002
+          },
+          "claude-opus-5-5": {
+            "input": 22,
+            "output": 2129,
+            "cache_read": 234650,
+            "cache_write": 18590,
+            "cost_usd": 0.23831799999999997
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 22,
+              "output": 2129,
+              "cache_read": 234650,
+              "cache_write": 18590
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bcavypi8l",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "boxrmonja",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "br0kxxbs7",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Bash": 5,
+          "Glob": 2,
+          "Read": 2,
+          "Skill": 1,
+          "Grep": 1,
+          "AskUserQuestion": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 532
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 311
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 113
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 73
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 57
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 290
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 46135
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 365
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 63
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 578
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 25318
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 21344
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-105-2026-11-17T18-10-06-890Z-run1.json"
+    }
+  ]
+}
