@@ -252,7 +252,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 ## Tasks
 
 ### C005-T-001 — Lite plan hash without the report-field lines
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 1 — Dogfood base
 - **Depends on:** none
 - **Implements:** C005-REQ-121, C005-REQ-122
@@ -284,6 +284,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] `TS-805.test.ts`, `TS-806.test.ts`, `TS-807.test.ts`, `TS-816.test.ts` and `tests/unit/model/frontmatter.test.ts` pass unchanged
   - [ ] Source, tests and rebuilt bundle are in one commit
   - [ ] Reported `done` with the working-tree CLI
+- **Commit:** deb770b
+- **Notes:** Step 2a of C005-IF-005 in phaseHash; TS-167..171 pass; npm run check 10/10
+- **Completed at:** 2026-11-17
 
 ### C005-T-002 — G3 re-approval of CHG-005 with the working-tree CLI
 - **Status:** todo

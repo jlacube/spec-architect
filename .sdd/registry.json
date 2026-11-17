@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-17T11:40:28Z",
+  "generated_at": "2026-11-17T12:53:48Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -3559,22 +3559,33 @@
         },
         "20-plan": {
           "status": "approved",
-          "approved_hash": "sha256:b5c8bd31ded201f7aeda5fb4fc7a48a759f0508dc47f1dced085c2d8957caf6a",
+          "approved_hash": "sha256:1a4aa77c32fd5408691b61498821f3026aceb9982bf11462fbbc310a0c5f1c1c",
           "approved_at": "2026-11-17",
           "approved_by": "Jerome LACUBE"
         }
       },
       "implementation": {
-        "status": "not-started",
+        "status": "in-progress",
         "tasks": {
           "total": 24,
-          "done": 0,
+          "done": 1,
           "blocked": 0,
           "in_progress": 0
         },
         "last_report": null
       },
-      "defects": [],
+      "defects": [
+        {
+          "id": "D-001",
+          "ref": "C005-REQ-121",
+          "summary": "sdd task set on a lite task inserts Commit, Notes and Completed at between the Done when field and its checkboxes, so LINT-TASK-001 reports an empty Done when (found on C005-T-001; fields moved by hand, hash unchanged)",
+          "reporter": "Jerome LACUBE",
+          "date": "2026-11-17",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
+        }
+      ],
       "waivers": []
     }
   ]
