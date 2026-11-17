@@ -13253,10 +13253,39 @@ function phaseFiles(phaseDir) {
 function fileHash(abs) {
   return sha2563(normalizeForHash(readFileSync15(abs, "utf8")));
 }
+var TASK_HEADING = /^#{2,4}\s+(?:C\d+-)?T-\d+(?![\w-])/;
+var SECTION_END = /^#{1,4}\s/;
+var REPORT_FIELDS = ["- **Status:**", "- **Commit:**", "- **Notes:**", "- **Completed at:**"];
+function dropReportFields(lines2) {
+  const out = [];
+  let inTask = false;
+  for (const line of lines2) {
+    if (SECTION_END.test(line)) inTask = TASK_HEADING.test(line);
+    else if (inTask && REPORT_FIELDS.some((f) => line.startsWith(f))) continue;
+    out.push(line);
+  }
+  return out;
+}
+function normalizeLitePlan(text) {
+  const doc = splitFrontmatter(text);
+  return dropReportFields(doc.lines.slice(doc.bodyStartLine - 1)).map((l) => l.replace(/[ \t]+$/, "")).join("\n");
+}
+function isLite(changeDir) {
+  try {
+    return splitFrontmatter(readFileSync15(join24(changeDir, "change.md"), "utf8")).data?.["profile"] === "lite";
+  } catch {
+    return false;
+  }
+}
 function phaseHash(changeDir, phase) {
   const dir2 = join24(changeDir, phase);
   const files = phaseFiles(dir2);
-  const hashes = files.map((rel) => [rel, fileHash(join24(dir2, ...rel.split("/")))]);
+  const litePlan = phase === "20-plan" && isLite(changeDir);
+  const hashes = files.map((rel) => {
+    const abs = join24(dir2, ...rel.split("/"));
+    const h = litePlan && rel === "plan.md" ? sha2563(normalizeLitePlan(readFileSync15(abs, "utf8"))) : fileHash(abs);
+    return [rel, h];
+  });
   if (hashes.length === 1) return { hash: `sha256:${hashes[0][1]}`, files: 1 };
   return { hash: `sha256:${sha2563(hashes.map(([rel, h]) => `${rel}	${h}
 `).join(""))}`, files: hashes.length };

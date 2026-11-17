@@ -4,7 +4,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { normalizeForHash } from "../model/frontmatter.ts";
+import { normalizeForHash, splitFrontmatter } from "../model/frontmatter.ts";
 import { buildChangeGraph } from "../model/graph.ts";
 import { writeTextAtomic } from "../io/atomic.ts";
 
@@ -34,11 +34,52 @@ export function fileHash(abs: string): string {
   return sha256(normalizeForHash(readFileSync(abs, "utf8")));
 }
 
+/** Heading of a task section: level 2 to 4, text starting with a task ID (C005-IF-005 §2). */
+const TASK_HEADING = /^#{2,4}\s+(?:C\d+-)?T-\d+(?![\w-])/;
+/** Any heading of level 1 to 4: the end of a task section. */
+const SECTION_END = /^#{1,4}\s/;
+/** The four report fields in the form `sdd task set` writes them (C005-IF-005 §2). */
+const REPORT_FIELDS = ["- **Status:**", "- **Commit:**", "- **Notes:**", "- **Completed at:**"];
+
+/** Step 2a of C005-IF-005 §2: task-section lines that begin with a report field, removed with their terminator. */
+export function dropReportFields(lines: readonly string[]): string[] {
+  const out: string[] = [];
+  let inTask = false;
+  for (const line of lines) {
+    if (SECTION_END.test(line)) inTask = TASK_HEADING.test(line);
+    else if (inTask && REPORT_FIELDS.some((f) => line.startsWith(f))) continue;
+    out.push(line);
+  }
+  return out;
+}
+
+/** C001-IF-13 §2 step 2 with step 2a of C005-IF-005: the normalised text of a lite `20-plan/plan.md`. */
+export function normalizeLitePlan(text: string): string {
+  const doc = splitFrontmatter(text);
+  return dropReportFields(doc.lines.slice(doc.bodyStartLine - 1))
+    .map((l) => l.replace(/[ \t]+$/, ""))
+    .join("\n");
+}
+
+/** Profile of the change from `change.md`; a missing or unreadable manifest counts as full (C005-T-001 step 2). */
+function isLite(changeDir: string): boolean {
+  try {
+    return splitFrontmatter(readFileSync(join(changeDir, "change.md"), "utf8")).data?.["profile"] === "lite";
+  } catch {
+    return false;
+  }
+}
+
 /** `sha256:<hex>` of a phase: the single file's hash, or the hash of `path\thash\n` lines. */
 export function phaseHash(changeDir: string, phase: string): { hash: string; files: number } {
   const dir = join(changeDir, phase);
   const files = phaseFiles(dir);
-  const hashes = files.map((rel) => [rel, fileHash(join(dir, ...rel.split("/")))] as const);
+  const litePlan = phase === "20-plan" && isLite(changeDir);
+  const hashes = files.map((rel) => {
+    const abs = join(dir, ...rel.split("/"));
+    const h = litePlan && rel === "plan.md" ? sha256(normalizeLitePlan(readFileSync(abs, "utf8"))) : fileHash(abs);
+    return [rel, h] as const;
+  });
   if (hashes.length === 1) return { hash: `sha256:${hashes[0]![1]}`, files: 1 };
   return { hash: `sha256:${sha256(hashes.map(([rel, h]) => `${rel}\t${h}\n`).join(""))}`, files: hashes.length };
 }
