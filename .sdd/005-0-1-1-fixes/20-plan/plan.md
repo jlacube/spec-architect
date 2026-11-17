@@ -466,7 +466,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** SDD.md section of C005-IF-003 section 4 with the build version; TS-126..128 pass; check 10/10
 
 ### C005-T-007 — Planning skill: versioned install line and archive-task marker
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-003
 - **Implements:** C005-REQ-107, C005-REQ-114
@@ -496,6 +496,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] In the dev-run transcripts of C005-TS-120 and C005-TS-121, the planner's own `sdd --version` call printed `0.1.1` through the wrapper, and the planner's writes passed the `guard-path` hook run through the wrapper
   - [ ] `npm run check` passes
   - [ ] Dev-run cost recorded in the one-line report note; a dev run that ended at the 0.50 USD session cap is named there (C005-ADR-002, Consequences)
+- **Completed at:** 2026-11-17
+- **Commit:** 4b99310
+- **Notes:** Planning skill text; 5 eval cases pass one dev run each, 2.34 USD notional; TS-121, 141, 142, 143 ended at the 0.50 USD session cap
 
 ### C005-T-008 — Archive preconditions: archive-task marker and lite task sections
 - **Status:** done
@@ -569,7 +572,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** L1-L4 lookup in resolveChange and changeOfId; ERR-CLI-014 on writing; TS-146..150,166 pass; hash 001 20-plan matches; check 10/10
 
 ### C005-T-010 — New-change procedure in `phase-ideation`, `commands/new.md` and the conductor
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-002
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124
@@ -603,6 +606,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The procedure text exists once, in `phase-ideation` (C005-CON-06)
   - [ ] The seven eval cases pass one dev run each
   - [ ] `npm run check` passes
+- **Completed at:** —
 
 ### C005-T-011 — Eval cases of the kind round
 - **Status:** todo
