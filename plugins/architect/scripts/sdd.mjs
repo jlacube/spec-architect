@@ -10815,7 +10815,9 @@ function lintWorkspace(root, options2) {
     selected = folders.filter((f) => !f.archived && f.name === name);
   }
   if (options2.change !== void 0) {
-    const match = folders.filter((f) => !f.archived && f.name.startsWith(options2.change + "-"));
+    const named = (archived) => folders.filter((f) => f.archived === archived && f.name.startsWith(options2.change + "-"));
+    const active = named(false);
+    const match = active.length > 0 ? active : named(true);
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: options2.change });
     selected = match;
   }
@@ -10825,7 +10827,7 @@ function lintWorkspace(root, options2) {
   const changes = selected.map((f) => {
     const graph = buildChangeGraph(f.dir);
     trace2("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
-    return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
+    return { change: graph.change, folder: f.archived ? `.sdd/_archive/${f.name}` : `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
   });
   const definitions = /* @__PURE__ */ new Map();
   const activeDefinitions = /* @__PURE__ */ new Map();

@@ -120,7 +120,11 @@ export function lintWorkspace(root: string, options: LintOptions): LintReport {
     selected = folders.filter((f) => !f.archived && f.name === name);
   }
   if (options.change !== undefined) {
-    const match = folders.filter((f) => !f.archived && f.name.startsWith(options.change + "-"));
+    // Change lookup of C005-IF-001 for a read-only invocation: L1 the folder `.sdd/<NNN>-*`, else L2 the
+    // folder `.sdd/_archive/<NNN>-*`; L4 none, or more than one at the step that decides.
+    const named = (archived: boolean) => folders.filter((f) => f.archived === archived && f.name.startsWith(options.change + "-"));
+    const active = named(false);
+    const match = active.length > 0 ? active : named(true);
     if (match.length !== 1) throw new CliError("ERR-CLI-002", { NNN: options.change });
     selected = match;
   }
@@ -131,7 +135,7 @@ export function lintWorkspace(root: string, options: LintOptions): LintReport {
   const changes: LintChange[] = selected.map((f) => {
     const graph = buildChangeGraph(f.dir);
     trace("graph", { change: graph.change, files: graph.files.length, nodes: graph.nodes.length, edges: graph.edges.length });
-    return { change: graph.change, folder: `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
+    return { change: graph.change, folder: f.archived ? `.sdd/_archive/${f.name}` : `.sdd/${f.name}`, profile: changeStatus(f.dir).profile, graph, spec: gatherSpecFacts(sdd, graph) };
   });
 
   // Workspace-wide definitions, tombstones and living files (not needed in quick mode).
