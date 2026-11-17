@@ -534,7 +534,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** Archive preconditions per profile with the marked task skipped; archive.md exemption; TS-134..140 pass; check 10/10
 
 ### C005-T-009 — CLI front-end: archived lookup for read-only and writing invocations
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-005, C005-T-008
 - **Implements:** C005-REQ-116, C005-REQ-117
@@ -564,7 +564,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The six test cases in Verified by pass
   - [ ] The ERR-CLI-002 tests of E-53 and the writing-command list tests pass unchanged
   - [ ] Rebuilt bundle committed with the source
-- **Completed at:** —
+- **Completed at:** 2026-11-17
+- **Commit:** 5a82bd5
+- **Notes:** L1-L4 lookup in resolveChange and changeOfId; ERR-CLI-014 on writing; TS-146..150,166 pass; hash 001 20-plan matches; check 10/10
 
 ### C005-T-010 — New-change procedure in `phase-ideation`, `commands/new.md` and the conductor
 - **Status:** todo
@@ -663,7 +665,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] `npm run check` passes
 
 ### C005-T-013 — Plugin README step 6 and the plugin-path scan
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-003, C005-T-006
 - **Implements:** C005-REQ-110, C005-REQ-111
@@ -686,6 +688,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Done when:**
   - [ ] The five test cases in Verified by pass
   - [ ] `<plugin-root>` and `<plugin>/scripts/sdd.mjs` occur in no file under `plugins/architect/`
+- **Completed at:** —
 
 ### C005-T-014 — Eval floor on Claude Code: create-change scenarios
 - **Status:** todo

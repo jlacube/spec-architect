@@ -110,8 +110,9 @@ In your repository, with the conductor running (`claude --agent architect:sdd-co
    architecture; then `/architect:gate spec` (G2).
 5. `/architect:plan` — tasks, milestones, test plan, risks, rollout, hand-off; then
    `/architect:gate plan` (G3).
-6. Give `.sdd/001-coupon-codes/20-plan/handoff.md` to whoever implements it. Progress is reported with
-   `node <plugin>/scripts/sdd.mjs task set <task-ID> --status done --commit <sha>`.
+6. Give `.sdd/001-coupon-codes/20-plan/handoff.md` to whoever implements it. The implementer installs
+   the sdd CLI once with `npm install -g architect-sdd@0.1.0` and reports progress with
+   `sdd task set <task-ID> --status done --commit <sha>`.
 7. When every task is done: `/architect:archive 001` merges the change into the living specs.
 
 At every gate you answer one question: **Approve**, **Approve with waivers**, **Revise** or **Stop**.
