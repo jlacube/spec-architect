@@ -6,6 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CliError } from "../cli/errors.ts";
 import { isInside, realPath } from "../io/paths.ts";
+import { VERSION } from "../version.ts";
 
 export type Profile = "full" | "lite";
 
@@ -148,9 +149,13 @@ export function resolveTemplate(profile: TemplateProfile, rel: string, options: 
   throw new CliError("ERR-CLI-019", { profile, path: rel });
 }
 
-/** Replaces `{{KEY}}` for every key given; other placeholders are left in place. */
+/**
+ * Replaces `{{KEY}}` for every key given; other placeholders are left in place. `{{VERSION}}` is supplied
+ * here, beside the caller's keys, as the running CLI's own version, so no caller leaves it out (C005-IF-003 §2).
+ */
 export function renderTemplate(text: string, vars: Readonly<Record<string, string>>): string {
-  return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key: string) => vars[key] ?? m);
+  const all: Readonly<Record<string, string>> = { VERSION, ...vars };
+  return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key: string) => all[key] ?? m);
 }
 
 /** Placeholders still present in `text`. */

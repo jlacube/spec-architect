@@ -16,11 +16,14 @@ status: draft
 
 ## Reporting protocol
 
+The first command is a one-time install of the sdd CLI (Node.js 20 or later); the others report progress.
+
 ```bash
-node <plugin-root>/scripts/sdd.mjs task set <task-id> --status in-progress
-node <plugin-root>/scripts/sdd.mjs task set <task-id> --status done --commit <sha> --note "<summary>"
-node <plugin-root>/scripts/sdd.mjs task set <task-id> --status blocked --reason "<why>"
-node <plugin-root>/scripts/sdd.mjs defect add --ref <ID> --summary "<what is wrong>"
+npm install -g architect-sdd@{{VERSION}}
+sdd task set <task-id> --status in-progress
+sdd task set <task-id> --status done --commit <sha> --note "<summary>"
+sdd task set <task-id> --status blocked --reason "<why>"
+sdd defect add --ref <ID> --summary "<what is wrong>"
 ```
 
 **Frontmatter fallback** (when the CLI cannot be run): edit the task file's frontmatter `status`

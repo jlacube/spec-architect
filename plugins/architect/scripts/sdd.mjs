@@ -10985,7 +10985,8 @@ function resolveTemplate(profile, rel, options2 = {}) {
   throw new CliError("ERR-CLI-019", { profile, path: rel });
 }
 function renderTemplate(text, vars) {
-  return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key) => vars[key] ?? m);
+  const all = { VERSION, ...vars };
+  return text.replace(/\{\{([A-Z]+)\}\}/g, (m, key) => all[key] ?? m);
 }
 
 // src/workspace/change.ts

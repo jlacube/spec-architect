@@ -13,6 +13,7 @@ Placeholders, replaced when a template is rendered:
 | `{{TITLE}}`, `{{KIND}}`, `{{PROFILE}}`, `{{DATE}}` | change title, kind, profile, ISO date |
 | `{{SEQ}}`, `{{SLUG}}`, `{{NAME}}` | entity number, slug, entity title |
 | `{{NN}}`, `{{B}}` | capability number padded (`01`) and as ID block (`1` → `REQ-101`) |
+| `{{VERSION}}` | `0.1.1`, the version of the sdd CLI that renders the template |
 
 A repository overrides any template by placing a file with the same relative path under
 `.sdd/_templates/<profile>/`, e.g. `.sdd/_templates/full/20-plan/70-risks.md`.

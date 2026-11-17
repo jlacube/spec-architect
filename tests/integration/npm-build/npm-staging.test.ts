@@ -107,35 +107,26 @@ test("C002-TS-419 (tarball part): LICENSE holds the MIT license and THIRD_PARTY_
   for (const name of ["yaml", "@modelcontextprotocol/sdk"]) assert.match(notices.toString("utf8"), new RegExp(`^### ${name.replace("/", "\\/")} \\d+\\.\\d+\\.\\d+ — \\S+`, "m"), name);
 });
 
-test("C002-TS-519: every template and the Serena mode file, with the source SHA-256 except the translated hand-off templates", () => {
-  for (const [rel, srcSha] of sourceShas) {
-    const staged = sha(entry(`templates/${rel}`));
-    if (HANDOFFS.includes(rel)) assert.notEqual(staged, srcSha, `${rel} is translated`);
-    else assert.equal(staged, srcSha, rel);
-  }
+test("C002-TS-519: every template and the Serena mode file, with the source SHA-256 (no hand-off line to translate since C005-T-003)", () => {
+  for (const [rel, srcSha] of sourceShas) assert.equal(sha(entry(`templates/${rel}`)), srcSha, rel);
+  for (const rel of HANDOFFS) assert.ok(sourceShas.has(rel), rel);
   assert.equal(sha(entry("serena/architect-read-only.yml")), sha(readFileSync(join(PLUGIN, "serena", "architect-read-only.yml"))));
 });
 
 for (const [profile, line, args] of [
-  ["full", 20, "task set <task-id> --status in-progress"],
-  ["full", 23, 'defect add --ref <ID> --summary "<what is wrong>"'],
-  ["lite", 21, 'task set <task-id> --status done --commit <sha> --note "<summary>"'],
-  ["lite", 22, 'task set <task-id> --status blocked --reason "<why>"'],
+  ["full", 23, "task set <task-id> --status in-progress"],
+  ["full", 26, 'defect add --ref <ID> --summary "<what is wrong>"'],
+  ["lite", 24, 'task set <task-id> --status done --commit <sha> --note "<summary>"'],
+  ["lite", 25, 'task set <task-id> --status blocked --reason "<why>"'],
 ] as const) {
-  test(`C002-TS-529: line ${line} of ${profile}/20-plan/handoff.md reads "sdd ${args}" in the tarball; the source is unchanged`, () => {
+  test(`C002-TS-529: line ${line} of ${profile}/20-plan/handoff.md reads "sdd ${args}" in the source and the tarball`, () => {
     const rel = `${profile}/20-plan/handoff.md`;
     const srcPath = join(PLUGIN, "templates", profile, "20-plan", "handoff.md");
-    const src = readFileSync(srcPath, "utf8").split("\n");
-    assert.equal(src[line - 1], `node <plugin-root>/scripts/sdd.mjs ${args}`, "the source line of the scenario");
+    const src = readFileSync(srcPath, "utf8");
+    assert.equal(src.split("\n")[line - 1], `sdd ${args}`, "the source line of the scenario");
     const staged = entry(`templates/${rel}`).toString("utf8");
-    const lines = staged.split("\n");
-    assert.equal(lines[line - 1], `sdd ${args}`);
-    assert.equal(lines.length, src.length, "line numbers stay");
+    assert.equal(staged, src, "the staged template equals its source");
     assert.ok(!staged.includes("scripts/sdd.mjs") && !staged.includes("<plugin-root>"));
-    // Nothing else changes.
-    lines.forEach((l, i) => {
-      if (l !== src[i]) assert.equal(`node <plugin-root>/scripts/${l.replace(/^sdd /, "sdd.mjs ")}`, src[i]);
-    });
     assert.equal(sha(readFileSync(srcPath)), sourceShas.get(rel));
   });
 }
@@ -236,23 +227,12 @@ test("C002-TS-502 (C002-TC-502): the installed sdd creates the same change folde
     // The same list of relative file paths.
     const fa = filesUnder(join(a.root, ".sdd", folder)).sort();
     assert.deepEqual(fa, filesUnder(join(b.root, ".sdd", folder)).sort());
-    // Each file has the same lines, except lines of 20-plan/handoff.md in which fx-b holds
-    // `node <plugin-root>/scripts/sdd.mjs` and fx-a `sdd` in its place, the rest of the line being equal.
-    const PLUGIN_CLI = "node <plugin-root>/scripts/sdd.mjs";
-    const differing: string[] = [];
+    // Each file is identical: the hand-off templates hold no plugin path since C005-T-003, and both CLIs
+    // fill {{VERSION}} with the same version.
     for (const rel of fa) {
-      const la = readFileSync(join(a.root, ".sdd", folder, rel), "utf8").split("\n");
-      const lb = readFileSync(join(b.root, ".sdd", folder, rel), "utf8").split("\n");
-      assert.equal(la.length, lb.length, `${rel}: line count`);
-      lb.forEach((line, i) => {
-        if (la[i] === line) return;
-        differing.push(rel);
-        assert.equal(rel, "20-plan/handoff.md", `${rel}:${i + 1} differs: ${JSON.stringify(la[i])} vs ${JSON.stringify(line)}`);
-        assert.ok(line.includes(PLUGIN_CLI), `${rel}:${i + 1} of fx-b holds ${PLUGIN_CLI}: ${line}`);
-        assert.equal(la[i], line.split(PLUGIN_CLI).join("sdd"), `${rel}:${i + 1}`);
-      });
+      assert.equal(readFileSync(join(a.root, ".sdd", folder, rel), "utf8"), readFileSync(join(b.root, ".sdd", folder, rel), "utf8"), rel);
     }
-    assert.ok(differing.includes("20-plan/handoff.md"), "the hand-off CLI lines are translated");
+    assert.ok(readFileSync(join(a.root, ".sdd", folder, "20-plan", "handoff.md"), "utf8").includes(`npm install -g architect-sdd@${version}`));
   } finally {
     a.cleanup();
     b.cleanup();
