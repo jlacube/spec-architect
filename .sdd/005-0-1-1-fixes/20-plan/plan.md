@@ -289,7 +289,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-17
 
 ### C005-T-002 — G3 re-approval of CHG-005 with the working-tree CLI
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 1 — Dogfood base
 - **Depends on:** C005-T-001
 - **Implements:** C005-REQ-122
@@ -318,7 +318,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The outputs of steps 1 and 4 are in section "Dogfood" of `docs/release-0.1.1-evidence.md`, committed before the `done` report
   - [ ] `20-plan` is approved with a hash computed by the working-tree CLI, and the stale check after step 6 reports no stale phase
   - [ ] Reported `done` with the working-tree CLI and a one-line note
-- **Completed at:** —
+- **Completed at:** 2026-11-17
+- **Commit:** cbf9f5f
+- **Notes:** 20-plan stale under 0.1.1 rule, re-approved 66fad5b, stays approved after task set; D-001 recorded
 
 ### C005-T-003 — Versioned install line in the hand-off templates
 - **Status:** todo
