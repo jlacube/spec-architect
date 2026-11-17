@@ -1,6 +1,8 @@
 {
   "change": "CHG-005",
-  "allocated": {},
+  "allocated": { "CAP": 1, "US": 106, "REQ": 126, "NFR": 1, "TS": 175, "IF": 5, "CON": 8, "COMP": 13, "DOD": 9 },
   "blocks": [],
-  "tombstones": []
+  "tombstones": [
+    { "id": "C005-TS-151", "reason": "critic CR-15: case out of scope (C005-US-105 Out of scope, C005-REQ-117 rationale)", "date": "2026-11-17" }
+  ]
 }
