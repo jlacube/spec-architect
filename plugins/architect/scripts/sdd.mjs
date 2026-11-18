@@ -13630,17 +13630,21 @@ function statuses(changeDir) {
   }
   return out;
 }
+var FIELD_LINE = /^- \*\*[^*]+:\*\*/;
+var isContinuation = (l) => /^[ \t]/.test(l) && /\S/.test(l);
 function setLiteField(text, id, name, value2) {
   const lines2 = text.split("\n");
   const at = lines2.findIndex((l) => new RegExp(`^#{2,4}\\s+${id}\\b`).test(l));
   let end = lines2.findIndex((l, i) => i > at && /^#{1,4}\s/.test(l));
   if (end < 0) end = lines2.length;
-  const f = lines2.findIndex((l, i) => i > at && i < end && l.startsWith(`- **${name}:**`));
-  if (f >= 0) lines2[f] = `- **${name}:** ${value2}`;
+  const line = `- **${name}:** ${value2}`;
+  const f = lines2.findIndex((l, i) => i > at && i < end && FIELD_LINE.test(l) && l.startsWith(`- **${name}:**`));
+  if (f >= 0) lines2[f] = line;
   else {
     let last = at;
-    for (let i = at + 1; i < end; i++) if (lines2[i].startsWith("- **")) last = i;
-    lines2.splice(last + 1, 0, `- **${name}:** ${value2}`);
+    for (let i = at + 1; i < end; i++) if (FIELD_LINE.test(lines2[i])) last = i;
+    if (last > at) while (last + 1 < end && isContinuation(lines2[last + 1])) last++;
+    lines2.splice(last + 1, 0, line);
   }
   return lines2.join("\n");
 }

@@ -83,18 +83,29 @@ function statuses(changeDir: string): Map<string, string> {
   return out;
 }
 
-/** Sets a `- **Name:** value` field inside one lite task section, adding it when absent. */
+/** Field line: `- **<name>:**` at the first character (glossary delta of CHG-005; C005-REQ-127). */
+const FIELD_LINE = /^- \*\*[^*]+:\*\*/;
+/** Continuation line: not blank and begins with a space or a tab (glossary delta of CHG-005). */
+const isContinuation = (l: string): boolean => /^[ \t]/.test(l) && /\S/.test(l);
+
+/**
+ * Sets a `- **Name:** value` field inside one lite task section (C005-REQ-127): the section's first field line of
+ * that field is replaced in place; else the field goes directly after the last field line and its continuation
+ * lines (e.g. the checkboxes of Done when, defect D-001); else directly after the heading line.
+ */
 function setLiteField(text: string, id: string, name: string, value: string): string {
   const lines = text.split("\n");
   const at = lines.findIndex((l) => new RegExp(`^#{2,4}\\s+${id}\\b`).test(l));
   let end = lines.findIndex((l, i) => i > at && /^#{1,4}\s/.test(l));
   if (end < 0) end = lines.length;
-  const f = lines.findIndex((l, i) => i > at && i < end && l.startsWith(`- **${name}:**`));
-  if (f >= 0) lines[f] = `- **${name}:** ${value}`;
+  const line = `- **${name}:** ${value}`;
+  const f = lines.findIndex((l, i) => i > at && i < end && FIELD_LINE.test(l) && l.startsWith(`- **${name}:**`));
+  if (f >= 0) lines[f] = line;
   else {
     let last = at;
-    for (let i = at + 1; i < end; i++) if (lines[i]!.startsWith("- **")) last = i;
-    lines.splice(last + 1, 0, `- **${name}:** ${value}`);
+    for (let i = at + 1; i < end; i++) if (FIELD_LINE.test(lines[i]!)) last = i;
+    if (last > at) while (last + 1 < end && isContinuation(lines[last + 1]!)) last++;
+    lines.splice(last + 1, 0, line);
   }
   return lines.join("\n");
 }
