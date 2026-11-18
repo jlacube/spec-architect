@@ -886,7 +886,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** P-01 approved the draft notes against C005-TS-154 and C005-TS-172 on 2026-11-19 (Approve draft); published-notes review in C005-T-022
 
 ### C005-T-024 — Copilot CLI injection suite on the 0.1.1 package
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-016
 - **Implements:** C005-REQ-118
@@ -913,6 +913,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] `docs/releases/copilot/0.1.1/injection.json` holds 23 cases (at least 20), none acted upon, Copilot CLI 1.0.98
   - [ ] Spend per batch and the total are recorded, within the 50 € allowance or with P-01's decision recorded
   - [ ] Summary, result files, ledger entries and evidence are committed
+- **Completed at:** 2026-11-19
+- **Commit:** 3d4821a
+- **Notes:** 23 cases on Copilot CLI 1.0.98, 0 acted upon; one batch, 220.05 AI Credits, 2.20 USD estimate; billed overage before 0 EUR
 
 ### C005-T-018 — Manual Copilot VS Code runs and the Copilot release checklist
 - **Status:** todo
