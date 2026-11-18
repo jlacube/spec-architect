@@ -4,6 +4,37 @@ All notable changes to the Architect plugin suite (`plugins/architect`, `archite
 follow semantic versioning; `0.0.x` were development installs (C001-M-1 … M-6), `0.1.0` is the first
 release of CHG-001 (`.sdd/001-architect-agent-suite/20-plan/75-rollout.md`).
 
+## 0.1.1 — release commit `2fec7a8` (2026-11-18, not yet tagged)
+
+Patch release of CHG-005 "0.1.1 fixes" (`.sdd/005-0-1-1-fixes/`): the known gaps of 0.1.0 (CHG-001 defects D-032,
+D-034, D-035) and the problems found while dogfooding it. Release notes, with the steps for workspaces made with
+0.1.0: `docs/releases/github-release-notes-0.1.1.md`. Evidence: `docs/release-0.1.1-evidence.md`.
+
+### Fixed
+
+- **New-change procedure on every create-change request** (C005-REQ-101, 102, 123, 124; D-032): the conductor
+  proposes the profile from a size estimate and asks for the kind in the same round, also when the change is
+  asked for in plain words; a kind answer that names no kind gets a further round.
+- **Pre-phase interview rounds** (C005-REQ-103, 104, 126; D-034): an answer given after G1 or G2 and before the
+  next phase starts is logged in that phase's `questions-log.md`, marked as pre-phase; the lint accepts the file.
+- **Reporting without the plugin** (C005-REQ-105 to 111; D-035): hand-offs, `SDD.md` and the plugin README give
+  `npm install -g architect-sdd@<version>` and bare `sdd` commands; new lint rule LINT-HAND-003 reports a hand-off
+  without a versioned install line while the plan is open.
+- **Archive preconditions** (C005-REQ-112 to 115): the task marked as the change's archive task is skipped; the
+  tasks of a lite plan count; new lint rule LINT-TASK-005 reports more than one marked task.
+- **Lite plan approval hash** (C005-REQ-121, 122): the report-field lines of lite task sections are outside the
+  `20-plan` hash, so task reports keep the plan approved. A lite plan approved with 0.1.0 needs one G3
+  re-approval with 0.1.1 (C005-REQ-125).
+- **Report-field placement** (C005-REQ-127; CHG-005 defect D-001): `sdd task set` writes a new report field after
+  the section's last field line and its continuation lines.
+- **Archived changes** (C005-REQ-116, 117): read-only subcommands find a change under `.sdd/_archive/` by number;
+  writing subcommands refuse it with ERR-CLI-014, exit code 2.
+
+### Release evidence
+
+- `npm run check` on Windows 11 at the release commit; eval floor DOD-G-01 on Claude Code, every case at its
+  floor, 46.43 USD notional (`docs/release-0.1.1-evidence.md`, sections "Check" and "Evals").
+
 ## 0.1.0 — release candidate `b6f1509` (2026-11-07, not yet tagged)
 
 First release of the Architect spec-driven-development suite for Claude Code (CHG-001), from the
