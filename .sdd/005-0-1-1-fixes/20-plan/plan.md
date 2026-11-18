@@ -753,7 +753,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-18
 
 ### C005-T-014 — Eval floor on Claude Code: create-change scenarios
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124
@@ -779,10 +779,12 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Every case meets its floor, or P-01 has decided on the result below it
   - [ ] Results, cost and running total are in `docs/release-0.1.1-evidence.md`
   - [ ] No open defect from this task
-- **Completed at:** —
+- **Completed at:** 2026-11-18
+- **Commit:** c715811
+- **Notes:** 17 cases at floor (5 rerun after the kind-round harness fix 1874eed); 3 regression sessions pass; evidence Evals section
 
 ### C005-T-015 — Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025
 - **Implements:** C005-REQ-103, C005-REQ-104, C005-REQ-107, C005-REQ-114
@@ -808,6 +810,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Every case meets its floor, or P-01 has decided on the result below it
   - [ ] Results and cost are in `docs/release-0.1.1-evidence.md`
   - [ ] No open defect from this task
+- **Completed at:** 2026-11-18
+- **Commit:** c715811
+- **Notes:** 11 cases at floor (TS-109 10/10 after D-002); planner cases at the 1.00 USD cap exception; 8 regression sessions pass
 
 ### C005-T-016 — Version 0.1.1, release build and checks
 - **Status:** todo
