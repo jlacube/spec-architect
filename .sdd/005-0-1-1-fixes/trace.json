@@ -1,12 +1,12 @@
 {
   "change": "CHG-005",
-  "generated_at": "2026-11-17T11:39:00.563Z",
+  "generated_at": "2026-11-18T00:24:32.423Z",
   "nodes": [
     {
       "id": "C005-AC-101.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 393,
+      "line": 404,
       "title": "Profile round before the change exists, on every create-change request",
       "content_hash": "sha256:eeba343ec9bc079757074ff37179be4e669f8a9cf37984ff5cb0aba392a2f194"
     },
@@ -14,7 +14,7 @@
       "id": "C005-AC-102.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 464,
+      "line": 475,
       "title": "Change created with both options from P-01's answers",
       "content_hash": "sha256:af5360b27bcda368f26b6845c225ccfeeb27b05c4eb8acfa178ed237c799d8fc"
     },
@@ -22,7 +22,7 @@
       "id": "C005-AC-103.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 580,
+      "line": 591,
       "title": "Pre-phase round appended to the next phase's questions log, approved phase untouched",
       "content_hash": "sha256:b54a5ac161699e03ded380e737ca0ad1ff0284cf3aa769921d88bd449d026d0a"
     },
@@ -30,7 +30,7 @@
       "id": "C005-AC-104.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 625,
+      "line": 636,
       "title": "Pre-phase round states the gate after which it was given",
       "content_hash": "sha256:838167c4fcbb932e053f2dc0e37968ec025088e2529c3640c6efcdd1b6466ab4"
     },
@@ -38,7 +38,7 @@
       "id": "C005-AC-105.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 681,
+      "line": 692,
       "title": "Reporting protocol gives bare sdd commands after the install line",
       "content_hash": "sha256:9f79a5673ca70f3961205c4d52ec559ad11a8a9c78fff758f4015aae4dc1e485"
     },
@@ -46,7 +46,7 @@
       "id": "C005-AC-106.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 713,
+      "line": 724,
       "title": "Hand-off scaffolded by the sdd CLI names the CLI's own version",
       "content_hash": "sha256:e2e556081c62e5a7ec49cfaea8f65aa289097e3a92a26643e535908c449e3b3a"
     },
@@ -54,7 +54,7 @@
       "id": "C005-AC-107.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 738,
+      "line": 749,
       "title": "Hand-off written by the planner names the version of the session's sdd",
       "content_hash": "sha256:9d51fc950d3c557f96e7f4f0d04686b3256ed5f196af5e4cd806d383f8be36ca"
     },
@@ -62,7 +62,7 @@
       "id": "C005-AC-108.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 757,
+      "line": 768,
       "title": "Lint reports a hand-off without a versioned install line while the plan is open",
       "content_hash": "sha256:342c2988207e4b169cc00d6dcd1cf0c104ac763f6071e9a64b7deaacedbdcfdd"
     },
@@ -70,7 +70,7 @@
       "id": "C005-AC-109.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 808,
+      "line": 819,
       "title": "SDD.md written by sdd init gives the install line and the bare task command",
       "content_hash": "sha256:84ce55dfc40c020d3032a799c947f372f9478364672ddecd9068563b2713feeb"
     },
@@ -78,7 +78,7 @@
       "id": "C005-AC-110.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 833,
+      "line": 844,
       "title": "Plugin README hand-off step names the version of plugin.json",
       "content_hash": "sha256:6c8e969724c547b22415f396f1856342275a44ddef2def28b31329a0c71a494e"
     },
@@ -86,7 +86,7 @@
       "id": "C005-AC-111.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 849,
+      "line": 860,
       "title": "No plugin-path invocation in any file of the source plugin",
       "content_hash": "sha256:02ddf933a346e274cb73292651b2ce4b6ed23f6629f8e9f9b82d987585ec5fd4"
     },
@@ -94,7 +94,7 @@
       "id": "C005-AC-112.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 877,
+      "line": 888,
       "title": "Archive refused on unmet preconditions, the marked archive task excepted",
       "content_hash": "sha256:961f20c33f5b7ee3540fa4e156363a1592ba2e39ef92f42866475eec36424096"
     },
@@ -102,7 +102,7 @@
       "id": "C005-AC-113.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 930,
+      "line": 941,
       "title": "Task sections of a lite plan counted in the archive preconditions",
       "content_hash": "sha256:2985caa627103bd50fd4dee9537bd63697cc9ca7865a1703a0d2bcdb449fa964"
     },
@@ -110,7 +110,7 @@
       "id": "C005-AC-114.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 965,
+      "line": 976,
       "title": "Planner marks the task that runs the change's own archive",
       "content_hash": "sha256:5f29689d1854801d2817e80880278466b7a3381ff385cb3b748af2f5f2c8437e"
     },
@@ -118,7 +118,7 @@
       "id": "C005-AC-115.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 994,
+      "line": 1005,
       "title": "Lint reports more than one marked archive task",
       "content_hash": "sha256:1da43d228675f3b570f7f3eac1047200e6bd5b89fafefbf3b8828d36e93c50cd"
     },
@@ -126,7 +126,7 @@
       "id": "C005-AC-116.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1078,
+      "line": 1167,
       "title": "Read-only subcommands run on an archived change",
       "content_hash": "sha256:982c7800e0c2b0f96346255ce64575c143d7b63503b63b965193d0a18981562b"
     },
@@ -134,7 +134,7 @@
       "id": "C005-AC-117.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1110,
+      "line": 1199,
       "title": "Writing subcommands refuse an archived change and write nothing",
       "content_hash": "sha256:6de6d1ff7efefc51550929d28280eb55b190a8ff77fb1443ba913b0aac69a82b"
     },
@@ -142,7 +142,7 @@
       "id": "C005-AC-118.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1155,
+      "line": 1244,
       "title": "0.1.1 release holds both host packages at version 0.1.1",
       "content_hash": "sha256:cd197e38576abbcf3603b8d5983a6d44e3b4c1a26ae427ee5ba50fd00d8c53b8"
     },
@@ -150,7 +150,7 @@
       "id": "C005-AC-119.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1166,
+      "line": 1255,
       "title": "architect-sdd 0.1.1 on npm no later than the release",
       "content_hash": "sha256:33299df32118743e1412d0c20361b9ddfd2bc9a783a5bfd600e3985abfb541a7"
     },
@@ -158,7 +158,7 @@
       "id": "C005-AC-120.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1176,
+      "line": 1265,
       "title": "Release notes give the old and the new SDD.md sentence",
       "content_hash": "sha256:9d1b93b33f73548935cc202aa21a1b0aac7a956d342cbea2b16e34e871389d56"
     },
@@ -166,7 +166,7 @@
       "id": "C005-AC-121.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1018,
+      "line": 1029,
       "title": "Lite task reports leave the approval hash unchanged; other hashes as at 0.1.0",
       "content_hash": "sha256:72290a1133d974d990a2082ce360937b51b8aa9a76bf1730b86973e20cebcd39"
     },
@@ -174,7 +174,7 @@
       "id": "C005-AC-122.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1057,
+      "line": 1068,
       "title": "Lite plan approved with the sdd CLI 0.1.0 reported stale once, re-approved once",
       "content_hash": "sha256:f3b8e9dd503b7c219df2c1583c5adc5f557b4c4b039d559ce59062e869f01794"
     },
@@ -182,7 +182,7 @@
       "id": "C005-AC-123.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 495,
+      "line": 506,
       "title": "Kind asked in the profile round unless the command gave it",
       "content_hash": "sha256:9dfa0d16063064b15773981a2ef21d536a5c1a1b43a6a159be118d143c547071"
     },
@@ -190,7 +190,7 @@
       "id": "C005-AC-124.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 524,
+      "line": 535,
       "title": "Kind asked again when the answer names no kind",
       "content_hash": "sha256:bcb4797a38e5324afa04ea626f6131488e938f351e67c88f2769d2a853554313"
     },
@@ -198,17 +198,25 @@
       "id": "C005-AC-125.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 1186,
-      "title": "Release notes state the one G3 re-approval of a lite plan approved with the sdd CLI 0.1.0",
-      "content_hash": "sha256:26cd9fe44a68c8ac98c28c3ff0f9a8906aeea412ba7a108f2e7666f4026895bb"
+      "line": 1275,
+      "title": "Release notes state the one G3 re-approval of a lite plan approved with the sdd CLI 0.1.0 and the hand move before it",
+      "content_hash": "sha256:04b938e525065e4498fe8ba30a00fbb1aa42ed18e51fb50cf6476824f65cd4e4"
     },
     {
       "id": "C005-AC-126.1",
       "type": "AC",
       "file": "10-spec/spec.md",
-      "line": 657,
+      "line": 668,
       "title": "Lint reports the same findings with and without a pre-phase questions log",
       "content_hash": "sha256:2a6bb65dfec25123a42aa82ac1cb85d774aa75b758f73bc11774a5642689dbd8"
+    },
+    {
+      "id": "C005-AC-127.1",
+      "type": "AC",
+      "file": "10-spec/spec.md",
+      "line": 1089,
+      "title": "A report-field line of a lite task replaces that field's line, or directly follows the last field line and its continuation lines, or directly follows the heading line",
+      "content_hash": "sha256:bfdb1a83319957ec923280833e7d6aad767c56c189e077c0ff6fd3da7d4d3499"
     },
     {
       "id": "C005-ADR-001",
@@ -240,7 +248,7 @@
       "id": "C005-COMP-001",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1693,
+      "line": 1785,
       "title": "Conductor",
       "content_hash": "sha256:e5addf2072cd3ff88a403576dac6c1cb3bc90ea36daac0dafe0ae1d5993019db"
     },
@@ -248,7 +256,7 @@
       "id": "C005-COMP-002",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1704,
+      "line": 1796,
       "title": "Skills library",
       "content_hash": "sha256:7d39df247c25d7b4178e133af6caa5bc7d234636c3aaccad3215d2f3932153e6"
     },
@@ -256,7 +264,7 @@
       "id": "C005-COMP-003",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1715,
+      "line": 1807,
       "title": "Commands",
       "content_hash": "sha256:b1d0998b870807e8e41f1c9710d249e49c5fa4458efe9c44f1e43855b6bfaff3"
     },
@@ -264,7 +272,7 @@
       "id": "C005-COMP-004",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1726,
+      "line": 1818,
       "title": "CLI front-end",
       "content_hash": "sha256:2e395d9a334c46445880b6e6c773d19b1af2441602e88eb3ee37acabef31523a"
     },
@@ -272,7 +280,7 @@
       "id": "C005-COMP-005",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1737,
+      "line": 1829,
       "title": "Workspace and registry module",
       "content_hash": "sha256:1910fad45cba04d85178579ff6bbb781017176fab7f34b8944edc972d7ef31c9"
     },
@@ -280,7 +288,7 @@
       "id": "C005-COMP-006",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1748,
+      "line": 1840,
       "title": "Parser, lint and trace engine",
       "content_hash": "sha256:381e862254b1a0378ad63f13a307d9b05e7971f99fdfda633628a8b02f4a0d50"
     },
@@ -288,15 +296,15 @@
       "id": "C005-COMP-007",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1759,
+      "line": 1851,
       "title": "Tracking and archive module",
-      "content_hash": "sha256:28e62aa8112123cc3d8b8a9db1cfa018be51ddc67dd09c8692109a5f883414b4"
+      "content_hash": "sha256:88d2e07efbd9e3c268e871c167676c8e84bb26cb10e0a9c9fd128083310661dc"
     },
     {
       "id": "C005-COMP-008",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1770,
+      "line": 1862,
       "title": "Templates",
       "content_hash": "sha256:633edcfeaf5e1073f549d107885af4cc50f96f7831c708ec3fd7132405a65331"
     },
@@ -304,7 +312,7 @@
       "id": "C005-COMP-009",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1781,
+      "line": 1873,
       "title": "Gate engine",
       "content_hash": "sha256:70927371eaf683e62761bbf85c72aeb31a484d21d00a855a652d22d4f9a57eb0"
     },
@@ -312,7 +320,7 @@
       "id": "C005-COMP-010",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1792,
+      "line": 1884,
       "title": "Plugin package and configuration",
       "content_hash": "sha256:100a618e83803143c8113ded80e8591b3a9cc6c56853e4f1b0c9fa5282312b4c"
     },
@@ -320,7 +328,7 @@
       "id": "C005-COMP-011",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1803,
+      "line": 1895,
       "title": "Build and check tooling",
       "content_hash": "sha256:0d5d047df1bc4b70676f154cbfa214d48408fb47c337f6862247eeed17bbdfa9"
     },
@@ -328,7 +336,7 @@
       "id": "C005-COMP-012",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1814,
+      "line": 1906,
       "title": "`architect-sdd` npm package",
       "content_hash": "sha256:55af4c2f8760cd380e2e469c6a0645de9108610f63a2ff11a10d013bf4295c69"
     },
@@ -336,7 +344,7 @@
       "id": "C005-COMP-013",
       "type": "COMP",
       "file": "10-spec/spec.md",
-      "line": 1824,
+      "line": 1916,
       "title": "0.1.1 release notes and records",
       "content_hash": "sha256:b6cec81d53b492a546da873e536c70290d123c0044da332fd2f6ca4f501b6cc1"
     },
@@ -344,7 +352,7 @@
       "id": "C005-CON-01",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1900,
+      "line": 1992,
       "title": "One list decides writing invocations",
       "content_hash": "sha256:5a5f9e6b9118a50cae968e4d046424b710f9ae8a76e7c6573e7b6dc1f34565a4"
     },
@@ -352,7 +360,7 @@
       "id": "C005-CON-02",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1905,
+      "line": 1997,
       "title": "No new CLI surface or error code",
       "content_hash": "sha256:c04a2a1a960520290192fcf5ec6703bcd9f0bbfb2607e755c32059efd977c7dd"
     },
@@ -360,7 +368,7 @@
       "id": "C005-CON-03",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1910,
+      "line": 2002,
       "title": "Archived folders are read-only",
       "content_hash": "sha256:0d305f2e978cecbb47a0a97b7f9ba7bf0b268c58bef8bc7032eb98e13276955b"
     },
@@ -368,7 +376,7 @@
       "id": "C005-CON-04",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1915,
+      "line": 2007,
       "title": "Template bytes unchanged on `template show`",
       "content_hash": "sha256:5dfe63a6655b0afe7a98e46dc6c892f59fc9007f55ed7eef87aaaba6001b2768"
     },
@@ -376,7 +384,7 @@
       "id": "C005-CON-05",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1920,
+      "line": 2012,
       "title": "No network and no npm from the CLI",
       "content_hash": "sha256:d384ebee327c12b86464d2af61ef6bd82017eae37ee2d95717a8648768faa77b"
     },
@@ -384,7 +392,7 @@
       "id": "C005-CON-06",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1925,
+      "line": 2017,
       "title": "The new-change procedure exists once",
       "content_hash": "sha256:ba526140220e981ba4b4d12348d10421c0ffeefea638b21d238adbefa16c4d21"
     },
@@ -392,7 +400,7 @@
       "id": "C005-CON-07",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1930,
+      "line": 2022,
       "title": "Shared text without a mapping change",
       "content_hash": "sha256:e426156d485c2299c9a006d8b22904f6e3397d109c5da770e0fbd4c8c99bbb92"
     },
@@ -400,7 +408,7 @@
       "id": "C005-CON-08",
       "type": "CON",
       "file": "10-spec/spec.md",
-      "line": 1935,
+      "line": 2027,
       "title": "One version source",
       "content_hash": "sha256:90f6ad5da12fb3bb514ecd992dc4017fde8323b8e608199d55fb9f4dd882b3a4"
     },
@@ -417,8 +425,8 @@
       "type": "DOD",
       "file": "10-spec/dod.md",
       "line": 17,
-      "title": "Every untagged scenario of `spec.md` § Acceptance (C005-TS-111, C005-TS-114 to C005-TS-119, C005-TS-122 to C005-TS-140, C005-TS-144 to C005-TS-150, C005-TS-166 to C005-TS-171, C005-TS-175) is an automated unit or integration test that carries its TS ID and passes in `npm run check` on the release commit",
-      "content_hash": "sha256:5dee4bf0150eb51e15f5e98db029ed40cc8d85708b0ae53da7bcee5f1fc1de6c"
+      "title": "Every untagged scenario of `spec.md` § Acceptance (C005-TS-111, C005-TS-114 to C005-TS-119, C005-TS-122 to C005-TS-140, C005-TS-144 to C005-TS-150, C005-TS-166 to C005-TS-171, C005-TS-175 to C005-TS-179) is an automated unit or integration test that carries its TS ID and passes in `npm run check` on the release commit",
+      "content_hash": "sha256:895c56794eeaa427a58057cbbb120d4cfbfc01ec298ac7908b1e110a61850663"
     },
     {
       "id": "C005-DOD-003",
@@ -426,7 +434,7 @@
       "file": "10-spec/dod.md",
       "line": 18,
       "title": "The line and branch coverage of the CLI source in the `npm run check` run of the release commit meets the thresholds of C001-NFR-502",
-      "content_hash": "sha256:369a0f54d58332af228d1631cfccb30644b6e3fcf5dd2da75ef635a138cf4d13"
+      "content_hash": "sha256:1b94365abdb200651758cf87e8000615bff3c52fb6cf4f719e17bf80b90528b6"
     },
     {
       "id": "C005-DOD-004",
@@ -457,8 +465,8 @@
       "type": "DOD",
       "file": "10-spec/dod.md",
       "line": 22,
-      "title": "P-01's review record of C005-TS-154 and C005-TS-172 on the published 0.1.1 release notes shows present the old and the new `SDD.md` sentence and, for lite plans approved with the sdd CLI 0.1.0, the statement that the first `sdd stale check` of the sdd CLI 0.1.1 sets `20-plan` stale, that one revision and one G3 approval with the sdd CLI 0.1.1 make it approved again, and that this approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1",
-      "content_hash": "sha256:c9b3c5cd7ad8e320c9d2dad1021b219dd7a0b8e7d423c3ecb8183d8aeb7fc398"
+      "title": "P-01's review record of C005-TS-154 and C005-TS-172 on the published 0.1.1 release notes shows present the old and the new `SDD.md` sentence and, for lite plans approved with the sdd CLI 0.1.0, the statement that the first `sdd stale check` of the sdd CLI 0.1.1 sets `20-plan` stale, that one revision and one G3 approval with the sdd CLI 0.1.1 make it approved again, that before that G3 approval P-01 moves each report-field line that stands between a field line and that field's indented lines to directly after them, and that this approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1",
+      "content_hash": "sha256:fcaf5a4a76f7f5a55301269cabf35417517bc4141ff5adbab2bb2db7a0d788c4"
     },
     {
       "id": "C005-DOD-008",
@@ -480,7 +488,7 @@
       "id": "C005-IF-001",
       "type": "IF",
       "file": "10-spec/spec.md",
-      "line": 1284,
+      "line": 1375,
       "title": "sdd CLI: archived changes and archive preconditions",
       "content_hash": "sha256:3fd4767c60ef222248f6fbfd0fdcf63344defe9c9e4765161262715388a208d5"
     },
@@ -488,7 +496,7 @@
       "id": "C005-IF-002",
       "type": "IF",
       "file": "10-spec/spec.md",
-      "line": 1411,
+      "line": 1502,
       "title": "Archive-task marker",
       "content_hash": "sha256:79b960c58cae3a52bd29b65e97449bc5a11fe4b43e06ff9fc8b7869c0a68373b"
     },
@@ -496,7 +504,7 @@
       "id": "C005-IF-003",
       "type": "IF",
       "file": "10-spec/spec.md",
-      "line": 1451,
+      "line": 1542,
       "title": "Version key and reporting lines",
       "content_hash": "sha256:e0b4e1c045f642934e29e8ba4fb2abf69560cfc1471ff4742db1fb5e62f38c4d"
     },
@@ -504,7 +512,7 @@
       "id": "C005-IF-004",
       "type": "IF",
       "file": "10-spec/spec.md",
-      "line": 1534,
+      "line": 1625,
       "title": "Pre-phase round in the questions log",
       "content_hash": "sha256:f358a2e1d7833d88c183585651c14851149d0c0ece7e3cb17ddd314e2f47705e"
     },
@@ -512,15 +520,15 @@
       "id": "C005-IF-005",
       "type": "IF",
       "file": "10-spec/spec.md",
-      "line": 1575,
+      "line": 1666,
       "title": "Approval hash of a lite plan",
-      "content_hash": "sha256:ca8a255ecd57cedf53277948cad6ef1e675a8233ea7c72129553b1ffd135c229"
+      "content_hash": "sha256:f83a29fd860910916d5eb825c831d8427d37329b56d5b1f8c5c9c1bd58c97c90"
     },
     {
       "id": "C005-NFR-001",
       "type": "NFR",
       "file": "10-spec/spec.md",
-      "line": 1247,
+      "line": 1338,
       "title": "Reporting commands on the reference machine",
       "content_hash": "sha256:8c885118acc1cca927bf955cc9ccff11f9e17fda61fdd30a6725e1d3b5f29f59"
     },
@@ -537,7 +545,7 @@
       "id": "C005-REQ-101",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 134,
+      "line": 135,
       "title": "Profile round on every create-change request",
       "content_hash": "sha256:a580c07bd662806e65da9202826e6c6c6ee7e756a093d5a034a828cc55d58442"
     },
@@ -545,7 +553,7 @@
       "id": "C005-REQ-102",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 144,
+      "line": 145,
       "title": "Change created with the profile and kind P-01 gave",
       "content_hash": "sha256:399f199f24b155ee4b99835d4b4a6dc01c16d18bdb9fc3f35af518871dae8aed"
     },
@@ -553,7 +561,7 @@
       "id": "C005-REQ-103",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 171,
+      "line": 172,
       "title": "Pre-phase round logged in the next phase's questions log",
       "content_hash": "sha256:63266f84b6199fad847f97415487f457c989df4da6c00c3a21091ba9e54633d7"
     },
@@ -561,7 +569,7 @@
       "id": "C005-REQ-104",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 180,
+      "line": 181,
       "title": "Pre-phase round marked in the log",
       "content_hash": "sha256:0b0f2a4d0d82dc4aae8ebe83a0a1383ab924cc958503ffa1fdeddcf04fbd8c53"
     },
@@ -569,7 +577,7 @@
       "id": "C005-REQ-105",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 198,
+      "line": 199,
       "title": "Reporting commands that run without the plugin",
       "content_hash": "sha256:a37996ec2a030324786cbbdbc6801b45e6b57021db40a2d0dbdb7a8c92a7909d"
     },
@@ -577,7 +585,7 @@
       "id": "C005-REQ-106",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 207,
+      "line": 208,
       "title": "Version in a hand-off written by the sdd CLI",
       "content_hash": "sha256:fa53d6e16d464645f2e52a4a67e19ba6b8f62933bda45cb7220b49f16f54f775"
     },
@@ -585,7 +593,7 @@
       "id": "C005-REQ-107",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 216,
+      "line": 217,
       "title": "Version in a hand-off written by the planner",
       "content_hash": "sha256:71f6239f0b1687528219453cfcd6a5eb0a1504ddc4f1296e6ec94874ce1a75b1"
     },
@@ -593,7 +601,7 @@
       "id": "C005-REQ-108",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 225,
+      "line": 226,
       "title": "Hand-off without a versioned install line reported",
       "content_hash": "sha256:2f31038b44251e39981ddf40816c0682f80a4cb257af5d5d68c9e96cc99944f6"
     },
@@ -601,7 +609,7 @@
       "id": "C005-REQ-109",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 234,
+      "line": 235,
       "title": "Reporting sentence of `SDD.md`",
       "content_hash": "sha256:4da5cf1ae134176ef1f07a8bca7dd21507d4e68c697933b473ce6b765618debe"
     },
@@ -609,7 +617,7 @@
       "id": "C005-REQ-110",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 243,
+      "line": 244,
       "title": "Reporting step of the README",
       "content_hash": "sha256:7ec1ee4ad22d4be326b8b126c40ed0215cf7d5ba42e8af289ed10e070df6a1cd"
     },
@@ -617,7 +625,7 @@
       "id": "C005-REQ-111",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 252,
+      "line": 253,
       "title": "No plugin-path invocation in the source plugin",
       "content_hash": "sha256:16810f8d5908293a10821c5b1470e0ae2b3aea853c5d3b9fa7ef0e7146e70b29"
     },
@@ -625,7 +633,7 @@
       "id": "C005-REQ-112",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 261,
+      "line": 262,
       "title": "Archive preconditions without the archive task",
       "content_hash": "sha256:1eb561be007ab0cf8d073c6fc9384acc8ebefb823946bceeab2d33ce16315998"
     },
@@ -633,7 +641,7 @@
       "id": "C005-REQ-113",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 272,
+      "line": 273,
       "title": "Tasks of a lite change in the archive preconditions",
       "content_hash": "sha256:2fdd1a484153f98d16962040d016629e8b30d0fc58943a103b27a4eaa38ee745"
     },
@@ -641,7 +649,7 @@
       "id": "C005-REQ-114",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 281,
+      "line": 282,
       "title": "Archive task marked by the planner",
       "content_hash": "sha256:9aef2447096a43d7995b97888f4742255fe79c3d0affd45729a59fb54344b2e4"
     },
@@ -649,7 +657,7 @@
       "id": "C005-REQ-115",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 290,
+      "line": 291,
       "title": "More than one archive task reported",
       "content_hash": "sha256:b0c93bdb731af798dace8cfbca7406a15209e89416db884e59a0903bf1938747"
     },
@@ -657,7 +665,7 @@
       "id": "C005-REQ-116",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 319,
+      "line": 330,
       "title": "Read-only subcommands on an archived change",
       "content_hash": "sha256:c61012e6adf029e8df372fc943f0a60100619a563104492db42cba9395a8e253"
     },
@@ -665,7 +673,7 @@
       "id": "C005-REQ-117",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 328,
+      "line": 339,
       "title": "Writing subcommands refuse an archived change",
       "content_hash": "sha256:54b0e7f305961169d68218353cb4509289700ca09240436e3df84ed71b70024e"
     },
@@ -673,7 +681,7 @@
       "id": "C005-REQ-118",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 337,
+      "line": 348,
       "title": "0.1.1 packages for both hosts",
       "content_hash": "sha256:fc3703871467c01c53c7a18290ce5e1031850f867189b1d32832d878325d45db"
     },
@@ -681,7 +689,7 @@
       "id": "C005-REQ-119",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 346,
+      "line": 357,
       "title": "`architect-sdd` 0.1.1 on npm no later than the release",
       "content_hash": "sha256:9ef4cfb42a3c823d8c24fb24b407be8a0fd412815ed5eb7d620695ca885e2101"
     },
@@ -689,7 +697,7 @@
       "id": "C005-REQ-120",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 355,
+      "line": 366,
       "title": "Release notes for existing workspaces",
       "content_hash": "sha256:741981c0e28f45be3fb7805c0fc56125be6b792b5b6b010f8b24e2e9cc7566f0"
     },
@@ -697,7 +705,7 @@
       "id": "C005-REQ-121",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 299,
+      "line": 300,
       "title": "Report fields of lite task sections outside the approval hash",
       "content_hash": "sha256:5ff773e97dd7b7886be256b85e8d4d1b2efb3c0c00a0ea0f74375f3abc68d6d4"
     },
@@ -705,15 +713,15 @@
       "id": "C005-REQ-122",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 310,
+      "line": 311,
       "title": "Lite plans approved with the sdd CLI 0.1.0",
-      "content_hash": "sha256:c3de78fc843590ec7fc5fde4499e187dc5527b86356243ad856bca0e5633a07c"
+      "content_hash": "sha256:ada0b519c2bd9611c4a02351bc911a8a7f8f960f7f012d9d0afdd6744e2da623"
     },
     {
       "id": "C005-REQ-123",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 153,
+      "line": 154,
       "title": "Kind asked in the new-change round",
       "content_hash": "sha256:080ac9a864f109dc01303df934f8a0e26990b9b5407dfc50f415c4f0eebf7f02"
     },
@@ -721,7 +729,7 @@
       "id": "C005-REQ-124",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 162,
+      "line": 163,
       "title": "Kind answer that names no kind",
       "content_hash": "sha256:14fc5a62098a3434e3e175dc5622a5ca69351614ba6bd56282a2870782aed009"
     },
@@ -729,23 +737,31 @@
       "id": "C005-REQ-125",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 364,
+      "line": 375,
       "title": "Release notes on the one G3 re-approval of a lite plan",
-      "content_hash": "sha256:5b7028bc882024cb6bd1d9ffae50b168c6802fae0648c921edc9ecfc1edc105c"
+      "content_hash": "sha256:f912d978303e84356b0581f2f570ba5998090f5d44b9ae523517f8c546cee08f"
     },
     {
       "id": "C005-REQ-126",
       "type": "REQ",
       "file": "10-spec/spec.md",
-      "line": 189,
+      "line": 190,
       "title": "Pre-phase questions log accepted by the lint",
       "content_hash": "sha256:27070177ee25120b19a8dded5ed82d2a70e25bea2fa19d8cd06b559a53861fec"
+    },
+    {
+      "id": "C005-REQ-127",
+      "type": "REQ",
+      "file": "10-spec/spec.md",
+      "line": 320,
+      "title": "Place of a report-field line in a lite task section",
+      "content_hash": "sha256:0a6ef9a1fc73f482bedd99757dad0bd67954eee94fec266cc01a1344da6302a4"
     },
     {
       "id": "C005-RISK-001",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1083,
+      "line": 1165,
       "title": "CHG-005's `20-plan` becomes stale after its re-approval because a hashing command runs the 0.1.0 plugin CLI (an `sdd-auditor` dispatch, `/architect:revise`, `/architect:gate`, `/architect:plan`, or a routine `stale check` without a change number by the conductor), or because a rollback brings the 0.1.0 hash rule back (rollback steps 1, 3, 5); `sdd archive 005` then refuses",
       "content_hash": "sha256:e46bfc6e944f798f8e13dcda1823401dfe5bc331f4f69889fa121e59f6af90f3"
     },
@@ -753,15 +769,15 @@
       "id": "C005-RISK-002",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1084,
+      "line": 1166,
       "title": "A `src/` task commits without the rebuilt bundle; `npm run check` does not compare the bundle with `src/` (E-129), so the plugin ships stale code",
-      "content_hash": "sha256:941d33b5ba089a562cf734535129a30685c6a5cb15b31db39d0ee5320ef0659f"
+      "content_hash": "sha256:491b62d308f2d53b8e2342046f7c9e057b7c8b297114c118dbd9cb02b372c58f"
     },
     {
       "id": "C005-RISK-003",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1085,
+      "line": 1167,
       "title": "Text edits move lines that tests pin (E-9, E-36), and the check fails in a later task",
       "content_hash": "sha256:01b3ed2d5d7220fad7cc36f5284bcd9c773d9d51d01642bf73ab67b4a7ce7fda"
     },
@@ -769,7 +785,7 @@
       "id": "C005-RISK-004",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1086,
+      "line": 1168,
       "title": "The hash change alters the hash of full changes or of other phases, so golden hashes and stored approvals no longer match",
       "content_hash": "sha256:eac485f84450c6dd354d243c8576b97a7b2fe7fbfed2f4d08c2f70e0963bb946"
     },
@@ -777,7 +793,7 @@
       "id": "C005-RISK-005",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1087,
+      "line": 1169,
       "title": "The lite branch of the archive runs for the first time on CHG-005 itself (E-43) and fails or misplaces files",
       "content_hash": "sha256:106485a3e3316dee36190f3515ed221aedf313f3337b8cc51d30a164cd6a5845"
     },
@@ -785,7 +801,7 @@
       "id": "C005-RISK-006",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1088,
+      "line": 1170,
       "title": "The new-change section and the pre-phase text push the conductor's inlined skills over 64,000 characters or a skill over 24,000",
       "content_hash": "sha256:72202e49bdacfa828049141d22e245cf7a73b26ff1aa35360a9c8fef7ed3649c"
     },
@@ -793,7 +809,7 @@
       "id": "C005-RISK-007",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1089,
+      "line": 1171,
       "title": "Eval cases fall below the DOD-G-01 floor, or reruns push spend past the Q-budget-01 envelope",
       "content_hash": "sha256:756c76dc79a452ed6ca50ddf1f0ca58e1097185d2954c37d7d702d747ea220e1"
     },
@@ -801,7 +817,7 @@
       "id": "C005-RISK-008",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1090,
+      "line": 1172,
       "title": "`architect-sdd` 0.1.1 is published with a defect, or a host package ships before its CLI is on npm; an npm version cannot be replaced",
       "content_hash": "sha256:1f138c07a5cebcfe3c222a4df8c044ac742d084f88a20ae5405d162d2f4c5931"
     },
@@ -809,7 +825,7 @@
       "id": "C005-RISK-009",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1091,
+      "line": 1173,
       "title": "A Windows shell refuses the npm shim (execution policy, R-001 low confidence), so C005-NFR-001 fails in that shell",
       "content_hash": "sha256:e07dca87e99a3cfa21960e044a618b4e72bb8b006f9e911106c7ec63b214c95f"
     },
@@ -817,7 +833,7 @@
       "id": "C005-RISK-010",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1092,
+      "line": 1174,
       "title": "The archived lookup lets a writing invocation reach an archived change and write into `.sdd/_archive/`",
       "content_hash": "sha256:656825d5c8688930d1eea25a23d6fc4aa8977710ed0e396e5c251a77cf35c27d"
     },
@@ -825,7 +841,7 @@
       "id": "C005-RISK-011",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1093,
+      "line": 1175,
       "title": "The 0.1.0 lint reports findings for a pre-phase questions log (E-131 was not run), so C005-REQ-126 needs a lint change",
       "content_hash": "sha256:8523fb167fdb1f6258b4f72303bd99ba864c2ede763c1b6f4750120cf7127ae8"
     },
@@ -833,7 +849,7 @@
       "id": "C005-RISK-012",
       "type": "RISK",
       "file": "20-plan/plan.md",
-      "line": 1094,
+      "line": 1176,
       "title": "The Copilot release check refuses version 0.1.1: a missing replay report, checklist record or injection summary (ERR-REL-003, ERR-REL-009; E-133), a host version that differs from the tested one (ERR-REL-006: VS Code, GitHub Copilot Chat or Copilot CLI updated), or an injection case acted upon (ERR-REL-002); or a manual VS Code run fails; or the injection run's Copilot spend reaches the 50 € overage allowance before 23 cases ran",
       "content_hash": "sha256:67d782a691f8e3da8208686932f9655963e640904f3c28138d953045c9f2d9b5"
     },
@@ -841,143 +857,143 @@
       "id": "C005-T-001",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 254,
+      "line": 262,
       "title": "Lite plan hash without the report-field lines",
-      "content_hash": "sha256:4f84fbfa72cb28b2ba2b2ae29d3898145a3bc18fb6aa9202373ae109ed7e547b"
+      "content_hash": "sha256:a4939d4e1ec117e3861fc79f950926b2337ece0310d5d33070aeb70be081453b"
     },
     {
       "id": "C005-T-002",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 288,
+      "line": 299,
       "title": "G3 re-approval of CHG-005 with the working-tree CLI",
-      "content_hash": "sha256:df2ef95f2b1982f4b4cf34e64546e120b5961f6ab76540e55225a95a8e050264"
+      "content_hash": "sha256:1d3b7655abb0950ad70659b9e27f58d6b6110b6dc1d0ff5cef8e3c000254d1f4"
     },
     {
       "id": "C005-T-003",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 319,
+      "line": 333,
       "title": "Versioned install line in the hand-off templates",
-      "content_hash": "sha256:6cd07477caa0bd982e06682e8054e7ecc64e05fae5b3df25ab42e52cf6088a68"
+      "content_hash": "sha256:d60a2668f9a962ac077af0ed0f1491697bf94813c2ce9e2617eccc5d5135b3e8"
     },
     {
       "id": "C005-T-004",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 356,
+      "line": 373,
       "title": "Lint rules LINT-HAND-003 and LINT-TASK-005",
-      "content_hash": "sha256:48be7ac232ef2f96202bcddaeba626f64c4228d5433a4095926f70c58a3315e5"
+      "content_hash": "sha256:5c52f261cc4de4d6eb85abb8964c3f6ae2745e9fb5ca6b4ade65e8f9412d399b"
     },
     {
       "id": "C005-T-005",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 391,
+      "line": 411,
       "title": "Lint engine: archived change selection and pre-phase questions log",
-      "content_hash": "sha256:42e9a69f396a03ee2933b8c62b14fec2bd26185900b1b9e442332a4048ec205b"
+      "content_hash": "sha256:8fe82c76688e496c9eedbd302c2c309af83513b88cae78fe3e209628ca585de3"
     },
     {
       "id": "C005-T-006",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 422,
+      "line": 445,
       "title": "`SDD.md` implementer section with the install line",
-      "content_hash": "sha256:aeb8d673a961a583823af66c5bf3aa53c5c8f93ec2b9014629e76a60c84b1ae7"
+      "content_hash": "sha256:815658c138092efe004e72a7b80256639ab8540492fa77334282f5411a0e68af"
     },
     {
       "id": "C005-T-007",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 450,
+      "line": 476,
       "title": "Planning skill: versioned install line and archive-task marker",
-      "content_hash": "sha256:c262e82f5f741bcd168bc39dc6a77c1b3f522761bdc62bf5bbc3bf2525db3f21"
+      "content_hash": "sha256:2ee6c2db837e6b4fae04504e5a402a21a7a7eca0d56148ceba61effad8f36207"
     },
     {
       "id": "C005-T-008",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 482,
+      "line": 511,
       "title": "Archive preconditions: archive-task marker and lite task sections",
-      "content_hash": "sha256:f16be4b53ce3b12d835e88ebf086d2d9a84a948fdc1642712b57d6e44791890b"
+      "content_hash": "sha256:f203b0eafcbb997f207e444fb3b4cdb3fc2f64c3f6240901d68762e60ee21115"
     },
     {
       "id": "C005-T-009",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 515,
+      "line": 547,
       "title": "CLI front-end: archived lookup for read-only and writing invocations",
-      "content_hash": "sha256:890d6a9a6cf13784d172095981061cf2ab643fc0068340ad3aed020fc82de568"
+      "content_hash": "sha256:f68964145c24e0e77b303a90115bd1bdb0a14c3b5e052f1c8ab37e7b8f1734e3"
     },
     {
       "id": "C005-T-010",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 547,
+      "line": 582,
       "title": "New-change procedure in `phase-ideation`, `commands/new.md` and the conductor",
-      "content_hash": "sha256:0eba47b6f67aa616164b19669b66df24acb2d8f1ddef2d60415454a0a585e94f"
+      "content_hash": "sha256:26a9985d86db12ee14f2e6979bcd483f1118c6d2cb7ab14bd7b2df7e4d19b627"
     },
     {
       "id": "C005-T-011",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 583,
+      "line": 619,
       "title": "Eval cases of the kind round",
-      "content_hash": "sha256:04ccae631d03a1bc6634ef7aac9dc2ca36f7606a26b6a091e6485676d9bdf4fe"
+      "content_hash": "sha256:c325c87bf17adb41ec50b88a5b464c556adcb0dab6889991fe59e90cdda3fcae"
     },
     {
       "id": "C005-T-012",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 610,
+      "line": 646,
       "title": "Pre-phase round: interview-protocol §5 and the conductor rule",
-      "content_hash": "sha256:86d95e2353bedb06d7411551234ce2883a4b895516993ffff9e2f536791e8312"
+      "content_hash": "sha256:19fc2ed22bd21eae185cc4caf42c3dec81bf071b815223ef0f082ee6983c4cf6"
     },
     {
       "id": "C005-T-013",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 643,
+      "line": 680,
       "title": "Plugin README step 6 and the plugin-path scan",
-      "content_hash": "sha256:3a4202b994f1e1395cf214442002e34d43b856f53e0f9e069273d09b1205154c"
+      "content_hash": "sha256:6d30187107a7805c323c64322009312c0984da23c91b94227c6e728c268c2da3"
     },
     {
       "id": "C005-T-014",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 668,
+      "line": 745,
       "title": "Eval floor on Claude Code: create-change scenarios",
-      "content_hash": "sha256:2b2109e7365179a3dcf871e5a2d32cb60d7e2a2285e75010556eb1ccafef7053"
+      "content_hash": "sha256:9f7225a0d459767fd3ba066c39c81b4002cd450a6dcf63d77f68bf33facffd70"
     },
     {
       "id": "C005-T-015",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 696,
+      "line": 773,
       "title": "Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios",
-      "content_hash": "sha256:79a3eab58e8d1f5e7a57302b35c83bb3ef9fa9d27c63f2fe639bbf9754487bcf"
+      "content_hash": "sha256:fb7059075cfbcbf950ceeb766bc0c211a9dd965f64e4ee78ac7f54d47f6ea6f1"
     },
     {
       "id": "C005-T-016",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 724,
+      "line": 801,
       "title": "Version 0.1.1, release build and checks",
-      "content_hash": "sha256:42fc1a8daa1939ad94f412f897332ef6f31bc02faf580b27afde6c2ed052bcd8"
+      "content_hash": "sha256:bd1a26afe361bd757ff7c878caedf255d7672a3b8bc67ad85d3c3ec26bef1573"
     },
     {
       "id": "C005-T-017",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 761,
+      "line": 838,
       "title": "Release notes 0.1.1 and release procedure",
-      "content_hash": "sha256:2e551f7cd0ac0dc884de239a457fb015a4c9cd1c0c8bfa65d1ac243c4da19664"
+      "content_hash": "sha256:f9fb179d097fe1133adc6968946359f3d4b0d0ceccbd926db7b9b36e2fac74b1"
     },
     {
       "id": "C005-T-018",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 817,
+      "line": 895,
       "title": "Manual Copilot VS Code runs and the Copilot release checklist",
       "content_hash": "sha256:f63cb1884faa93e5906ad409340d85ce778f5841abc1ab74468492f01f303a71"
     },
@@ -985,7 +1001,7 @@
       "id": "C005-T-019",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 845,
+      "line": 923,
       "title": "Publish `architect-sdd` 0.1.1 on npm",
       "content_hash": "sha256:999a5ca1bf88cdb6caf35320b4faf863d916f57bbf3c49ee7ccec0a28a754acc"
     },
@@ -993,7 +1009,7 @@
       "id": "C005-T-020",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 871,
+      "line": 949,
       "title": "C005-NFR-001 check in three shells",
       "content_hash": "sha256:31f761e0133d1d25b05dbfe9aa39aec254b43f1425f54be2bf729df73368661b"
     },
@@ -1001,7 +1017,7 @@
       "id": "C005-T-021",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 895,
+      "line": 973,
       "title": "Release 0.1.1 on both hosts",
       "content_hash": "sha256:202f2c2fda775df83b73e54f2b8c17f4f15eb66dd4d6e327f0208d3887d1bc5c"
     },
@@ -1009,7 +1025,7 @@
       "id": "C005-T-022",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 925,
+      "line": 1003,
       "title": "DoD evidence and close preconditions",
       "content_hash": "sha256:b869ef7fd22fe30784f2855b831a67705e16dff0c8d02d7e8418e2ec657d26c0"
     },
@@ -1017,7 +1033,7 @@
       "id": "C005-T-023",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 951,
+      "line": 1029,
       "title": "Archive CHG-005 into living specs",
       "content_hash": "sha256:4b9077b7f9168e6e86d4b622bf230df7811cf30c8742d52d56e2d3275f2b38eb"
     },
@@ -1025,15 +1041,23 @@
       "id": "C005-T-024",
       "type": "T",
       "file": "20-plan/plan.md",
-      "line": 788,
+      "line": 866,
       "title": "Copilot CLI injection suite on the 0.1.1 package",
       "content_hash": "sha256:fa89d5f8c7c7131b0ec63c5a2feed75447af56c97584ae19cd10ab9dd6c0c962"
+    },
+    {
+      "id": "C005-T-025",
+      "type": "T",
+      "file": "20-plan/plan.md",
+      "line": 708,
+      "title": "Lite report fields written after the task's field list (D-001)",
+      "content_hash": "sha256:30cd0cfc71420cc155ae387b27aa24bbc7ae3f222cf5580ce21c2f2e150a7e6a"
     },
     {
       "id": "C005-TC-001",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 982,
+      "line": 1060,
       "title": "C005-TS-101",
       "content_hash": "sha256:f283bff63ac342123fd002d6704ec57372a03f69ce37189cd42c8e00335fb289"
     },
@@ -1041,7 +1065,7 @@
       "id": "C005-TC-002",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 983,
+      "line": 1061,
       "title": "C005-TS-102",
       "content_hash": "sha256:ea48f05c935c7d30fc7c5546619464fb61cf78f1a911602ea3783bcb3a64fc75"
     },
@@ -1049,7 +1073,7 @@
       "id": "C005-TC-003",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 984,
+      "line": 1062,
       "title": "C005-TS-103",
       "content_hash": "sha256:ae313732400d2e16052844f89c633433e39acb8bfe450c22b99da7a2c5d890d9"
     },
@@ -1057,7 +1081,7 @@
       "id": "C005-TC-004",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 985,
+      "line": 1063,
       "title": "C005-TS-104",
       "content_hash": "sha256:e5b4c810cd63d6d848f8bd76c56e63d88da5a31a98cab7448e950e046560e46d"
     },
@@ -1065,7 +1089,7 @@
       "id": "C005-TC-005",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 986,
+      "line": 1064,
       "title": "C005-TS-105",
       "content_hash": "sha256:6311a9b1409eaf5d4e02b1ea52cc3148ef2c29fafc12027d4e6f345bbb1b329c"
     },
@@ -1073,7 +1097,7 @@
       "id": "C005-TC-006",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 987,
+      "line": 1065,
       "title": "C005-TS-106",
       "content_hash": "sha256:1132a12c1f1475e4056a516e5259473afeca2f6e5ae055d1381f7c38a86eb49d"
     },
@@ -1081,7 +1105,7 @@
       "id": "C005-TC-007",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 988,
+      "line": 1066,
       "title": "C005-TS-107",
       "content_hash": "sha256:96c8d779ab2066abe3df24166dd12c5c131c7786dce781e0dfbc630012f63fc1"
     },
@@ -1089,7 +1113,7 @@
       "id": "C005-TC-008",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 989,
+      "line": 1067,
       "title": "C005-TS-108",
       "content_hash": "sha256:7010dbda3219c84ee2cfe9ed2795da9f4c713b59e66f9f7e67ee4a4f9145e30a"
     },
@@ -1097,7 +1121,7 @@
       "id": "C005-TC-009",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 990,
+      "line": 1068,
       "title": "C005-TS-109",
       "content_hash": "sha256:58772ac15bb916879cb5a30ba135d111eb41d8e90e02350bd2053f0f9b6ea7d9"
     },
@@ -1105,7 +1129,7 @@
       "id": "C005-TC-010",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 991,
+      "line": 1069,
       "title": "C005-TS-110",
       "content_hash": "sha256:2f839852379313562890f288aa1d5c72fcac24630cce5107949f414bea6a6e62"
     },
@@ -1113,7 +1137,7 @@
       "id": "C005-TC-011",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 992,
+      "line": 1070,
       "title": "C005-TS-111",
       "content_hash": "sha256:4cbc15bb2fd911deaed058143970708ecd600b0b59791062a11a96dae4111631"
     },
@@ -1121,7 +1145,7 @@
       "id": "C005-TC-012",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 993,
+      "line": 1071,
       "title": "C005-TS-112",
       "content_hash": "sha256:48e2d4080237c7f8d27e82fa0b910740f943381126337e32192173f093e48f4c"
     },
@@ -1129,7 +1153,7 @@
       "id": "C005-TC-013",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 994,
+      "line": 1072,
       "title": "C005-TS-113",
       "content_hash": "sha256:0b0215787956809d32f1089c6fb270e52088c2a74a6bd30e58d0d59454ad450d"
     },
@@ -1137,7 +1161,7 @@
       "id": "C005-TC-014",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 995,
+      "line": 1073,
       "title": "C005-TS-114",
       "content_hash": "sha256:90e50690e74a77fd20d89f2aea29d5d2c4da9a9905528413311c9315e533426d"
     },
@@ -1145,7 +1169,7 @@
       "id": "C005-TC-015",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 996,
+      "line": 1074,
       "title": "C005-TS-115",
       "content_hash": "sha256:fada3ebe4202bea36eb3e407a2c1a5176f1b56d6ed0c641c201219abfff87274"
     },
@@ -1153,7 +1177,7 @@
       "id": "C005-TC-016",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 997,
+      "line": 1075,
       "title": "C005-TS-116",
       "content_hash": "sha256:9319c305db3912a0f89ef91254212890b626e71f1e43cb651d796c011db4add4"
     },
@@ -1161,7 +1185,7 @@
       "id": "C005-TC-017",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 998,
+      "line": 1076,
       "title": "C005-TS-117",
       "content_hash": "sha256:f1b9af88a54fdaaa1cb1eb504605ca7841fbf998f7f15f301b5e3961ba6d910c"
     },
@@ -1169,7 +1193,7 @@
       "id": "C005-TC-018",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 999,
+      "line": 1077,
       "title": "C005-TS-118",
       "content_hash": "sha256:d88fb542232c67687152abffca34ef2723d1f2f4d5473b6b4c6c45776c595340"
     },
@@ -1177,7 +1201,7 @@
       "id": "C005-TC-019",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1000,
+      "line": 1078,
       "title": "C005-TS-119",
       "content_hash": "sha256:432105822f0f29effdd57b728855afff3b62c25c107a7df819008baa0924f712"
     },
@@ -1185,7 +1209,7 @@
       "id": "C005-TC-020",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1001,
+      "line": 1079,
       "title": "C005-TS-120",
       "content_hash": "sha256:54d861272448ca15b0e5007786019b96b0af779619f2ff68cd471527f1f0e237"
     },
@@ -1193,7 +1217,7 @@
       "id": "C005-TC-021",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1002,
+      "line": 1080,
       "title": "C005-TS-121",
       "content_hash": "sha256:009bc42ba9e49a5646e415985e9e0ba7806d5508ff037d98babac092887e9007"
     },
@@ -1201,7 +1225,7 @@
       "id": "C005-TC-022",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1003,
+      "line": 1081,
       "title": "C005-TS-122",
       "content_hash": "sha256:a22554ef609b72eecb3b64777042fbfc7cd68fc530174a05e3819c0e92780244"
     },
@@ -1209,7 +1233,7 @@
       "id": "C005-TC-023",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1004,
+      "line": 1082,
       "title": "C005-TS-123",
       "content_hash": "sha256:5f0ac616ee6083bcd482d27f2741cecc2fd2c4ec0cdbcdea688f13427a1a50fb"
     },
@@ -1217,7 +1241,7 @@
       "id": "C005-TC-024",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1005,
+      "line": 1083,
       "title": "C005-TS-124",
       "content_hash": "sha256:ace58bb8f5f7ca9856f801641e5bc8fb6fc27b2819b529b4f06e3353a22905ab"
     },
@@ -1225,7 +1249,7 @@
       "id": "C005-TC-025",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1006,
+      "line": 1084,
       "title": "C005-TS-125",
       "content_hash": "sha256:75e3efcec8d8abc64b6048dbac11ef0dd53ab78b63f658f404958d801141012e"
     },
@@ -1233,7 +1257,7 @@
       "id": "C005-TC-026",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1007,
+      "line": 1085,
       "title": "C005-TS-126",
       "content_hash": "sha256:a6e1097796dff6d93f2cf177fa4370131fcda55d1611ddf625ce827cd5029409"
     },
@@ -1241,7 +1265,7 @@
       "id": "C005-TC-027",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1008,
+      "line": 1086,
       "title": "C005-TS-127",
       "content_hash": "sha256:a235a3d2632b655162ef6d1fa3aea49fb8fd5aae3bc74d38e4b39872e7d62e1f"
     },
@@ -1249,7 +1273,7 @@
       "id": "C005-TC-028",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1009,
+      "line": 1087,
       "title": "C005-TS-128",
       "content_hash": "sha256:0fc22156cb6e81efd2c97c75ed7af360ed395f4dbcb295df31d6fa8b92f0e030"
     },
@@ -1257,7 +1281,7 @@
       "id": "C005-TC-029",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1010,
+      "line": 1088,
       "title": "C005-TS-129",
       "content_hash": "sha256:7eeac69ebf9d41b09ea8c3b2b4af5841c0a1a50623ed65e256809a4b578b01aa"
     },
@@ -1265,7 +1289,7 @@
       "id": "C005-TC-030",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1011,
+      "line": 1089,
       "title": "C005-TS-130",
       "content_hash": "sha256:41acb75bf1347e51527ac93bc73b1a63ce1a849d3e210a0cbc72256b04e87f38"
     },
@@ -1273,7 +1297,7 @@
       "id": "C005-TC-031",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1012,
+      "line": 1090,
       "title": "C005-TS-131",
       "content_hash": "sha256:43214b7745cd6c5efa9e36177ad3c34f48b4fdc392dab23efbd50a3fe794c8d3"
     },
@@ -1281,7 +1305,7 @@
       "id": "C005-TC-032",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1013,
+      "line": 1091,
       "title": "C005-TS-132",
       "content_hash": "sha256:d35c78cca096174e1592b25fc488d7522a602d381a285fe81def4f9b1d05aaf9"
     },
@@ -1289,7 +1313,7 @@
       "id": "C005-TC-033",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1014,
+      "line": 1092,
       "title": "C005-TS-133",
       "content_hash": "sha256:ea2b3dec8bcf03f011478b4e112a48f20f7bc833509f711434294358473f59fc"
     },
@@ -1297,7 +1321,7 @@
       "id": "C005-TC-034",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1015,
+      "line": 1093,
       "title": "C005-TS-134",
       "content_hash": "sha256:79138fffe567df7db794a7944a48c8d99b24c841ccc37b2d32b218c2fcdec6b3"
     },
@@ -1305,7 +1329,7 @@
       "id": "C005-TC-035",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1016,
+      "line": 1094,
       "title": "C005-TS-135",
       "content_hash": "sha256:5a9510ca966392c9d5235eb746d0b4e53d0f8c909fc0578a17b7a91f180b1c7b"
     },
@@ -1313,7 +1337,7 @@
       "id": "C005-TC-036",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1017,
+      "line": 1095,
       "title": "C005-TS-136",
       "content_hash": "sha256:a2133a50cf06a8ef2b1a1245cf4c2ae889f0d7383f367e8b8f879a1f09d7f2cc"
     },
@@ -1321,7 +1345,7 @@
       "id": "C005-TC-037",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1018,
+      "line": 1096,
       "title": "C005-TS-137",
       "content_hash": "sha256:82036ecfac13f991ece953c820f064ddb056dada61c194e2750027ddcd595851"
     },
@@ -1329,7 +1353,7 @@
       "id": "C005-TC-038",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1019,
+      "line": 1097,
       "title": "C005-TS-138",
       "content_hash": "sha256:c4e74a3b433a026ce7ba243a6f718455a0e89dba42cdcd35d009671ceaebc812"
     },
@@ -1337,7 +1361,7 @@
       "id": "C005-TC-039",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1020,
+      "line": 1098,
       "title": "C005-TS-139",
       "content_hash": "sha256:fba7b7418d6a70c1cb1ef3aea0a21aad62637f482e145181f2c1a042ff49d3f3"
     },
@@ -1345,7 +1369,7 @@
       "id": "C005-TC-040",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1021,
+      "line": 1099,
       "title": "C005-TS-140",
       "content_hash": "sha256:fadcf2010345fc9b2c392301b3f82b94fd1e2ead6a3c32915e92b2d35d920794"
     },
@@ -1353,7 +1377,7 @@
       "id": "C005-TC-041",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1022,
+      "line": 1100,
       "title": "C005-TS-141",
       "content_hash": "sha256:dc7516cbc31a121666160c8532acea4c75b1b8e1d36235449b97159a5532b25c"
     },
@@ -1361,7 +1385,7 @@
       "id": "C005-TC-042",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1023,
+      "line": 1101,
       "title": "C005-TS-142",
       "content_hash": "sha256:b4ada6cdae17b8a40cb56c6a8b0295b6e2e11b82f214f280fd852a2002d5e657"
     },
@@ -1369,7 +1393,7 @@
       "id": "C005-TC-043",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1024,
+      "line": 1102,
       "title": "C005-TS-143",
       "content_hash": "sha256:180f7c00ea636fbd5efcc7f90319fa92117e6526c4442834daf629650b593ca1"
     },
@@ -1377,7 +1401,7 @@
       "id": "C005-TC-044",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1025,
+      "line": 1103,
       "title": "C005-TS-144",
       "content_hash": "sha256:a919e2b8807f37ed145efe2b5662f2c815844881d991fd3a1cdbbbbda6dc6647"
     },
@@ -1385,7 +1409,7 @@
       "id": "C005-TC-045",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1026,
+      "line": 1104,
       "title": "C005-TS-145",
       "content_hash": "sha256:2340aba5c9991f5d264b935bd29e633ebe63dfdd3495976a0fb7e619a99334d7"
     },
@@ -1393,7 +1417,7 @@
       "id": "C005-TC-046",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1027,
+      "line": 1105,
       "title": "C005-TS-146",
       "content_hash": "sha256:e105c1f4dbcda7676fe1ce6dbdcd6eb29ffb6cb2b535876862ab165461c4ea53"
     },
@@ -1401,7 +1425,7 @@
       "id": "C005-TC-047",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1028,
+      "line": 1106,
       "title": "C005-TS-147",
       "content_hash": "sha256:70abd7e8081f81202ae747885ae8880528dc8f4c652f4602daa9c42c0e419315"
     },
@@ -1409,7 +1433,7 @@
       "id": "C005-TC-048",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1029,
+      "line": 1107,
       "title": "C005-TS-148",
       "content_hash": "sha256:2177c1e2bfa9d85150b870b9616a29c03c83e5cfdb054d18079f2da462e21d4d"
     },
@@ -1417,7 +1441,7 @@
       "id": "C005-TC-049",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1030,
+      "line": 1108,
       "title": "C005-TS-149",
       "content_hash": "sha256:3e25e17f7f4566cf1988e0baa82cf81c8e81acbec70c27648689a3fbc66d7173"
     },
@@ -1425,7 +1449,7 @@
       "id": "C005-TC-050",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1031,
+      "line": 1109,
       "title": "C005-TS-150",
       "content_hash": "sha256:63da268f7bb914a43df58e57e6ce1cd75f3d35fcd18b3350d733d5899d4cb742"
     },
@@ -1433,7 +1457,7 @@
       "id": "C005-TC-051",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1032,
+      "line": 1110,
       "title": "C005-TS-152",
       "content_hash": "sha256:cd41d017f02595ae92d2e873bf9c9864857534b2add19d71dbfe638d1d656a9b"
     },
@@ -1441,7 +1465,7 @@
       "id": "C005-TC-052",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1033,
+      "line": 1111,
       "title": "C005-TS-153",
       "content_hash": "sha256:da63321df9826fd912ae33c9fff6be987292af466092c1e63129d69d0c5cbc55"
     },
@@ -1449,7 +1473,7 @@
       "id": "C005-TC-053",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1034,
+      "line": 1112,
       "title": "C005-TS-154",
       "content_hash": "sha256:3ca066b59344fa410321ac6a992ee99f2b493762c0cfef72ef98144155635fa6"
     },
@@ -1457,7 +1481,7 @@
       "id": "C005-TC-054",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1035,
+      "line": 1113,
       "title": "C005-TS-155",
       "content_hash": "sha256:fedb9b67963fdf7c4df1bec36d0480b7f0603d7cddc03b95408610a27508ed09"
     },
@@ -1465,7 +1489,7 @@
       "id": "C005-TC-055",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1036,
+      "line": 1114,
       "title": "C005-TS-157",
       "content_hash": "sha256:38ed0f8d3dab0110950d1c7473265697a2ccec538c0d925b9f303a018e2e7863"
     },
@@ -1473,7 +1497,7 @@
       "id": "C005-TC-056",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1037,
+      "line": 1115,
       "title": "C005-TS-158",
       "content_hash": "sha256:aac389f3ec91a1412e8adeed32293ee91a179e9288c1a9effb653f1fd29be05c"
     },
@@ -1481,7 +1505,7 @@
       "id": "C005-TC-057",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1038,
+      "line": 1116,
       "title": "C005-TS-159",
       "content_hash": "sha256:cffd89c2ebca04d3016d949024c33c07a6f91f08f94c5fe95d652f2bf9b79c03"
     },
@@ -1489,7 +1513,7 @@
       "id": "C005-TC-058",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1039,
+      "line": 1117,
       "title": "C005-TS-160",
       "content_hash": "sha256:f5ac3377b828e4ca129811734ef8d33d2460b28f9f0777ea5aa82d12bd3cde10"
     },
@@ -1497,7 +1521,7 @@
       "id": "C005-TC-059",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1040,
+      "line": 1118,
       "title": "C005-TS-161",
       "content_hash": "sha256:01df1ba46e46b6f38818f5cd9d34bcf9150f1b7ba507378bd2a67ef00c380301"
     },
@@ -1505,7 +1529,7 @@
       "id": "C005-TC-060",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1041,
+      "line": 1119,
       "title": "C005-TS-162",
       "content_hash": "sha256:c6af1fd23c3aa2d2021709e24263b8ddcd7f0756cdd1a50492e64fae02162aaf"
     },
@@ -1513,7 +1537,7 @@
       "id": "C005-TC-061",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1042,
+      "line": 1120,
       "title": "C005-TS-163",
       "content_hash": "sha256:4453cea3a6053ee3fec90700348d585d0c216b491a041045dd68fb4af8b72637"
     },
@@ -1521,7 +1545,7 @@
       "id": "C005-TC-062",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1043,
+      "line": 1121,
       "title": "C005-TS-164",
       "content_hash": "sha256:acf699aee0356c36af6b6999ea861e3725f1000d47e3361580f035c4cf456d73"
     },
@@ -1529,7 +1553,7 @@
       "id": "C005-TC-063",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1044,
+      "line": 1122,
       "title": "C005-TS-165",
       "content_hash": "sha256:986b086cbb3fd202d6dc7073e476a4b18b9406fef4e8d48517964a102a847af8"
     },
@@ -1537,7 +1561,7 @@
       "id": "C005-TC-064",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1045,
+      "line": 1123,
       "title": "C005-TS-166",
       "content_hash": "sha256:7de73ff1c4f484d878e2ed731489308b79ff0c32ba6b93efda35fc43026fa0fd"
     },
@@ -1545,7 +1569,7 @@
       "id": "C005-TC-065",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1046,
+      "line": 1124,
       "title": "C005-TS-167",
       "content_hash": "sha256:8b8f7710b2aa6a03488fd68a8465d47c10ee2e7bbffb5cd72ed62803e149cbbd"
     },
@@ -1553,7 +1577,7 @@
       "id": "C005-TC-066",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1047,
+      "line": 1125,
       "title": "C005-TS-168",
       "content_hash": "sha256:4b0065cd21a66e06afbebb3287a6d866d2d3d0b958843592940cef60a17accaa"
     },
@@ -1561,7 +1585,7 @@
       "id": "C005-TC-067",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1048,
+      "line": 1126,
       "title": "C005-TS-169",
       "content_hash": "sha256:4b06d16cae68ba59ef897c82e7d1bb1c782a7f1858768527040f9049e9b2151a"
     },
@@ -1569,7 +1593,7 @@
       "id": "C005-TC-068",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1049,
+      "line": 1127,
       "title": "C005-TS-170",
       "content_hash": "sha256:e1cb496b58039e60a90ea035a506e5d53e9a93cb1ca33e2cb701ee275eddaee5"
     },
@@ -1577,7 +1601,7 @@
       "id": "C005-TC-069",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1050,
+      "line": 1128,
       "title": "C005-TS-171",
       "content_hash": "sha256:6475a588c353af10f1d8b39a59b09507e5e60492e119850adc812628e1bd9f5f"
     },
@@ -1585,7 +1609,7 @@
       "id": "C005-TC-070",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1051,
+      "line": 1129,
       "title": "C005-TS-172",
       "content_hash": "sha256:220db9fcd0e97dedf4f0ad79d2653c1a39d4336f4f845c7133307a9f8f7f5748"
     },
@@ -1593,7 +1617,7 @@
       "id": "C005-TC-071",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1052,
+      "line": 1130,
       "title": "C005-TS-173",
       "content_hash": "sha256:56416a7124f33963e26075f77704ddfc3c96982382ee05302446f0edd9c8646d"
     },
@@ -1601,7 +1625,7 @@
       "id": "C005-TC-072",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1053,
+      "line": 1131,
       "title": "C005-TS-174",
       "content_hash": "sha256:54e196536f2d20d51942d48da7b6106ae81b7bc5394a6a20fd1bac33868a9e85"
     },
@@ -1609,7 +1633,7 @@
       "id": "C005-TC-073",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1054,
+      "line": 1132,
       "title": "C005-TS-175",
       "content_hash": "sha256:4ed3b22dbf823725818290d91387231a188e977a96b1ca3ff8ebd09de9b60634"
     },
@@ -1617,7 +1641,7 @@
       "id": "C005-TC-074",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1055,
+      "line": 1133,
       "title": "C005-TS-114",
       "content_hash": "sha256:059cb9b135a6a3d2fd631d9d6a4d52c3eabbcd506e216db8be7a119f7e76259e"
     },
@@ -1625,7 +1649,7 @@
       "id": "C005-TC-075",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1056,
+      "line": 1134,
       "title": "C005-TS-156",
       "content_hash": "sha256:f7adcef46bc760c02a17b395219c4eb700ddc94e2e6177defeab5713b115fcf5"
     },
@@ -1633,15 +1657,47 @@
       "id": "C005-TC-076",
       "type": "TC",
       "file": "20-plan/plan.md",
-      "line": 1057,
+      "line": 1135,
       "title": "C005-TS-152",
       "content_hash": "sha256:d4ae105ed0635785e2c099fc4117d6fcfe8ad7ad8e101bb9e2fb3bec8fc325bb"
+    },
+    {
+      "id": "C005-TC-077",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 1136,
+      "title": "C005-TS-176",
+      "content_hash": "sha256:e738b746d50c5830fc78ac9536518ab0daba5b47a15c7cb7517ef1e90e1f2268"
+    },
+    {
+      "id": "C005-TC-078",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 1137,
+      "title": "C005-TS-177",
+      "content_hash": "sha256:8dcf6b035a53d42c459b45c71249372dec859fa1aea9c4cd939d304885da2782"
+    },
+    {
+      "id": "C005-TC-079",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 1138,
+      "title": "C005-TS-178",
+      "content_hash": "sha256:5ca2eb16add426cacf3fd6002412fca5bde467f0d1734e542c45e8ddcb49cb87"
+    },
+    {
+      "id": "C005-TC-080",
+      "type": "TC",
+      "file": "20-plan/plan.md",
+      "line": 1139,
+      "title": "C005-TS-179",
+      "content_hash": "sha256:ab9db6148de84143d3aa23973538e8046428555f2a62548847c828f006f5232c"
     },
     {
       "id": "C005-TS-101",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 396,
+      "line": 407,
       "title": "plain-words create request on Claude Code",
       "content_hash": "sha256:87b3ecf50d1b5106b2aea1bf8f40720be990338c1c3d76f7b1da2910afde1a52"
     },
@@ -1649,7 +1705,7 @@
       "id": "C005-TS-102",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 419,
+      "line": 430,
       "title": "new-change command keeps the profile round after the procedure moves",
       "content_hash": "sha256:7f79a36aa0a3e5f11dc86dac711e5316098da55ed0cf0177311caa4041c569ea"
     },
@@ -1657,7 +1713,7 @@
       "id": "C005-TS-103",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 437,
+      "line": 448,
       "title": "a request that creates no change starts no profile round",
       "content_hash": "sha256:ecace68c535ecebb36707596a849587fe3b2b94e421a93329728348be3389e4a"
     },
@@ -1665,7 +1721,7 @@
       "id": "C005-TS-104",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 447,
+      "line": 458,
       "title": "profile round declined, no change created",
       "content_hash": "sha256:030bef01e147a764d0b1be62762a6b6505b46373397b88d88d34e9adc923a2ca"
     },
@@ -1673,7 +1729,7 @@
       "id": "C005-TS-105",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 457,
+      "line": 468,
       "title": "request to skip the questions still gets the profile round",
       "content_hash": "sha256:aa029daa8befc7b4addb1d69e480be6c955187269164372add73156944ca78f4"
     },
@@ -1681,7 +1737,7 @@
       "id": "C005-TS-106",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 467,
+      "line": 478,
       "title": "profile and kind passed to sdd change new on Claude Code",
       "content_hash": "sha256:3bce4dcb8b83b98e08b5f37fc3aa61f14760243f949e23432c7d81f0a20d441d"
     },
@@ -1689,7 +1745,7 @@
       "id": "C005-TS-107",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 487,
+      "line": 498,
       "title": "answers equal to the CLI defaults are passed as options",
       "content_hash": "sha256:f667a8dee2e80c04062f8bf8b895d753f6baec6bbaf08c07ad20ee0d9885d455"
     },
@@ -1697,7 +1753,7 @@
       "id": "C005-TS-108",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 583,
+      "line": 594,
       "title": "answer after the G1 approval on Claude Code",
       "content_hash": "sha256:cb77212ea9e100b5736cdf9317a717ae15fc780f02bf7c5b8a791285d8fcdff0"
     },
@@ -1705,7 +1761,7 @@
       "id": "C005-TS-109",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 606,
+      "line": 617,
       "title": "answer after the G2 approval goes to the 20-plan log",
       "content_hash": "sha256:fc184e9786f288510022c8f1ae2409444ceb12f88b90b8191b3068d7a4e2b70b"
     },
@@ -1713,7 +1769,7 @@
       "id": "C005-TS-110",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 617,
+      "line": 628,
       "title": "second pre-phase round appended after the first",
       "content_hash": "sha256:36bdc5359b1d91aa69695d0a164c83274fac78c608400db1972a5d6d9094de9f"
     },
@@ -1721,7 +1777,7 @@
       "id": "C005-TS-111",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 659,
+      "line": 670,
       "title": "pre-phase log in a not-started phase adds or removes no lint finding",
       "content_hash": "sha256:d027cc4de2b42d6820991a1ff2caeaac35b99c282486db7e9f5847a282f63509"
     },
@@ -1729,7 +1785,7 @@
       "id": "C005-TS-112",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 628,
+      "line": 639,
       "title": "pre-phase round marked with its gate",
       "content_hash": "sha256:ab49e4ff6549a4289d64734b50bb84e83c71149f60ae50c0915341f80aeda04a"
     },
@@ -1737,7 +1793,7 @@
       "id": "C005-TS-113",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 649,
+      "line": 660,
       "title": "round answered after the phase started carries no pre-phase mark",
       "content_hash": "sha256:695bc8f5a3c0242c6559d62091cf7bf52b14dfb60c5f515ae38b5982b60ee989"
     },
@@ -1745,7 +1801,7 @@
       "id": "C005-TS-114",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 683,
+      "line": 694,
       "title": "Reporting protocol of a scaffolded lite hand-off",
       "content_hash": "sha256:2a1ea611b266a37539912ccccb3c74cd51c5ba7c859dc5e9e2befc8b5e358050"
     },
@@ -1753,7 +1809,7 @@
       "id": "C005-TS-115",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 693,
+      "line": 704,
       "title": "Reporting protocol of each source hand-off template",
       "content_hash": "sha256:3d2902576c54e267c18a26ffc0a0ff318b3cb39b84ac15024790ecb3dfa16191"
     },
@@ -1761,7 +1817,7 @@
       "id": "C005-TS-116",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 706,
+      "line": 717,
       "title": "npm packaging leaves the Reporting protocol of the hand-off templates unchanged",
       "content_hash": "sha256:a910653beab9d5db6937876d5b4ba3d1c5d3a2eaad24a9c72ab5f62694aabd99"
     },
@@ -1769,7 +1825,7 @@
       "id": "C005-TS-117",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 715,
+      "line": 726,
       "title": "lite hand-off scaffolded by the plugin's sdd CLI",
       "content_hash": "sha256:c0057fe0f0e2d8cf44d68e7ac3af624043626aa9d706386989c09badf9eac7fa"
     },
@@ -1777,7 +1833,7 @@
       "id": "C005-TS-118",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 723,
+      "line": 734,
       "title": "lite hand-off scaffolded by the npm-installed sdd",
       "content_hash": "sha256:ce5407a4ae64c8fff7c012811a5684f4acb5355291018333bd80b10da50148c9"
     },
@@ -1785,7 +1841,7 @@
       "id": "C005-TS-119",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 732,
+      "line": 743,
       "title": "template show prints the hand-off template unfilled",
       "content_hash": "sha256:108bf986d3d616189e57c25a9ba8d37a1435c164f0c9e2ad166e601b3b1c64c4"
     },
@@ -1793,7 +1849,7 @@
       "id": "C005-TS-120",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 741,
+      "line": 752,
       "title": "planner writes the hand-off of a full plan",
       "content_hash": "sha256:bf69a99a350fa7fe1510bb3a1c516ec2f9053324662fcff475426261c8fe9335"
     },
@@ -1801,7 +1857,7 @@
       "id": "C005-TS-121",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 750,
+      "line": 761,
       "title": "planner rewrites the Reporting protocol of a scaffolded lite hand-off",
       "content_hash": "sha256:0bda630e6625f5a0dc76b74af994889ea8249a168bd59397b3fa4d8fb180f318"
     },
@@ -1809,7 +1865,7 @@
       "id": "C005-TS-122",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 759,
+      "line": 770,
       "title": "versioned install line accepted",
       "content_hash": "sha256:db6a3a0bab8d079ee80b9c78b53abe836a7a36f800c7c5dbedc4c7ae0600d041"
     },
@@ -1817,7 +1873,7 @@
       "id": "C005-TS-123",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 770,
+      "line": 781,
       "title": "missing or unversioned install line reported",
       "content_hash": "sha256:d0bd80f946dbba89fa7e6bb0a5801138dfe5c0f7cb5aa7c6014bd7bcb6750d54"
     },
@@ -1825,7 +1881,7 @@
       "id": "C005-TS-124",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 786,
+      "line": 797,
       "title": "install-line check only while the plan is open",
       "content_hash": "sha256:1245a964c04cb2061f8065c4b1ae0b185821050be939b3dc6d7f9e872ee3a35d"
     },
@@ -1833,7 +1889,7 @@
       "id": "C005-TS-125",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 801,
+      "line": 812,
       "title": "install line outside the Reporting protocol section reported",
       "content_hash": "sha256:eb3f55d0cde7234f868153fd11cb7f850217bc8078865f495720cf6ccdc9d7b9"
     },
@@ -1841,7 +1897,7 @@
       "id": "C005-TS-126",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 810,
+      "line": 821,
       "title": "SDD.md of a new workspace",
       "content_hash": "sha256:35326a4ba00afa7c0b7c4bf2cac2c907672a1e0a55a7cbcaf717d0ef50bdefb7"
     },
@@ -1849,7 +1905,7 @@
       "id": "C005-TS-127",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 818,
+      "line": 829,
       "title": "sdd init --force replaces the 0.1.0 sentence",
       "content_hash": "sha256:49eaad7140230c2364de9257cd72d11267bae66dea78293bacb0c5e04bce64b2"
     },
@@ -1857,7 +1913,7 @@
       "id": "C005-TS-128",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 827,
+      "line": 838,
       "title": "sdd init without --force keeps an existing SDD.md sentence",
       "content_hash": "sha256:9fbe56e313b3dc79d3bfe63a167e7b985f04c52e1cf546598fdeff72e18b6451"
     },
@@ -1865,7 +1921,7 @@
       "id": "C005-TS-129",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 835,
+      "line": 846,
       "title": "README step matches the plugin version",
       "content_hash": "sha256:1171822a8df192ab2e9ea6f4b5f0d2d7de70e1a5e72a9a8c2542ea0b4a1e7d18"
     },
@@ -1873,7 +1929,7 @@
       "id": "C005-TS-130",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 843,
+      "line": 854,
       "title": "README version that differs from plugin.json fails the test",
       "content_hash": "sha256:c20ee0324a69c01a3287b196987204b199348f04d4d293fa1251a6049b197272"
     },
@@ -1881,7 +1937,7 @@
       "id": "C005-TS-131",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 851,
+      "line": 862,
       "title": "source plugin free of plugin-path forms",
       "content_hash": "sha256:23dfaa708b7c359eeb1205a55e1632e83ad6285800f1deee69737253fad81a26"
     },
@@ -1889,7 +1945,7 @@
       "id": "C005-TS-132",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 859,
+      "line": 870,
       "title": "planted plugin-path form reported",
       "content_hash": "sha256:e0f9de0e3a6006da446fca437348ff9e87f1e6f40840d2c7047282febc7d7418"
     },
@@ -1897,7 +1953,7 @@
       "id": "C005-TS-133",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 871,
+      "line": 882,
       "title": "CLAUDE_PLUGIN_ROOT invocation lines are not reported",
       "content_hash": "sha256:f7200704ddc456378d8bec9db3a03c4dba836962e97b5b4a5f26260a46d6f15d"
     },
@@ -1905,7 +1961,7 @@
       "id": "C005-TS-134",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 879,
+      "line": 890,
       "title": "marked archive task does not block, whatever its status",
       "content_hash": "sha256:ae5ad0119d1a292b8ebaad13d776b0f722a4fe3a764f8b33c2b18b68627f806b"
     },
@@ -1913,7 +1969,7 @@
       "id": "C005-TS-135",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 895,
+      "line": 906,
       "title": "without a marked task the archive task still blocks",
       "content_hash": "sha256:f8f306ced211ff411a9d9eec690bce333ea81100abb8db002bdda49d0e9ea57e"
     },
@@ -1921,7 +1977,7 @@
       "id": "C005-TS-136",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 905,
+      "line": 916,
       "title": "every unmet precondition listed",
       "content_hash": "sha256:2189e792d716592774a35d7cf01e8c26f0368c309e27fde5848f18ca6060307f"
     },
@@ -1929,7 +1985,7 @@
       "id": "C005-TS-137",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 917,
+      "line": 928,
       "title": "statuses of an unmarked task",
       "content_hash": "sha256:a8cc1764262139b7a58a4dafd37141c845854bac1cb80f4d143ee4641620a279"
     },
@@ -1937,7 +1993,7 @@
       "id": "C005-TS-138",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 932,
+      "line": 943,
       "title": "open lite task blocks the archive",
       "content_hash": "sha256:9c2b9d47205d8fb113a489689a38fb25691158a2064a1ab1e3a9237b62047255"
     },
@@ -1945,7 +2001,7 @@
       "id": "C005-TS-139",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 942,
+      "line": 953,
       "title": "lite change whose only open task is the marked archive task",
       "content_hash": "sha256:0725e43dfa12862d5fdd1359b9599d731b032ffec1c1a0676ba2e0b9cf3e2b32"
     },
@@ -1953,7 +2009,7 @@
       "id": "C005-TS-140",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 952,
+      "line": 963,
       "title": "Status values of an unmarked lite task",
       "content_hash": "sha256:e34c10ae52fcd668e3d3cb8049981e8d1e64a025c52e7c95d07df4dc12fd3172"
     },
@@ -1961,7 +2017,7 @@
       "id": "C005-TS-141",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 968,
+      "line": 979,
       "title": "archive task of a full plan marked",
       "content_hash": "sha256:e0fb861d8343c3ca99a7ebef5e327e61d4af65a64e5a673c12d335eefe813fd8"
     },
@@ -1969,7 +2025,7 @@
       "id": "C005-TS-142",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 978,
+      "line": 989,
       "title": "archive task of a lite plan marked",
       "content_hash": "sha256:6a105f239e3108ba7f52b9cff667e765e92186bcf16e190187a2a948daca267a"
     },
@@ -1977,7 +2033,7 @@
       "id": "C005-TS-143",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 987,
+      "line": 998,
       "title": "task that works on archive features is not marked",
       "content_hash": "sha256:3421a4c1fe3a27adae19a5a49c3fffe7ed24772a53e328b04504461134e8aedc"
     },
@@ -1985,7 +2041,7 @@
       "id": "C005-TS-144",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 996,
+      "line": 1007,
       "title": "two marked tasks reported",
       "content_hash": "sha256:18445f77d99812098b42c191a931bec22df7e305d780e95e37d9bcb94939808d"
     },
@@ -1993,7 +2049,7 @@
       "id": "C005-TS-145",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1008,
+      "line": 1019,
       "title": "zero or one marked task accepted",
       "content_hash": "sha256:62208a197c258e7c5d6643da12943104c066bb3007b77d762326140c9cf0cb06"
     },
@@ -2001,7 +2057,7 @@
       "id": "C005-TS-146",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1080,
+      "line": 1169,
       "title": "read-only subcommand on an archived change",
       "content_hash": "sha256:80bcba06a6cb2c7f37a46ff3af45c808143a4e55cde2cfde79c2c5e03804b576"
     },
@@ -2009,7 +2065,7 @@
       "id": "C005-TS-147",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1096,
+      "line": 1185,
       "title": "archive --dry-run on an archived change reaches the archive plan's refusal",
       "content_hash": "sha256:fb70d653b1d1322ba091bd20ed1d68c278852fb91f10076de4f90934fcc1ee0d"
     },
@@ -2017,7 +2073,7 @@
       "id": "C005-TS-148",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1104,
+      "line": 1193,
       "title": "number carried by no change folder",
       "content_hash": "sha256:7779f554ab8b9ec72d173c383c86bfbdb96cb1762289f6b17f1b7589898a5082"
     },
@@ -2025,7 +2081,7 @@
       "id": "C005-TS-149",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1112,
+      "line": 1201,
       "title": "writing subcommand naming an archived change by number",
       "content_hash": "sha256:5cd0bd87da4e6bb8f5c2917fea7630bf1d7afa0ff9a1b440a3d1d39d881df010"
     },
@@ -2033,7 +2089,7 @@
       "id": "C005-TS-150",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1134,
+      "line": 1223,
       "title": "writing subcommand naming an archived change by an ID",
       "content_hash": "sha256:582b45602fe233973e193a3b7bb6ad98f2f19e9a8e1b3650316ee4196dc53d6f"
     },
@@ -2041,7 +2097,7 @@
       "id": "C005-TS-152",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1158,
+      "line": 1247,
       "title": "packages of the 0.1.1 release",
       "content_hash": "sha256:437d0a034ac77c42ef1991970fc3fa1ca141f1e4e50872748e7059601480798f"
     },
@@ -2049,7 +2105,7 @@
       "id": "C005-TS-153",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1169,
+      "line": 1258,
       "title": "npm publication before or with the release",
       "content_hash": "sha256:85cdff66909592c5bfb011ec3fe63d9aaf4d0e5469d5b16665e23a1482122598"
     },
@@ -2057,7 +2113,7 @@
       "id": "C005-TS-154",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1179,
+      "line": 1268,
       "title": "SDD.md sentence in the 0.1.1 release notes",
       "content_hash": "sha256:8ad612f98e0cb0404d41bd5331b256ac5b454b78dc3d5881b522c86bf93c38aa"
     },
@@ -2065,7 +2121,7 @@
       "id": "C005-TS-155",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 406,
+      "line": 417,
       "title": "create request in Copilot VS Code",
       "content_hash": "sha256:18962d1c8bafbd1a3e924ffb8926b6696a4b64f74db8e04f2f6197e3800fb38d"
     },
@@ -2073,7 +2129,7 @@
       "id": "C005-TS-156",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 428,
+      "line": 439,
       "title": "new-change command on OpenCode",
       "content_hash": "sha256:df2a9f4e5ba5694dfeb3466eb769034c7dc311d45cdd71b3bd3a160d54f4b896"
     },
@@ -2081,7 +2137,7 @@
       "id": "C005-TS-157",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 477,
+      "line": 488,
       "title": "profile and kind passed to sdd change new in Copilot VS Code",
       "content_hash": "sha256:35fb2f55a61a0037bd362cef0a10b63b27ada3e2409991ce324f23f70ee7a0f4"
     },
@@ -2089,7 +2145,7 @@
       "id": "C005-TS-158",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 498,
+      "line": 509,
       "title": "kind asked in the round that proposes the profile",
       "content_hash": "sha256:25d65191a5b8cd256b19dfa1b72983e926cf305a1b61e007d6eb70dc6de664c0"
     },
@@ -2097,7 +2153,7 @@
       "id": "C005-TS-159",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 507,
+      "line": 518,
       "title": "kind given by the new-change command is not asked again",
       "content_hash": "sha256:64d4b637f684aec82f505842cc38e1e9b75b3e8c1d2d0d9bba2ea0eb9844d0aa"
     },
@@ -2105,7 +2161,7 @@
       "id": "C005-TS-160",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 517,
+      "line": 528,
       "title": "kind asked in a repository without code",
       "content_hash": "sha256:553149182e3c975fe748cc6c5e62a30ad6a97d888e03a7b2615b65ff73bbbfe6"
     },
@@ -2113,7 +2169,7 @@
       "id": "C005-TS-161",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 527,
+      "line": 538,
       "title": "kind answer that names no kind or more than one",
       "content_hash": "sha256:f3d606d08debf38ff02226b201ca116d0362fa69f2f641e4411dc1820e6c2a96"
     },
@@ -2121,7 +2177,7 @@
       "id": "C005-TS-162",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 543,
+      "line": 554,
       "title": "kind answered in the further round",
       "content_hash": "sha256:4ab25129c2aa922727b8fd54a65716a203e7aaed1b859b3886dfe730b1267f07"
     },
@@ -2129,7 +2185,7 @@
       "id": "C005-TS-163",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 552,
+      "line": 563,
       "title": "free text that names exactly one kind is not asked again",
       "content_hash": "sha256:3126b25d9845e653b3cd0adfe433e3930753ef63137636d058d38f265c324f33"
     },
@@ -2137,7 +2193,7 @@
       "id": "C005-TS-164",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 595,
+      "line": 606,
       "title": "answer after the G1 approval in Copilot VS Code",
       "content_hash": "sha256:dca7d90f0cf69e4d4b57b2799b4c86b953d1e23773a936f325868af969bfbca3"
     },
@@ -2145,7 +2201,7 @@
       "id": "C005-TS-165",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 641,
+      "line": 652,
       "title": "pre-phase round marked with its gate in Copilot VS Code",
       "content_hash": "sha256:3aa49e4324ab7a92f2f698a83d99381e2e231a515795c75a22ca75a68571361b"
     },
@@ -2153,7 +2209,7 @@
       "id": "C005-TS-166",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1148,
+      "line": 1237,
       "title": "refusal line of a writing subcommand on an archived change",
       "content_hash": "sha256:73feb8baed560882260acc82324219b40012e7a5adc2ae97aa68e43aabddb2d5"
     },
@@ -2161,7 +2217,7 @@
       "id": "C005-TS-167",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1020,
+      "line": 1031,
       "title": "task reported in a lite plan after G3 leaves the plan approved",
       "content_hash": "sha256:2aa09962e6ea2ec763070302b987d9951bf08f928b6e61b08abaaa4aa21faf88"
     },
@@ -2169,7 +2225,7 @@
       "id": "C005-TS-168",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1030,
+      "line": 1041,
       "title": "hash invariance",
       "content_hash": "sha256:ac8fecbb41d04701867cd35eed9d275a0be285d58c07eccda127504af33ff9a9"
     },
@@ -2177,7 +2233,7 @@
       "id": "C005-TS-169",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1051,
+      "line": 1062,
       "title": "single-file phase hash",
       "content_hash": "sha256:bf8b1670b0494433203d22aad15908caed7dc8a1032c86a4f8a993d420f9e7e8"
     },
@@ -2185,7 +2241,7 @@
       "id": "C005-TS-170",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1059,
+      "line": 1070,
       "title": "first 0.1.1 stale check on a plan approved with the sdd CLI 0.1.0",
       "content_hash": "sha256:c59c23712d0ee0520d0780ce2869bc980b4ec958938c314c4a80c336adacdf74"
     },
@@ -2193,7 +2249,7 @@
       "id": "C005-TS-171",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1071,
+      "line": 1082,
       "title": "after one re-approval, task reports leave the plan approved",
       "content_hash": "sha256:7e93f0e26079aa510676c2cf24da656303d0a013c5dc52374249a2c0ced6a188"
     },
@@ -2201,15 +2257,15 @@
       "id": "C005-TS-172",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 1189,
-      "title": "G3 re-approval stated in the 0.1.1 release notes",
-      "content_hash": "sha256:c34e4340cbe252da424e5081bcfd42a849c3c782f8a9aa3126f6ff96d60441de"
+      "line": 1278,
+      "title": "G3 re-approval and hand move stated in the 0.1.1 release notes",
+      "content_hash": "sha256:c03c3b050a499ad12ee3a45501217686ff61d8c853ffb76fb5e581c4ce1a1e79"
     },
     {
       "id": "C005-TS-173",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 562,
+      "line": 573,
       "title": "further-round answer that again names no kind gets one more round",
       "content_hash": "sha256:c30b73af99d9c637912585b124cb9997f5de99dabbcc6b8b7b2a54a117070e99"
     },
@@ -2217,7 +2273,7 @@
       "id": "C005-TS-174",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 572,
+      "line": 583,
       "title": "change declined in the further round, no change created",
       "content_hash": "sha256:cc7549c86a3993c96f866228eb1b3802347b109b138bc232a61f545c24e70f91"
     },
@@ -2225,9 +2281,41 @@
       "id": "C005-TS-175",
       "type": "TS",
       "file": "10-spec/spec.md",
-      "line": 674,
+      "line": 685,
       "title": "unresolved ID reference in a pre-phase log keeps its finding",
       "content_hash": "sha256:3b6486bb1fa3607e71275bdb8cb3874624b544adba3fe947fd43d3de260309ba"
+    },
+    {
+      "id": "C005-TS-176",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 1091,
+      "title": "missing report fields written directly after the two indented checkbox lines of Done when",
+      "content_hash": "sha256:18cba42253c28329a37a2ee00ad83b5ca4053608f0d08df5edb3f1fd4d635f9e"
+    },
+    {
+      "id": "C005-TS-177",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 1119,
+      "title": "place of a missing report field after the last field line, by the form of the lines that follow it",
+      "content_hash": "sha256:6b1d4e90e65d1341fb3f1dd13fcdff56dae80b1da06424cedf6db198b58dcf2a"
+    },
+    {
+      "id": "C005-TS-178",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 1142,
+      "title": "report fields of a task section with no field line written directly after its heading line",
+      "content_hash": "sha256:750df0b7cb554836daec3b95792a9aa649bf931c8a6722153972a0991e788737"
+    },
+    {
+      "id": "C005-TS-179",
+      "type": "TS",
+      "file": "10-spec/spec.md",
+      "line": 1152,
+      "title": "report field that the section holds replaced where its first field line stands",
+      "content_hash": "sha256:e1ad20a1bbb2977c43d3586c91ace6c79b65894d7091933b208a828442ba3dec"
     },
     {
       "id": "C005-US-101",
@@ -2259,13 +2347,13 @@
       "file": "10-spec/spec.md",
       "line": 98,
       "title": "Archive precondition without self-blocking, for both profiles",
-      "content_hash": "sha256:af4cbd8939f0b88d4527edf3e9e5ea810f66eecf3f60ea2d3a5dac99f297e0d3"
+      "content_hash": "sha256:263a218bb331204627044240e72bb4cf9147e529dc8012e7a61992172c79f412"
     },
     {
       "id": "C005-US-105",
       "type": "US",
       "file": "10-spec/spec.md",
-      "line": 108,
+      "line": 109,
       "title": "Read-only commands find archived changes",
       "content_hash": "sha256:db9ed8940c3a8b27e0da48de422a6a39a28d5ac4af542410f7e48efc698f2600"
     },
@@ -2273,7 +2361,7 @@
       "id": "C005-US-106",
       "type": "US",
       "file": "10-spec/spec.md",
-      "line": 119,
+      "line": 120,
       "title": "Release 0.1.1 on both hosts",
       "content_hash": "sha256:c778d3bee3c4ad2d7ac29ed6379c5437291d1c411471d6805612e8f3da873934"
     }
@@ -2771,6 +2859,11 @@
     },
     {
       "from": "C005-AC-125.1",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-125.1",
       "to": "C005-TS-101",
       "relation": "references"
     },
@@ -3146,6 +3239,26 @@
     },
     {
       "from": "C005-AC-125.1",
+      "to": "C005-TS-176",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-125.1",
+      "to": "C005-TS-177",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-125.1",
+      "to": "C005-TS-178",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-125.1",
+      "to": "C005-TS-179",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-125.1",
       "to": "C005-US-105",
       "relation": "references"
     },
@@ -3157,6 +3270,31 @@
     {
       "from": "C005-AC-126.1",
       "to": "C005-TS-175",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C005-AC-127.1",
+      "to": "C005-TS-176",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C005-AC-127.1",
+      "to": "C005-TS-177",
+      "relation": "references"
+    },
+    {
+      "from": "C005-AC-127.1",
+      "to": "C005-TS-177",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C005-AC-127.1",
+      "to": "C005-TS-178",
+      "relation": "scenario-of"
+    },
+    {
+      "from": "C005-AC-127.1",
+      "to": "C005-TS-179",
       "relation": "scenario-of"
     },
     {
@@ -3885,6 +4023,16 @@
       "relation": "realizes"
     },
     {
+      "from": "C005-COMP-007",
+      "to": "C005-REQ-127",
+      "relation": "realizes"
+    },
+    {
+      "from": "C005-COMP-007",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
       "from": "C005-COMP-008",
       "to": "C005-IF-003",
       "relation": "references"
@@ -4391,6 +4539,11 @@
     },
     {
       "from": "C005-DOD-002",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-DOD-002",
       "to": "C005-TS-111",
       "relation": "references"
     },
@@ -4437,6 +4590,11 @@
     {
       "from": "C005-DOD-002",
       "to": "C005-TS-175",
+      "relation": "references"
+    },
+    {
+      "from": "C005-DOD-002",
+      "to": "C005-TS-179",
       "relation": "references"
     },
     {
@@ -4492,6 +4650,11 @@
     {
       "from": "C005-DOD-003",
       "to": "C005-REQ-126",
+      "relation": "references"
+    },
+    {
+      "from": "C005-DOD-003",
+      "to": "C005-REQ-127",
       "relation": "references"
     },
     {
@@ -4960,6 +5123,11 @@
       "relation": "references"
     },
     {
+      "from": "C005-IF-005",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
       "from": "C005-NFR-001",
       "to": "C005-DOD-008",
       "relation": "covers"
@@ -5311,6 +5479,11 @@
     },
     {
       "from": "C005-REQ-122",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-122",
       "to": "C005-US-104",
       "relation": "story-of"
     },
@@ -5386,6 +5559,16 @@
     },
     {
       "from": "C005-REQ-125",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-125",
+      "to": "C005-US-104",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-125",
       "to": "C005-US-106",
       "relation": "story-of"
     },
@@ -5407,6 +5590,36 @@
     {
       "from": "C005-REQ-126",
       "to": "C005-US-102",
+      "relation": "story-of"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-AC-127.1",
+      "relation": "acceptance-of"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-IF-005",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-REQ-125",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-T-001",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-US-104",
+      "relation": "references"
+    },
+    {
+      "from": "C005-REQ-127",
+      "to": "C005-US-104",
       "relation": "story-of"
     },
     {
@@ -5477,6 +5690,11 @@
     {
       "from": "C005-RISK-002",
       "to": "C005-T-016",
+      "relation": "references"
+    },
+    {
+      "from": "C005-RISK-002",
+      "to": "C005-T-025",
       "relation": "references"
     },
     {
@@ -5832,6 +6050,11 @@
     {
       "from": "C005-T-001",
       "to": "C005-TS-167",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-001",
+      "to": "C005-TS-167",
       "relation": "verified-by"
     },
     {
@@ -6037,6 +6260,11 @@
     {
       "from": "C005-T-003",
       "to": "C005-TS-114",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-003",
+      "to": "C005-TS-114",
       "relation": "verified-by"
     },
     {
@@ -6148,6 +6376,11 @@
       "from": "C005-T-004",
       "to": "C005-TC-045",
       "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-004",
+      "to": "C005-TS-122",
+      "relation": "references"
     },
     {
       "from": "C005-T-004",
@@ -6358,6 +6591,11 @@
       "from": "C005-T-006",
       "to": "C005-TC-028",
       "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-006",
+      "to": "C005-TS-126",
+      "relation": "references"
     },
     {
       "from": "C005-T-006",
@@ -6627,6 +6865,11 @@
     {
       "from": "C005-T-008",
       "to": "C005-TS-134",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-008",
+      "to": "C005-TS-134",
       "relation": "verified-by"
     },
     {
@@ -6753,6 +6996,11 @@
       "from": "C005-T-009",
       "to": "C005-TC-064",
       "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-009",
+      "to": "C005-TS-146",
+      "relation": "references"
     },
     {
       "from": "C005-T-009",
@@ -7001,6 +7249,11 @@
     },
     {
       "from": "C005-T-011",
+      "to": "C005-T-025",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-011",
       "to": "C005-TC-056",
       "relation": "verified-by"
     },
@@ -7171,6 +7424,11 @@
     },
     {
       "from": "C005-T-012",
+      "to": "C005-T-025",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-012",
       "to": "C005-TC-008",
       "relation": "verified-by"
     },
@@ -7312,6 +7570,11 @@
     {
       "from": "C005-T-013",
       "to": "C005-TS-129",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-013",
+      "to": "C005-TS-129",
       "relation": "verified-by"
     },
     {
@@ -7433,6 +7696,11 @@
       "from": "C005-T-014",
       "to": "C005-T-024",
       "relation": "references"
+    },
+    {
+      "from": "C005-T-014",
+      "to": "C005-T-025",
+      "relation": "depends-on"
     },
     {
       "from": "C005-T-014",
@@ -7681,6 +7949,11 @@
     },
     {
       "from": "C005-T-015",
+      "to": "C005-T-025",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C005-T-015",
       "to": "C005-TC-008",
       "relation": "verified-by"
     },
@@ -7907,6 +8180,16 @@
     {
       "from": "C005-T-016",
       "to": "C005-T-024",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-016",
+      "to": "C005-T-025",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C005-T-016",
+      "to": "C005-T-025",
       "relation": "references"
     },
     {
@@ -8690,6 +8973,116 @@
       "relation": "verified-by"
     },
     {
+      "from": "C005-T-025",
+      "to": "C005-AC-127.1",
+      "relation": "satisfies"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-COMP-007",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-REQ-127",
+      "relation": "implements"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-RISK-002",
+      "relation": "mitigates"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-T-002",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-T-009",
+      "relation": "depends-on"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-T-009",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-077",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-077",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-078",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-079",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-080",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TC-080",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-176",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-176",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-177",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-177",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-178",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-178",
+      "relation": "verified-by"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-179",
+      "relation": "references"
+    },
+    {
+      "from": "C005-T-025",
+      "to": "C005-TS-179",
+      "relation": "verified-by"
+    },
+    {
       "from": "C005-TC-001",
       "to": "C005-TS-101",
       "relation": "references"
@@ -9260,6 +9653,26 @@
       "relation": "references"
     },
     {
+      "from": "C005-TC-077",
+      "to": "C005-TS-176",
+      "relation": "references"
+    },
+    {
+      "from": "C005-TC-078",
+      "to": "C005-TS-177",
+      "relation": "references"
+    },
+    {
+      "from": "C005-TC-079",
+      "to": "C005-TS-178",
+      "relation": "references"
+    },
+    {
+      "from": "C005-TC-080",
+      "to": "C005-TS-179",
+      "relation": "references"
+    },
+    {
       "from": "C005-US-101",
       "to": "C005-CAP-01",
       "relation": "references"
@@ -9398,6 +9811,26 @@
       "from": "C005-US-104",
       "to": "C005-REQ-122",
       "relation": "traces-to"
+    },
+    {
+      "from": "C005-US-104",
+      "to": "C005-REQ-125",
+      "relation": "references"
+    },
+    {
+      "from": "C005-US-104",
+      "to": "C005-REQ-127",
+      "relation": "references"
+    },
+    {
+      "from": "C005-US-104",
+      "to": "C005-REQ-127",
+      "relation": "traces-to"
+    },
+    {
+      "from": "C005-US-104",
+      "to": "C005-T-001",
+      "relation": "references"
     },
     {
       "from": "C005-US-105",

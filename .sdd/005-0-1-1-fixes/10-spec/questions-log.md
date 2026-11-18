@@ -126,3 +126,30 @@ status: draft
 - **Sources:** C005-TS-111, C005-REQ-103, 90-critic-report.md CR-13
 - **Answer:** Requirement: lint accepts it (Recommended)
 - **Extracted instructions:** none
+
+## Round 6 — 2026-11-17
+
+### Q-d001-01 — How should defect D-001 (lite report fields inserted between Done when and its checkboxes) be fixed?
+- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (conductor: fix in this change; carry to a later change)
+- **Why it matters:** every task report on a lite plan makes LINT-TASK-001 report an empty Done when, and `sdd gate approve` refuses the lite `20-plan` until the lines are moved by hand (found on C005-T-001).
+- **Options:**
+  1. Fix in CHG-005 (Recommended) — small spec and plan revision, one requirement and one task; ships in 0.1.1.
+  2. Carry to a later change — 0.1.1 ships with the bug; the release notes name the hand workaround.
+- **Sources:** D-001, E-99, C005-T-001
+- **Answer:** Fix in CHG-005 (Recommended)
+- **Extracted instructions:** none
+- **Conductor's note (2026-11-18, critic CR-48):** this ID keeps digits in its topic, which the C001-IF-05 pattern does not allow; it is kept unchanged because C005-REQ-127 and the Gate log cite it. The question settled *when* D-001 is fixed; it was marked material with two candidates. *How* sections already damaged by the 0.1.0 CLI are handled was put to P-01 with a five-candidate analysis as Q-placement-01 (round 7).
+
+## Round 7 — 2026-11-18
+
+### Q-placement-01 — How should 0.1.1 handle lite task sections damaged by the 0.1.0 CLI (report lines between Done when and its checkboxes)?
+- **Blocking:** no · **Material:** yes · **Candidates considered:** 5 (conductor; criteria: upgrade effort 0.30, extra code and scope 0.25, no masking of malformed text 0.25, test cost 0.20)
+- **Why it matters:** such sections fail LINT-TASK-001, so the one G3 re-approval of C005-REQ-122 is refused until they are fixed (critic CR-46; second review of `90-critic-report.md`).
+- **Options:**
+  1. Hand move in notes (Recommended) — 4.40; the release notes tell P-01 to move the lines by hand (C005-REQ-125); no extra code.
+  2. Hand move + lint hint — 4.10; the LINT-TASK-001 message also names the misplaced line; small lint change and one scenario.
+  3. Repair on next report — 3.80; `task set` re-places Commit, Notes and Completed at on every call (hash-neutral); done tasks still need the hand move.
+- **Rejected:** New `sdd task repair` command — 3.35, new CLI surface; Lint accepts misplaced lines — 3.35, hides malformed text.
+- **Sources:** D-001, C005-REQ-125, C005-REQ-127, 90-critic-report.md CR-46, CR-48 (second review)
+- **Answer:** Hand move in notes (Recommended)
+- **Extracted instructions:** none

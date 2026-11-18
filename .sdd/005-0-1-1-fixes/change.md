@@ -7,8 +7,8 @@ status: active
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:874c9db6ae403caba4fea1f4e24e9704ebd9287f4140aaef1e5637c5dcf86e12", approved_at: 2026-11-17, approved_by: "Jerome LACUBE" }
-  10-spec: { status: approved, approved_hash: "sha256:0a317544e8cf6343a6bb12ec561c454fb46d15166338e867da7658ed2fb82314", approved_at: 2026-11-17, approved_by: "Jerome LACUBE" }
-  20-plan: { status: approved, approved_hash: "sha256:1a4aa77c32fd5408691b61498821f3026aceb9982bf11462fbbc310a0c5f1c1c", approved_at: 2026-11-17, approved_by: "Jerome LACUBE" }
+  10-spec: { status: approved, approved_hash: "sha256:05547e753e91ef5bdae59fbb756fb3cb7cf5481557033c3e26e4d09cdd1af997", approved_at: 2026-11-18, approved_by: "Jerome LACUBE" }
+  20-plan: { status: in-revision, approved_hash: "sha256:1a4aa77c32fd5408691b61498821f3026aceb9982bf11462fbbc310a0c5f1c1c", approved_at: 2026-11-17, approved_by: "Jerome LACUBE" }
 implementation: { status: not-started }
 stopped: null
 owners: []
@@ -31,3 +31,6 @@ waivers: []
 | 2026-11-17 | G3 (plan) | **Approved** | "Approve" | none | unavailable |
 | 2026-11-17 | G3 (plan) | **Revise** | "C005-REQ-122: re-approve G3 under the 0.1.1 hash rule" | none | unavailable |
 | 2026-11-17 | G3 (plan) | **Approved** | "Standing approval (2026-10-24): routine G3 re-approval under C005-REQ-122, no plan text changed; P-01 2026-11-17: G3 approved. you can go full speed" | none | unavailable |
+| 2026-11-17 | G2 (spec) | **Revise** | "D-001: sdd task set inserts lite report fields between the Done when field and its checkboxes; P-01 2026-11-17: Fix in CHG-005 (Recommended)" | none | unavailable |
+| 2026-11-17 | G3 (plan) | **Revise** | "D-001: task C005-T-025 for C005-REQ-127 (lite report fields after the field list)" | none | unavailable |
+| 2026-11-18 | G2 (spec) | **Approved** | "Approve" | none | unavailable |

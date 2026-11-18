@@ -330,3 +330,435 @@ CR-12, CR-14…CR-21.
 - **Evidence.** E-95…E-103 match the cited lines (`src/gate/hash.ts:33-59`, `src/model/frontmatter.ts:48-53`,
   `src/gate/stale.ts:21-48`, `src/tracking/task.ts:86-122`, `src/archive/plan.ts:94-98`, `:121`, `:295`, `:360`,
   `tests/integration/cap08/TS-806.test.ts:20`). The two corrections (E-102, E-103) are disclosed as such.
+
+## Re-review — D-001 revision (2026-11-18)
+
+Focused re-review of the 10-spec revision for defect D-001 (`change.md:16`: "sdd task set on a lite task inserts Commit,
+Notes and Completed at between the Done when field and its checkboxes"). P-01's answer to Q-d001-01 ("Fix in CHG-005
+(Recommended)", `questions-log.md:132-140`, round 6) is taken as given and not reopened. Inputs: the working-tree diff of
+`10-spec/spec.md`, `10-spec/dod.md` and `10-spec/questions-log.md` against HEAD (`9eae3b2`); E-99
+(`evidence/spec-addendum.md:283`); repository code read only to confirm claims: `src/tracking/task.ts` at HEAD (last
+changed in `ffe41ae`, C001-T-026), `src/gate/hash.ts`, `src/gate/gate.ts`, `src/lint/spec.ts`,
+`src/lint/rules/task-001.ts`, `plugins/architect/templates/lite/20-plan/plan.md`, `.sdd/_living/CAP-tracking-archive.md`.
+`node plugins/architect/scripts/sdd.mjs lint 005 --phase 10-spec --json`: 0 errors, 0 warnings, 0 info.
+`node plugins/architect/scripts/sdd.mjs trace 005` (no `--write`): TR-01 6/6, TR-02 27/27, TR-03 27/27, TR-05 27/27 and
+1/1. New findings start at CR-42 (the plan report holds CR-27…CR-41).
+
+**Reviewed set.** C005-REQ-127; C005-AC-127.1; C005-TS-176 and its row in the coverage table; C005-US-104 (requirement
+list, notes, Traces to); C005-DOD-002, C005-DOD-003; C005-COMP-007. Linked by the revised text: C005-IF-005 §2 (cited by
+the C005-REQ-127 rationale), C005-REQ-121 (the hash rule the rationale relies on), C005-REQ-122, C005-REQ-125 and
+C005-TS-172 (the G3 re-approval of lite plans reported with 0.1.0, CR-46), the Data view row "Report fields of a lite
+task section" and the G-4 rows of the As-is to to-be delta. C005-T-025 belongs to the plan review. CR-10…CR-26 are
+outside this review and keep their recorded status.
+
+### Checks named in the brief
+
+| Check | Result |
+|---|---|
+| EARS form and singularity of C005-REQ-127 | pass: event-driven, one SHALL, one observable outcome (where the new line stands). The replace-in-place case stays in the rationale, outside the statement |
+| 0.1.0 behaviour claimed in the rationale | holds. `for (let i = at + 1; i < end; i++) if (lines[i]!.startsWith("- **")) last = i;` and `lines.splice(last + 1, 0, …)` — `src/tracking/task.ts:96-97` at HEAD, as E-99 states. `setTask` writes Status, Commit, Notes and Completed at in that order (`:119-122`), so each inserted line becomes the last `- **` line and the next one follows it: the three lines land between `- **Done when:**` and its checkboxes. The indented checkboxes then read as the value of Completed at (`src/lint/spec.ts:180`), LINT-TASK-001 reports an empty Done when (`src/lint/rules/task-001.ts:12`), and `gate approve` refuses unwaived lint errors with ERR-CLI-010 (`src/gate/gate.ts:138-139`). One case the claim leaves out: with no `- **` line in the section, 0.1.0 inserts after the heading (`let last = at;`, `:95`); see CR-42 |
+| Step 2a of C005-IF-005 removes the lines wherever they are in the section | holds. Step 2a removes every line of a task section that begins with one of the four texts (`spec.md:1614-1628`), and its section bounds are those within which `sdd task set` writes (`spec.md:1617-1619`; `src/tracking/task.ts:89-91`). The new insertion point lies inside the same bounds, and the inserted line begins at its first character. Stale sentence in §2: CR-45. End-of-file case: Other checks |
+| Scenario testability, both Examples rows | CR-42 (the form of the checkbox lines is not given), CR-43 (Targets and Verification; "follow") |
+| "Continuation lines" defined precisely enough | no: CR-42 |
+| Coverage-table n/a reasons | CR-44 (boundary and idempotency cells); the error, authorization and abuse cells are credible |
+
+### Summary (re-review D-001)
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 1 | 4 |
+
+Open in the D-001 set after this re-review: 0 blocker; 1 major (CR-42); 4 minor (CR-43…CR-46).
+
+### New findings (D-001)
+
+### CR-42 — "Continuation lines" is defined nowhere, so the insertion point of C005-REQ-127 has several readings, and C005-TS-176 does not tell them apart
+- **Severity:** major
+- **Refs:** C005-REQ-127, C005-AC-127.1, C005-TS-176, C005-COMP-007
+- **Evidence:** "THE sdd CLI SHALL insert the field's line after the last line of the section's last field, that field's continuation lines included." — `10-spec/spec.md:322`; "ends with the field "- **Done when:**" and its two checkbox lines, <next>" — `10-spec/spec.md:1090`; "write a missing report field of a lite task section after the section's last field and its continuation lines (C005-REQ-127)" — `10-spec/spec.md:1788`. The term occurs only at `spec.md:322`, `:1087` and `:1788`; neither `40-domain/glossary-delta.md` nor C005-IF-005 defines it. The lint reads a field value up to the first blank or unindented line: `if (l.trim() === "" || !/^\s+/.test(l)) break;` — `src/lint/spec.ts:180`. With no `- **` line in the section, 0.1.0 inserts after the heading: `let last = at;` — `src/tracking/task.ts:95` (HEAD). The untracked test for this scenario encodes its own rule: `while (/^\s+\S/.test(lines[last + 1] ?? "")) last++;` — `tests/integration/chg005/C005-TS-176.test.ts:37`.
+- **Why it matters:** the only operative term of the statement has at least three readings that write different files. (a) The non-blank indented lines directly after the field, as LINT-TASK-001 reads a field value. (b) A Markdown list item, which also takes an indented line after a blank line, so a Done when list with a blank line between two checkboxes counts whole; under reading (a) the fields split that list and the second checkbox ends up under Completed at, the D-001 damage again. (c) Every line up to the next field or the end of the section, which also takes trailing blank lines and an unindented `- [ ]` list. The Given gives neither the indentation of the checkbox lines nor what directly follows them, so a fixture of two-space checkboxes passes under every reading: the scenario cannot fail an implementation that picked another rule. The implementer and the test writer have each picked reading (a) on their own. The statement also has no insertion point for a task section with no field line, since "the section's last field" does not exist there.
+- **Suggested fix:** define the term in C005-REQ-127 or in a paragraph of C005-IF-005 §2: "field line: a line of the task section that begins with `- **<name>:**`; continuation line: a non-blank line that begins with a space or tab and directly follows the field line or another continuation line; a blank line or a line that begins at its first character ends the field (the lines that LINT-TASK-001 reads as the field's value)". State the no-field case (the line follows the heading, as at 0.1.0). In C005-TS-176, give the checkbox lines exactly (for example `  - [ ] CSV header written`) and add an Examples row in which a blank line and an indented line follow the checkboxes, with the expected placement. An alternative that needs no continuation rule: insert a missing report field directly after the section's Status field, or after the last report field already present; this keeps the four report fields together and does not depend on the form of Done when.
+- **Status:** open
+
+### CR-43 — The last Then of C005-TS-176 depends on Targets and Verification, which the Given does not fill, and "follow" does not say "directly"
+- **Severity:** minor
+- **Refs:** C005-TS-176, C005-AC-127.1
+- **Evidence:** "holds the field "- **Status:** in-progress" and ends with the field "- **Done when:**" and its two checkbox lines" — `10-spec/spec.md:1090`; "And "sdd lint 004" reports no LINT-TASK-001 finding for "C004-T-001"" — `10-spec/spec.md:1095`; a lite task also needs non-empty Targets and Verification: `return ["Targets", "Verification", "Done when"].filter((name) => (fieldText(lines, name) ?? "") === "");` — `src/lint/rules/task-001.ts:12`; the lite template leaves both empty: "- **Targets:**" / "- **Verification:**" — `plugins/architect/templates/lite/20-plan/plan.md:21-22`; "with today's date follow the last checkbox line, in this order" — `10-spec/spec.md:1093`.
+- **Why it matters:** a fixture that follows the Given and copies the lite template gets "C004-T-001 has an empty Targets, Verification section" from LINT-TASK-001, so the last Then fails whatever the fix does. "Follow the last checkbox line" also holds when the lines stand after a blank line or at the end of the section, so the Then accepts placements that C005-REQ-127 does not describe.
+- **Suggested fix:** add to the Given "and non-empty Targets and Verification fields", or narrow the Then to "no LINT-TASK-001 finding that names Done when". Write "directly follow the last checkbox line".
+- **Status:** open
+
+### CR-44 — The C005-REQ-127 coverage row gives as boundary a case outside the statement, cites a frontmatter-only requirement for it, and leaves the real boundaries without a scenario
+- **Severity:** minor
+- **Refs:** C005-REQ-127, C005-TS-176
+- **Evidence:** "| TS-176 (a field that the section holds is replaced in place: Status) |" and "n/a: a repeated "sdd task set" finds the fields and replaces them in place (C001-REQ-901)" — `10-spec/spec.md:1243`; the trigger of the statement: "writes a report field that a lite task section of `20-plan/plan.md` does not hold yet" — `10-spec/spec.md:322`; the replacement is stated only in the rationale: "A field that the section already holds is replaced in place, as at 0.1.0." — `10-spec/spec.md:323`; the living C001-REQ-901 writes "into the task's frontmatter (`status`, `report.commit`, `report.notes`, and `report.completed_at` when the status is `done`)" — `.sdd/_living/CAP-tracking-archive.md:58`; the marker may stand last: "bullet field `- **Archive task:** true` among the task's fields, in any position" — `10-spec/spec.md:1445`.
+- **Why it matters:** the boundary cell and the idempotency n/a rest on the in-place replacement of a lite field, which no statement requires: C005-REQ-127 covers only a missing field, and C001-REQ-901 covers task-file frontmatter only. C005-TS-176 asserts the replacement (`spec.md:1094`) with no owning requirement. The boundaries of the insertion rule have no scenario: a last field with no continuation line, where the new line must go directly after the field as at 0.1.0 (for example an archive-task marker after the checkboxes), and a task section that ends the file. These are the cases where the new rule must keep the 0.1.0 result, and nothing checks them.
+- **Suggested fix:** in the boundary cell, name an Examples row of C005-TS-176 whose last field has no continuation line (for example `- **Archive task:** true` after the checkboxes) and one whose task section ends the file. In the boundary and idempotency cells, cite the replacement as kept 0.1.0 behaviour (E-99; `src/tracking/task.ts:92-93`) instead of C001-REQ-901, or state it in Open items of C005-REQ-127 as unchanged behaviour that C005-TS-176 checks.
+- **Status:** open
+
+### CR-45 — Text around the revision still describes the spec before D-001
+- **Severity:** minor
+- **Refs:** C005-US-104, C005-COMP-007, C005-IF-005, C005-REQ-127
+- **Evidence:** "Six requirements, all for goal G-4, each testable on its own." — `10-spec/spec.md:104`, while `:105` lists seven, C005-REQ-127 included; "- **Traces to:** ideation §2, §4.1 G-4, §8; Q-scope-01, Q-scope-03, Q-archive-01, Q-litehash-01" — `10-spec/spec.md:106` (no D-001, no Q-d001-01); "`sdd task set` (C005-COMP-007, tracking part, code unchanged)" — `10-spec/spec.md:1878`, while C005-COMP-007 now names `src/tracking/task.ts` (`setLiteField()`) and realizes C005-REQ-127 (`spec.md:1785-1789`), and its Evidence field cites E-37, E-94, E-42 and E-65 but not E-99 (`spec.md:1793`); "so the result does not depend on whether `sdd task set` replaced a field or inserted" / "it after the last bullet of the section (E-99)." — `10-spec/spec.md:1635-1636`; the As-is to to-be delta has G-4 rows for the archive and the lite plan hash only (`spec.md:2199-2200`).
+- **Why it matters:** each place contradicts C005-REQ-127 or leaves it out. A planner who reads the Data view takes the tracking code as unchanged. C005-IF-005 §2 gives the 0.1.0 insertion point as the current one. The delta table, which lists the to-be behaviour per goal, has no row for the new placement. None of this changes behaviour, but each breaks the "one fact in one place" reading (R7, S6).
+- **Suggested fix:** in C005-US-104 write "Seven requirements" and add D-001 and Q-d001-01 to Traces to. In the Data view write "`sdd task set` (C005-COMP-007, tracking part; placement of a missing field changed by C005-REQ-127)", and add E-99 to the Evidence of C005-COMP-007. In C005-IF-005 §2 write "… replaced a field or inserted it (C005-REQ-127; at 0.1.0, after the last bullet of the section, E-99)". Add a delta row "G-4, D-001 | a missing report field goes after the last `- **` line of the section, between Done when and its checkboxes (E-99) | after the last field and its continuation lines (C005-REQ-127) | C005-COMP-007".
+- **Status:** open
+
+### CR-46 — Task sections already written by the 0.1.0 CLI stay broken, and nothing tells P-01 to repair them before the G3 re-approval that C005-REQ-122 requires
+- **Severity:** minor
+- **Refs:** C005-REQ-127, C005-REQ-122, C005-REQ-125, C005-TS-172, C005-US-104
+- **Evidence:** "WHEN `sdd task set` writes a report field that a lite task section of `20-plan/plan.md` does not hold yet" — `10-spec/spec.md:322`; "LINT-TASK-001 reports an empty Done when, and `sdd gate approve` refuses a lite `20-plan` until the lines are moved by hand." — `10-spec/spec.md:323`; "THE sdd CLI SHALL set that `20-plan` phase `stale`, with no rule that accepts the hash of the 0.1.0 normalisation." — `10-spec/spec.md:313`; "And they state that one revision of that phase and one G3 approval with the sdd CLI 0.1.1 make it approved again" — `10-spec/spec.md:1217`; `if (lint.length > 0) throw new CliError("ERR-CLI-010", …` — `src/gate/gate.ts:139`; "2. Carry to a later change — 0.1.1 ships with the bug; the release notes name the hand workaround." — `10-spec/questions-log.md:137`.
+- **Why it matters:** C005-REQ-127 changes only where a missing field goes. A section in which 0.1.0 already put Commit, Notes or Completed at between Done when and its checkboxes keeps them there: a later `task set` replaces those lines in place and inserts any missing one after the checkboxes, so Done when stays empty for the lint. Such a plan is a lite plan approved and reported with the 0.1.0 CLI, which C005-REQ-122 sends to one revision and G3 approval. That approval then fails with ERR-CLI-010 (LINT-TASK-001) until P-01 moves the lines by hand. The release notes of C005-TS-172 name the re-approval but not this step, and C005-US-104 states no out-of-scope for repairing existing sections. The hand workaround in the release notes was part of option 2 only, which P-01 did not choose.
+- **Suggested fix:** add to C005-REQ-125 and C005-TS-172 a statement that a lite plan reported with the sdd CLI 0.1.0 may hold report-field lines between Done when and its checkboxes, and that P-01 moves them after the checkboxes before the G3 approval. Record "repair of task sections written by the 0.1.0 CLI" as out of scope in C005-US-104. A repair by the CLI would go beyond "one requirement and one task" of Q-d001-01 and is not suggested.
+- **Status:** open
+
+### Rubric (D-001 set)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass: C005-US-104 names P-01 |
+| stories | S2 Value / outcome stated | pass: goal G-4; C005-REQ-127 keeps a reported lite plan free of the LINT-TASK-001 error that blocks a G3 approval |
+| stories | S3 INVEST | pass: C005-REQ-127 is testable on its own (C005-TS-176); size hint M still fits |
+| stories | S4 Every story has ≥ 1 requirement | pass: TR-01 6/6 |
+| stories | S5 Out of scope stated where a neighbour exists | CR-46 (repair of sections written by the 0.1.0 CLI) |
+| stories | S6 Traces to the ideation | CR-45 (Traces to omits D-001 and Q-d001-01) |
+| requirements | R1 Singular outcome | pass: one SHALL, one placement outcome |
+| requirements | R2 Testable | pass: the line order of `plan.md` is observable from outside; the gaps of the scenario are under A2 |
+| requirements | R3 Unambiguous | CR-42 |
+| requirements | R4 Correct EARS pattern | pass: event-driven; the trigger is the write of a missing field |
+| requirements | R5 Implementation-free | pass: the statement names lines of `plan.md`; `setLiteField()` appears only in C005-COMP-007 |
+| requirements | R6 Complete | CR-42 (section without a field line), CR-46 (sections written by 0.1.0) |
+| requirements | R7 Consistent | CR-45 |
+| requirements | R8 Feasible | pass: the insertion stays inside the section bounds that `setLiteField()` already computes (`src/tracking/task.ts:89-91`) |
+| requirements | R9 Necessary | pass: D-001 and Q-d001-01 |
+| requirements | R10 Measurable values with units | n/a: the statement holds no quantity |
+| requirements | R11 Delta and evidence | pass: ADDED is right; no living requirement places lite fields (C001-REQ-901 writes frontmatter, `.sdd/_living/CAP-tracking-archive.md:58`); the 0.1.0 claim cites E-99, which holds at HEAD |
+| requirements | R12 Priority consistent | pass: Must under the Must story C005-US-104 |
+| NFRs | N1 ISO 25010 category | n/a: no NFR references C005-REQ-127 |
+| NFRs | N2 Metric with unit | n/a: as N1; the method of C005-NFR-001 counts exit codes and reported changes, not line positions |
+| NFRs | N3 Threshold set | n/a: as N1 |
+| NFRs | N4 Feasible method and environment | n/a: as N1 |
+| NFRs | N5 Covered by a DoD item | n/a: as N1 |
+| acceptance | A1 Every REQ has an AC, every AC a scenario | pass: C005-AC-127.1 → C005-TS-176; TR-02 27/27, TR-03 27/27 |
+| acceptance | A2 Scenarios observable and concrete | CR-42, CR-43 |
+| acceptance | A3 One behaviour per scenario | pass: the Thens describe the result of one `task set` call |
+| acceptance | A4 Error and abuse cases present | pass: the rule refuses nothing; the refusals of `task set` stay with C001-REQ-902 and C001-REQ-922 |
+| acceptance | A5 n/a cells justified credibly | CR-44 |
+| domain, interfaces, architecture | D1 Entities with attributes, owner, invariants | CR-45 (Data view "code unchanged") |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states diagrammed | n/a: no lifecycle changes |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass: the bounds and line forms of C005-IF-005 §2 cover the new position; its stale sentence is in CR-45 |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements | pass: C005-COMP-007 names `setLiteField()`, the new responsibility and C005-REQ-127; C001-COMP-06 already owns `src/tracking/` (`.sdd/_archive/001-architect-agent-suite/10-spec/60-architecture/architecture.md:86`) |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | pass: Q-d001-01 records two candidates although marked material; for a fix-now-or-later question these are the real alternatives. The placement rule has an alternative in CR-42 |
+| DoD and index | O1 Every REQ and NFR covered | pass: C005-REQ-127 in C005-DOD-002 and C005-DOD-003; TR-05 27/27 |
+| DoD and index | O2 Evidence types fit the statements | pass: a test report for an untagged scenario, a coverage report for CLI code |
+| DoD and index | O3 Global items referenced | pass: C005-DOD-002 is the DOD-G-01 instance for untagged scenarios (`dod.md:28`), and C005-TS-176 is untagged (`spec.md:1088-1089`) |
+| DoD and index | X1 Index is navigation only | n/a: a lite change has no index file |
+
+### Other checks, not findings (D-001)
+
+- **End of file.** Step 2a removes "each line with its line terminator" (`spec.md:1615`). When a task section ends the
+  file with no final line break, the report-field line inserted last has no terminator, and a literal reading leaves the
+  line break that the insertion added to the line before it. The implemented step drops the lines from the line list
+  and joins the rest (`src/gate/hash.ts:45`, `:57-61` at HEAD), which gives back the approved text. The case predates
+  the revision (0.1.0 also inserts at the end of the file when the last `- **` line is the last line), and the lite
+  template closes the task list with `## Test mapping` (`plugins/architect/templates/lite/20-plan/plan.md:25`). The
+  end-of-file Examples row of CR-44 would cover it.
+- **Defect reference.** D-001 gives `ref: C005-REQ-121` (`change.md:16`); the fix is C005-REQ-127. The manifest is
+  written by the CLI; the resolution of `sdd defect close` can name C005-REQ-127 and C005-T-025.
+- **Work ahead of the gates.** The working tree already holds a change to `setLiteField()` (`src/tracking/task.ts`, and
+  the rebuilt `plugins/architect/scripts/sdd.mjs`) and an untracked `tests/integration/chg005/C005-TS-176.test.ts`,
+  while 10-spec and 20-plan are `in-revision` (`change.md:10-11`). Their rule is reading (a) of CR-42. I did not review
+  that code.
+
+### Why no further findings (D-001)
+
+- **Stories and requirements.** I checked the EARS shape and singularity of C005-REQ-127, its system name (sdd CLI, a
+  constitution system name), and each step of the rationale against HEAD: the insertion after the last `- **` line
+  (`src/tracking/task.ts:96-97`), the write order (`:119-122`), the lint's reading of the checkboxes as the value of
+  Completed at (`src/lint/spec.ts:180`), the empty Done when (`src/lint/rules/task-001.ts:12`) and the gate refusal
+  (`src/gate/gate.ts:138-139`). ADDED is the right delta: the living `CAP-tracking-archive.md` has no requirement on
+  lite fields. The remaining gaps are CR-42, CR-45 and CR-46.
+- **Acceptance.** The transition `in-progress → done` of C005-TS-176 is allowed (`src/tracking/task.ts:17`). The order
+  Commit, Notes, Completed at follows from the write order and the statement. Row 2 matches the lite template (Done
+  when last, then a blank line and `## Test mapping`, template lines 23-25). The error, authorization and abuse cells
+  are credible: the rule refuses nothing, there are no roles, and the values are P-01's own options. The gaps are
+  CR-42, CR-43 and CR-44.
+- **Interfaces and architecture.** The bounds of step 2a (`src/gate/hash.ts:38`, `:40`) and of `setLiteField()`
+  (`src/tracking/task.ts:89-90`) end a section at the same heading levels, so no inserted line can leave the part that
+  step 2a scans. F7 (`spec.md:1868`) names no position and stays correct. C005-COMP-007 needs no new interface: the rule
+  changes only the line order of a file whose format C005-IF-005 already describes. The stale text is CR-45.
+- **DoD.** C005-DOD-002 adds C005-TS-176 and C005-REQ-127, and C005-DOD-003 adds C005-REQ-127 (`dod.md:17-18`). Both
+  evidence types fit a CLI behaviour checked by an automated test.
+
+## Re-review — D-001 revision, second reviewer (2026-11-18)
+
+A second, independent focused review of the same revision ran while the section above was being written. It used the
+same reviewed set and inputs, plus `plugins/architect/skills/interview-protocol/references/questions.schema.json` and
+`.sdd/_constitution/constitution.md`. `node plugins/architect/scripts/sdd.mjs lint 005 --json`: 0 findings;
+`node plugins/architect/scripts/sdd.mjs trace 005`: TR-01…TR-08 at 100%, TR-11 acyclic. It reached the substance of
+CR-42, CR-43, CR-45 and CR-46 on its own and confirms CR-44; this addendum adds only what the section above lacks. New
+IDs continue this report at CR-47: the plan report's D-001 section reserves "(CR-42 … CR-59)" for this report
+(`20-plan/90-critic-report.md:287`) and starts its own at CR-60, and CR-47…CR-59 were unused.
+
+### Summary (second review)
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 2 |
+
+Open from this addendum: 2 minor (CR-47, CR-48). A severity note on CR-46 follows the findings; question Q-placement-01
+for P-01 is in the critic's hand-back.
+
+### New findings (second review)
+
+### CR-47 — C005-TS-176 does not say that the section holds no Commit, Notes or Completed at line, while a section brought to `in-progress` by `sdd task set` holds one, which changes the expected order
+- **Severity:** minor
+- **Refs:** C005-TS-176, C005-AC-127.1, C005-REQ-127
+- **Evidence:** "holds the field "- **Status:** in-progress" and ends with the field "- **Done when:**" and its two checkbox lines, <next>" — `10-spec/spec.md:1090`; "And the lines "- **Commit:** a1b2c3d", "- **Notes:** CSV export done" and "- **Completed at:**" with today's date follow the last checkbox line, in this order" — `10-spec/spec.md:1093`; Completed at is written "on every call, `—` while the task is not done" — `10-spec/spec.md:1628`; the in-progress task C005-T-010 holds "- **Completed at:** —" — `20-plan/plan.md:612` (its Status at `:578`).
+- **Why it matters:** the natural way to reach the Given, `sdd task set C004-T-001 --status in-progress`, also writes "- **Completed at:** —". Under C005-REQ-127 that line already stands after the checkboxes, so the `done` call replaces it in place and inserts Commit and Notes after it. The order becomes Completed at, Commit, Notes, and the "in this order" Then fails although the placement is right. The scenario holds only for a hand-written fixture that the Given does not describe. CR-43 covers the other gaps of this Given (Targets, Verification) and of the Then ("directly").
+- **Suggested fix:** add "and holds no Commit, Notes or Completed at line" to the Given, or add an Examples row that starts from a section reported `in-progress` through `sdd task set`, with the expected order "Completed at, Commit, Notes".
+- **Status:** open
+
+### CR-48 — The round-6 entry departs from C001-IF-05: the ID holds digits in its topic, and a question marked material shows two candidates
+- **Severity:** minor
+- **Refs:** C005-REQ-127
+- **Evidence:** "### Q-d001-01 — How should defect D-001 (lite report fields inserted between Done when and its checkboxes) be fixed?" — `10-spec/questions-log.md:132`; `"id": { "type": "string", "pattern": "^Q-[a-z]+-[0-9]{2,3}$" },` — `plugins/architect/skills/interview-protocol/references/questions.schema.json:18`; "- **Blocking:** yes · **Material:** yes · **Candidates considered:** 2 (conductor: fix in this change; carry to a later change)" — `10-spec/questions-log.md:133`; for a material question: `"then": { "required": ["candidates_considered", "options", "rejected"], "properties": { "candidates_considered": { "minimum": 4 } } }` — `questions.schema.json:60`; C005-REQ-127 cites the ID: "P-01's answer to Q-d001-01" — `10-spec/spec.md:323`.
+- **Why it matters:** the questions contract allows lowercase letters only in the topic, so a check of logged IDs against C001-IF-05 rejects Q-d001-01, which C005-REQ-127 cites. A material question needs four or five candidates with the rejected ones named. With two, P-01 was shown only when to fix D-001, never how; the repair of sections already written by the 0.1.0 CLI (CR-46) was not among the options. The D5 row of the section above passes the two candidates as the real alternatives of a timing question; I read the schema rule as binding whenever a question is marked material.
+- **Suggested fix:** while 10-spec is in revision, rename the question to a letters-only ID (for example Q-defectfix-01) in the log and in the rationale of C005-REQ-127, or keep the ID and note the departure in the log entry. For the material marker, record the candidates considered with the rejected ones, or put the placement choice to P-01 now (Q-placement-01, below).
+- **Status:** open
+
+### Notes on findings of the section above (second review)
+
+- **CR-46, severity and route.** I would grade CR-46 major: it is the common upgrade case, since the lite template ends
+  every task with `- **Done when:**` (`plugins/architect/templates/lite/20-plan/plan.md:23`) and `task set` writes
+  Completed at on every call (`10-spec/spec.md:1628`), so every 0.1.0 lite plan with a reported task fails the one G3
+  re-approval that C005-REQ-125 promises. I also read a repair as inside "one requirement and one task" of Q-d001-01:
+  it changes the same statement of C005-REQ-127 and the same function. Re-placing Commit, Notes and Completed at on
+  every `task set` is hash-neutral (step 2a of C005-IF-005) and repairs a section on its next report, C005-T-025's own
+  included. The choice between that repair and the documented hand move of CR-46's suggested fix belongs to P-01:
+  question Q-placement-01 in the hand-back.
+- **CR-60 of the plan report** has the same root cause. A LINT-TASK-001 error left in a task section also fails
+  DOD-G-03 at the close: "| DOD-G-03 | No new error-severity finding from `sdd lint` on this repository's `.sdd/` |
+  command-output |" — `.sdd/_constitution/constitution.md:59`. With the repair option of Q-placement-01, the `done`
+  report of C005-T-025 repairs its own section; with the hand-move option, the step that CR-60 asks for stays needed.
+- **ID range.** `20-plan/90-critic-report.md:287` names "(CR-42 … CR-59)" for this report; it holds CR-42…CR-48.
+
+### Rubric (second review)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass: C005-US-104 names P-01 |
+| stories | S2 Value / outcome stated | pass: as in the D-001 rubric above |
+| stories | S3 INVEST | pass: one goal, each requirement testable on its own; the stale count is CR-45 |
+| stories | S4 Every story has ≥ 1 requirement | pass: TR-01 6/6 |
+| stories | S5 Out of scope stated where a neighbour exists | CR-46 |
+| stories | S6 Traces to the ideation | CR-45 |
+| requirements | R1 Singular outcome | pass |
+| requirements | R2 Testable | pass |
+| requirements | R3 Unambiguous | CR-42 |
+| requirements | R4 Correct EARS pattern | pass: event-driven |
+| requirements | R5 Implementation-free | pass |
+| requirements | R6 Complete | CR-42, CR-46 |
+| requirements | R7 Consistent | CR-45 |
+| requirements | R8 Feasible | pass: one function with one production caller (E-118) |
+| requirements | R9 Necessary | pass: D-001 and Q-d001-01 |
+| requirements | R10 Measurable values with units | n/a: the statement holds no quantity |
+| requirements | R11 Delta and evidence | pass: ADDED; E-99 holds at HEAD (`src/tracking/task.ts:87-100`, `:119-122`) |
+| requirements | R12 Priority consistent | pass: Must under a Must story |
+| NFRs | N1 ISO 25010 category | n/a: no NFR in the reviewed set |
+| NFRs | N2 Metric with unit | n/a: no NFR in the reviewed set |
+| NFRs | N3 Threshold set | n/a: no NFR in the reviewed set |
+| NFRs | N4 Feasible method and environment | n/a: no NFR in the reviewed set |
+| NFRs | N5 Covered by a DoD item | n/a: no NFR in the reviewed set |
+| acceptance | A1 Every REQ has an AC, every AC a scenario | pass: TR-02 27/27, TR-03 27/27 |
+| acceptance | A2 Scenarios observable and concrete | CR-42, CR-43, CR-47 |
+| acceptance | A3 One behaviour per scenario | pass |
+| acceptance | A4 Error and abuse cases present | CR-46 (no case for a section that already holds a misplaced report field) |
+| acceptance | A5 n/a cells justified credibly | CR-44 |
+| domain, interfaces, architecture | D1 Entities with attributes, owner, invariants | CR-45 |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states diagrammed | n/a: no lifecycle changes |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass: step 2a of C005-IF-005 removes report-field lines wherever they stand |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements | pass: C005-COMP-007 names `setLiteField()` and C005-REQ-127; its Evidence gap is in CR-45 |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | CR-48 |
+| DoD and index | O1 Every REQ and NFR covered | pass: TR-05 27/27 |
+| DoD and index | O2 Evidence types fit the statements | pass |
+| DoD and index | O3 Global items referenced | pass: DOD-G-01 reaches C005-TS-176 through C005-DOD-002 |
+| DoD and index | X1 Index is navigation only | n/a: a lite change has no index file |
+
+### Why no further findings (second review)
+
+- **Stories and requirements.** Beyond the findings above, I checked that the C005-US-104 story still holds C005-REQ-127
+  (its "I want" names the lite task reports, `10-spec/spec.md:100`), that no living requirement states where lite
+  fields go (C001-REQ-901 states the frontmatter form, `.sdd/_living/CAP-tracking-archive.md:58`), and that the
+  rationale's hash claim holds (step 2a matches report-field lines by their first characters, `spec.md:1620-1621`).
+- **Acceptance.** The When of C005-TS-176 uses the real option names (`--commit`, `--note`; `src/cli/commands.ts:259`)
+  and an allowed transition (`src/tracking/task.ts:17`). The error, authorization and abuse cells of the C005-REQ-127
+  row are credible. What remains is in CR-42, CR-43, CR-44 and CR-47.
+- **Domain, interfaces, architecture.** C005-COMP-007 names the function, the responsibility and C005-REQ-127, and no
+  interface changes: C005-IF-005 §2 already removes the lines wherever they stand. The outdated texts are CR-45; the
+  decision record is CR-48.
+- **DoD.** C005-DOD-002 and C005-DOD-003 name C005-TS-176 and C005-REQ-127 once each (`10-spec/dod.md:17-18`), with
+  evidence types that fit an automated test of CLI code.
+
+## Verification — D-001 fixes (2026-11-18)
+
+Focused verification (step 7, before the G2 re-approval) of the fixes for CR-42 … CR-46 of the section "Re-review —
+D-001 revision (2026-11-18)" and for CR-47 and CR-48 of the second review, and a review of the changed text for new
+problems. Diff read: `git diff -- .sdd/005-0-1-1-fixes/` (working tree against HEAD `9eae3b2`). Code read only to
+confirm claims, at HEAD: `src/tracking/task.ts` (transitions `:15-21`, `findTask()` `:48-72`, `setLiteField()`
+`:87-100`, `setTask()` `:102-122`), `src/lint/spec.ts:173-184` (`fieldText()`), `src/model/graph.ts:172-180`,
+`src/gate/gate.ts:139`; `.sdd/_living/CAP-planning.md:405`. The uncommitted code in `src/` and `tests/` was not
+reviewed. `node plugins/architect/scripts/sdd.mjs lint 005 --phase 10-spec --json`: 0 errors, 0 warnings, 0 info.
+`node plugins/architect/scripts/sdd.mjs trace 005` (no `--write`): TR-01 6/6, TR-02 27/27, TR-03 27/27, TR-04 1/1,
+TR-05 27/27 and 1/1, TR-08 78/78, TR-11 acyclic; of its "open items: 3", none is a marker in `10-spec/`
+(`85-open-items.md:12`: "Total: 0 (none)"). I ran no stale check, gate command, `trace --write` or other writing
+command. New findings continue at CR-49: CR-47 and CR-48 are taken by the second review, and the plan report starts
+its D-001 findings at CR-60.
+
+**Reviewed set.** C005-REQ-127 (statement, rationale, open items); C005-AC-127.1 with C005-TS-176, C005-TS-177,
+C005-TS-178, C005-TS-179 and the paragraph on the CR-42 readings (`spec.md:1134-1139`); the C005-REQ-127 row of the
+coverage table; C005-REQ-125 and C005-AC-125.1 with C005-TS-172; the rationale of C005-REQ-122; C005-US-104; the
+glossary-delta §1 rows Report fields, Field line and Continuation line; C005-DOD-002, C005-DOD-003, C005-DOD-007;
+C005-IF-005 §2; C005-COMP-007; the Data view row "Report fields of a lite task section"; the As-is to to-be row
+"G-4, D-001". Read for consistency only: C005-US-106 (the story of C005-REQ-125), round 6 of `questions-log.md`, and on
+the plan side C005-T-017, C005-T-025 and `20-plan/handoff.md:84-107` (the hand move). The frontmatter keeps
+`reviewed_ids: all`; this paragraph gives the set.
+
+### Resolution of the earlier findings (D-001)
+
+| Finding | Result | Evidence |
+|---|---|---|
+| CR-42 (major) | resolved | Both terms are defined: "| Field line | A line of a task section (bounds: C005-IF-005 §2) that begins, at its first character, with `- **`, a field name and `:**`" — `40-domain/glossary-delta.md:25`. The Continuation line row ends the lines at a blank line, at a line that begins with a character other than a space or a tab, and at the end of the section, and adds "an indented line after a blank line is no continuation line" — `:26`; this is what `fieldText()` reads (`src/lint/spec.ts:180`). The statement now has the no-field case: "or, when the section holds no field line, directly after the section's heading line." — `spec.md:323`. C005-TS-176 gives the checkbox lines exactly, indented by two spaces (`spec.md:1101-1102`, `:1106`), and C005-TS-177 adds the marker, blank-line and unindented cases (`spec.md:1128-1131`). Every reading of CR-42 is ruled out by at least one row (row check below) |
+| CR-43 (minor) | resolved | The Given fills both fields: "- **Targets:**", "  - add src/export/csv.ts", "- **Verification:**", "  - npm test" (`spec.md:1096-1099`, inside the docstring); the Thens read "directly follow" (`spec.md:1106-1107`) |
+| CR-44 (minor) | resolved | The replacement is now part of the statement: "write the field's line in place of the section's first field line of that field" — `spec.md:323`. The idempotency cell cites C005-REQ-127 instead of C001-REQ-901, and the boundary cell names "TS-177 (row 1: last field with no continuation line; …)" and "TS-176 (row 3: the section ends the file)" — `spec.md:1309`. The rationale says why the kept 0.1.0 behaviour is stated here: C001-REQ-618 "names the fields of a lite task section, not where `sdd task set` writes them" — `spec.md:324` (confirmed by `.sdd/_living/CAP-planning.md:405`) |
+| CR-45 (minor) | resolved | "Seven requirements, all for goal G-4" — `spec.md:104`; "Q-d001-01; D-001" in Traces to — `:107`; "placement of a missing field changed by C005-REQ-127" — `:1945`; E-99 in the Evidence of C005-COMP-007 — `:1860`; "at the place C005-REQ-127 gives, or, with the sdd CLI 0.1.0, after" / "the last bullet of the section (E-99)" — `:1702-1703`; the delta row "| G-4, D-001 |" — `:2268` |
+| CR-46 (minor) | resolved | C005-US-104 Out of scope: "repair by the sdd CLI of task sections in which the sdd CLI 0.1.0 already wrote report-field lines" — `spec.md:105`. The fourth part of C005-REQ-125: "that before that G3 approval P-01 moves each report-field line that stands between a field line" — `spec.md:378`; the same in C005-TS-172 (`:1283`) and C005-DOD-007 (`dod.md:22`). The G3 refusal until the move is in the rationale of C005-REQ-122 (`spec.md:315`). The plan carries the statement into C005-T-017 (`20-plan/plan.md:849`, `:862`) |
+| CR-47 (minor, second review) | resolved | "with exactly these lines, in this order, and no other line" — `spec.md:1092`. The lines hold no Commit, Notes or Completed at line, so the order Commit, Notes, Completed at follows from the write order of `setTask()` (`src/tracking/task.ts:119-122`) |
+| CR-48 (minor, second review) | not resolved; not in the fix list of this round | The round-6 entry is unchanged: "### Q-d001-01 — How should defect D-001 …" and "**Candidates considered:** 2" — `questions-log.md:132-133`. No answer to Q-placement-01 (repair by the CLI, or hand move) is logged. The revised text states the hand move as decided and grounds it on the option text of Q-d001-01: "Q-d001-01 chose one requirement and one task; critic CR-46" — `spec.md:105`; "P-01 decided one requirement and one task for D-001 (Q-d001-01)" — `spec.md:379`. The conductor decides whether P-01 confirms the route before G2; an answer already given belongs in the log |
+
+### Row check of C005-TS-176 … C005-TS-179
+
+Readings named in CR-42: (a) the lines that LINT-TASK-001 reads, now the glossary definition; (b) the Markdown list
+item, which spans a blank line; (c) every line up to the next field or the end of the section; and the 0.1.0 place,
+after the last line that begins with `- **` (`src/tracking/task.ts:95-97`). I traced each row through the statement,
+the two glossary rows and `setTask()`, which writes Status, then Commit and Notes only when a value is known, then
+Completed at on every call (`:109-122`; `findTask()` reads the known values from the section, `:66`). So
+`--status in-progress` with no other option writes only Status and Completed at (C005-TS-177, C005-TS-178), and
+`--status done --commit a1b2c3d` writes no Notes line when the section holds none (C005-TS-179).
+
+| Row | One expected outcome | Readings it tells apart | Agrees with the glossary |
+|---|---|---|---|
+| TS-176 row 1: heading `### C004-T-002` next | yes: Commit, Notes, Completed at directly after "  - [ ] CSV rows written", then the heading | the 0.1.0 place (Commit directly after Done when) from (a), (b) and (c), which agree here | yes: the heading line begins with `#` and ends the continuation lines of Done when |
+| TS-176 row 2: blank line, then `## Test mapping` | yes: the line after Completed at is the blank line | the 0.1.0 place; (c) only under the bounds of C005-IF-005 §2, not under the scenario's own wording (CR-49) | yes: a blank line ends the continuation lines |
+| TS-176 row 3: end of the file, final line break | yes: Completed at ends the file, with a line break | the 0.1.0 place | yes: the end of the section ends the continuation lines |
+| TS-177 row 1: checkbox, marker, blank | yes: directly after the marker, before the blank line | (c); keeps the 0.1.0 result | yes: `- **Archive task:** true` is a field line with no continuation line |
+| TS-177 row 2: checkbox, blank, indented checkbox | yes: directly after the first checkbox, before the blank line | (b), (c) and the 0.1.0 place | yes: "an indented line after a blank line is no continuation line" |
+| TS-177 row 3: indented, then unindented `- [ ]` | yes: between the two checkbox lines | (c) and the 0.1.0 place | yes: the unindented line ends the continuation lines and is no field line |
+| TS-177 row 4: unindented `- [ ]` directly after Done when | yes: directly after Done when | (c); keeps the 0.1.0 result | yes: Done when has no continuation line |
+| TS-178: no field line | yes: Status after the heading, Completed at after Status, then the text line | the third case of the statement, which CR-42 found missing; (a), (b) and (c) agree; keeps the 0.1.0 result | yes: "Write the CSV export." begins with a letter, so it is no continuation line of the inserted Status line. `task set` finds a section with no field line (`src/model/graph.ts:172-180`) and reads its status as `todo` (`src/tracking/task.ts:65`) |
+| TS-179 row 1: Commit and Completed at after the checkbox | yes: both replaced where they stand; same line count | none of (a), (b), (c): nothing is inserted | yes |
+| TS-179 row 2: Commit and Completed at between Done when and the checkbox | yes: both replaced where they stand, not moved | replacement in place against a CLI repair that re-places the lines (the alternative of the second review) | yes. It agrees with C005-REQ-125 ("before that G3 approval P-01 moves each report-field line that stands between a field line, such as `- **Done when:**`, and that field's indented lines", `spec.md:378`), with the rationale of C005-REQ-127 ("Lines that the sdd CLI 0.1.0 already wrote keep their place", `spec.md:324`), with C005-US-104 Out of scope (`spec.md:105`), with the hand-off ("The fixed CLI replaces an existing field in place and does not move it back.", `20-plan/handoff.md:95-96`) and with C005-T-025 step 4 ("a line that an earlier report misplaced stays where it is and is moved by hand", `20-plan/plan.md:731`) |
+| TS-179 row 3: two Commit lines | yes: the first replaced, the second unchanged | first against last field line of a field | yes: "the section's first field line of that field" (`spec.md:323`) |
+
+Taken together: (b) is ruled out by C005-TS-177 row 2, (c) by C005-TS-177 rows 1 to 4, and the 0.1.0 place by
+C005-TS-176 rows 1 to 3 and C005-TS-177 rows 2 and 3. The rows that tell none of (a), (b), (c) apart (C005-TS-176
+rows 1 and 3, C005-TS-178, C005-TS-179) check the D-001 fix itself or the two kept cases of the statement. The
+paragraph at `spec.md:1134-1139` says which readings each row of C005-TS-177 rules out; each claim holds.
+
+### Summary (verification)
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 1 |
+
+Resolved: CR-42 … CR-47. Open in the D-001 set: CR-48 (minor, second review, not in this round's fix list) and CR-49
+(minor, new). Neither holds the G2 approval.
+
+### New findings (verification)
+
+### CR-49 — Row 2 of C005-TS-176 puts the blank line after the section, while C005-IF-005 §2 puts it inside; under the scenario's own wording the row no longer rules out reading (c)
+- **Severity:** minor
+- **Refs:** C005-TS-176, C005-AC-127.1, C005-REQ-127, C005-IF-005
+- **Evidence:** "Given an active lite change 004 whose "20-plan/plan.md" holds the task section "C004-T-001" with exactly these lines, in this order, and no other line:" — `10-spec/spec.md:1092`; "| the lines directly after the section are a blank line and the heading line "## Test mapping"" — `10-spec/spec.md:1114`; "TS-176 (row 2: the last task section, followed by a blank line and another section)" — `10-spec/spec.md:1309`; the bounds: "- **Task section:** from a heading line of level 2, 3 or 4 whose text starts with a task ID (`C<NNN>-T-<seq>` or" / "`T-<seq>`) to the line before the next heading line of level 1 to 4, or to the end of the file." — `10-spec/spec.md:1683-1684`; the glossary uses those bounds: "A line of a task section (bounds: C005-IF-005 §2)" — `40-domain/glossary-delta.md:25`; C005-TS-177 writes the blank line into the section: "then <tail>, where "" stands for a blank line" and "And the line directly after the section is the heading line "## Test mapping"" — `10-spec/spec.md:1120-1121`.
+- **Why it matters:** under the bounds that the glossary cites, the blank line before `## Test mapping` belongs to the task section, so the Given contradicts itself ("no other line"). The fixture is still clear, and the expected outcome holds under either reading, so no test changes. But C005-TS-176 and C005-TS-177 now describe the same file shape in two incompatible ways. Under the scenario's own wording, reading (c) ("every line up to … the end of the section") also puts Completed at before the blank line, so row 2 does not rule (c) out. C005-TS-177 rows 1 to 4 do, so no reading stays untested.
+- **Suggested fix:** use the convention of C005-TS-177. Write the Given as "holds the task section "C004-T-001" that begins with exactly these lines, in this order:", and row 2 as "the section ends with a blank line after "  - [ ] CSV rows written", and the line directly after the section is the heading line "## Test mapping"". Reword the coverage cell to "row 2: a blank line ends the section, before another section".
+- **Status:** open
+
+### Rubric (verification set)
+
+| Rubric | Item | Result |
+|---|---|---|
+| stories | S1 Persona is a defined P-ID | pass: C005-US-104 and C005-US-106 name P-01 |
+| stories | S2 Value / outcome stated | pass: C005-REQ-127 keeps a reported lite plan free of the LINT-TASK-001 error that blocks a G3 approval; the fourth part of C005-REQ-125 tells an upgrading user what the release of C005-US-106 requires |
+| stories | S3 INVEST | pass: each requirement of C005-US-104 testable on its own; C005-REQ-127 has four scenarios of one AC |
+| stories | S4 Every story has ≥ 1 requirement | pass: TR-01 6/6 |
+| stories | S5 Out of scope stated where a neighbour exists | pass: C005-US-104 Out of scope (`spec.md:105`) |
+| stories | S6 Traces to the ideation | pass: Q-d001-01 and D-001 in Traces to (`spec.md:107`) |
+| requirements | R1 Singular outcome | pass: C005-REQ-127 has one SHALL and one outcome, the place of the written line; C005-REQ-125 keeps one procedure, now in four parts, by the reasoning accepted for three |
+| requirements | R2 Testable | pass: line order of `plan.md` (C005-REQ-127); P-01's review of the notes (C005-REQ-125) |
+| requirements | R3 Unambiguous | pass: field line and continuation line are defined (`40-domain/glossary-delta.md:25-26`); overlapping conditions: Other checks |
+| requirements | R4 Correct EARS pattern | pass: C005-REQ-127 event-driven, C005-REQ-125 ubiquitous |
+| requirements | R5 Implementation-free | pass: the statements name lines of `plan.md` and the release notes; `setLiteField()` appears only in C005-COMP-007 |
+| requirements | R6 Complete | pass: the existing-field and no-field cases are in the statement; sections written by 0.1.0 are handled by C005-REQ-125 and the Out of scope of C005-US-104 |
+| requirements | R7 Consistent | pass: the rationales of C005-REQ-122 and C005-REQ-127, C005-REQ-125, C005-US-104 and the hand-off give the same route; the scenario wording is CR-49 |
+| requirements | R8 Feasible | pass: the bounds of `setLiteField()` are kept; `task set` finds a section with no field line (`src/model/graph.ts:172-180`) |
+| requirements | R9 Necessary | pass: D-001, Q-d001-01, CR-46 |
+| requirements | R10 Measurable values with units | n/a: neither statement holds a quantity |
+| requirements | R11 Delta and evidence | pass: ADDED; the kept 0.1.0 behaviour is stated with E-99 and `src/tracking/task.ts:95` at `9eae3b2`, because no living requirement places a lite field (C001-REQ-901, C001-REQ-618) |
+| requirements | R12 Priority consistent | pass: Must under Must stories |
+| NFRs | N1 ISO 25010 category | n/a: no NFR in the verification set |
+| NFRs | N2 Metric with unit | n/a: no NFR in the verification set |
+| NFRs | N3 Threshold set | n/a: no NFR in the verification set |
+| NFRs | N4 Feasible method and environment | n/a: no NFR in the verification set |
+| NFRs | N5 Covered by a DoD item | n/a: no NFR in the verification set |
+| acceptance | A1 Every REQ has an AC, every AC a scenario | pass: C005-AC-127.1 → C005-TS-176 … C005-TS-179; C005-AC-125.1 → C005-TS-172; TR-02 27/27, TR-03 27/27 |
+| acceptance | A2 Scenarios observable and concrete | CR-49 |
+| acceptance | A3 One behaviour per scenario | pass: each scenario checks one case of the statement |
+| acceptance | A4 Error and abuse cases present | pass: the rule refuses nothing; a section already damaged by 0.1.0 is now a case (C005-TS-179 row 2) |
+| acceptance | A5 n/a cells justified credibly | pass: the boundary and idempotency cells name scenarios; the error, authorization and abuse cells are credible |
+| domain, interfaces, architecture | D1 Entities with attributes, owner, invariants | pass: Data view row updated (`spec.md:1945`) |
+| domain, interfaces, architecture | D2 Lifecycles > 2 states diagrammed | n/a: no lifecycle changes |
+| domain, interfaces, architecture | D3 Interfaces parse and name their errors | pass: C005-IF-005 §2 removes report-field lines wherever they stand and names both places (`spec.md:1701-1703`) |
+| domain, interfaces, architecture | D4 Components with ID, responsibilities, requirements | pass: C005-COMP-007 names `setLiteField()`, the responsibility, C005-REQ-127 and E-99 (`spec.md:1852-1860`) |
+| domain, interfaces, architecture | D5 Decisions with alternatives recorded | CR-48 (open, unchanged) |
+| DoD and index | O1 Every REQ and NFR covered | pass: C005-REQ-127 in C005-DOD-002 and C005-DOD-003, C005-REQ-125 in C005-DOD-007; TR-05 27/27 |
+| DoD and index | O2 Evidence types fit the statements | pass: test report for the untagged scenarios, review record for C005-TS-172 |
+| DoD and index | O3 Global items referenced | pass: C005-DOD-002, the DOD-G-01 instance for untagged scenarios, lists "C005-TS-175 to C005-TS-179" (`dod.md:17`); all four new scenarios are untagged |
+| DoD and index | X1 Index is navigation only | n/a: a lite change has no index file |
+
+### Other checks, not findings (verification)
+
+- **Overlapping conditions.** The rationale says "its three cases exclude each other" (`spec.md:324`). Strictly, "when
+  the section holds no field line of that field" also holds for a section with no field line, but the second case
+  names "the section's last field line", which such a section lacks, so only the third case applies. One reading
+  only; not a finding.
+- **`* **` fields.** `fieldText()` also accepts a field written `* **Name:**` (`src/lint/spec.ts:174`), which the
+  glossary does not count as a field line. A report line is still never inserted inside such a field: the `* **`
+  line begins with a character other than a space or a tab, so it ends the continuation lines of the field line
+  before it. The lite template and `sdd task set` use the `- **` form only.
+- **Release-notes wording.** C005-REQ-125, C005-TS-172 and C005-DOD-007 say "that field's indented lines", not
+  "continuation lines". That is right: in a section damaged by 0.1.0 the checkboxes are, by the glossary, continuation
+  lines of the misplaced report-field line. The three texts use the same words.
+- **Hash.** Step 2a removes report-field lines wherever they stand (`spec.md:1680-1703`), so the heading-line place of
+  C005-TS-178 and the hand move leave the approval hash unchanged, as the rationale of C005-REQ-127 says.
+
+### Why no further findings (verification)
+
+- **Stories.** C005-US-104 lists seven requirements, names D-001 and Q-d001-01, and puts the repair of sections written
+  by 0.1.0 out of scope (`spec.md:104-107`). C005-US-106 still lists C005-REQ-125, whose fourth part serves the same
+  upgrade path. Nothing else in either story changed.
+- **Requirements.** I checked C005-REQ-127 for EARS shape and singularity, and each case against `setLiteField()` at
+  HEAD: the replacement of the first `- **<name>:**` line (`src/tracking/task.ts:92-93`), the insertion after the last
+  `- **` line and the heading place (`:95-97`). I also checked the claim that `fieldText()` stops at a blank or
+  unindented line (`src/lint/spec.ts:180`) and the reason for stating kept behaviour (`.sdd/_living/CAP-planning.md:405`).
+  C005-REQ-125, the rationale of C005-REQ-122 and the rationale of C005-REQ-127 give the same route: the hand move
+  before the G3 approval, ERR-CLI-010 otherwise (`src/gate/gate.ts:139`).
+- **Acceptance.** I traced every row by hand (row check above). The transitions used are allowed (`todo → in-progress`,
+  `in-progress → done`, `src/tracking/task.ts:16-17`). `task set` without `--commit` or `--note` writes no Commit or
+  Notes line when the section holds none (`:109`, `:120-121`), as C005-TS-177, C005-TS-178 and C005-TS-179 assume.
+  The only gap is CR-49.
+- **Domain, interfaces, architecture.** C005-IF-005 §2, C005-COMP-007, the Data view and the delta row agree with
+  C005-REQ-127 and with each other. D5 stays with CR-48.
+- **DoD.** C005-DOD-002 covers C005-TS-175 to C005-TS-179 and C005-REQ-127 (`dod.md:17`), C005-DOD-003 covers
+  C005-REQ-127 (`dod.md:18`), and C005-DOD-007 holds the hand move in the words of C005-REQ-125 and C005-TS-172
+  (`dod.md:22`).

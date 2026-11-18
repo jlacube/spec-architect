@@ -275,3 +275,247 @@ Open after the re-review: 0 blocker; 0 major; 6 minor (CR-36 and CR-37 with P-01
 | plan | P5 Risks cover the hotspots touched | CR-38 (C005-RISK-001 for the other lite changes), CR-39 (the acted-upon route of C005-RISK-012) |
 | plan | P6 Rollout and rollback stated | CR-39, CR-41 |
 | plan | P7 ADRs for every remaining technical decision | pass: C005-ADR-002 accepted with P-01's answer; the Copilot spending rule is P-01's decision (Q-copilot-cost-01), not an ADR; the wrapper is a test-fixture choice inside C005-T-007 |
+
+## Re-review — D-001 revision (2026-11-18)
+
+Focused re-review (step 7) of the `20-plan` revision for defect D-001 (`change.md:16`; Gate log rows of 2026-11-17,
+`change.md:34-35`): the new task C005-T-025 for C005-REQ-127, the test case C005-TC-077 for C005-TS-176, the new
+dependency of C005-T-016 on C005-T-025, the hand-off order and the plan lines that name C005-T-025. Diff read:
+`git diff -- .sdd/005-0-1-1-fixes/20-plan/plan.md .sdd/005-0-1-1-fixes/20-plan/handoff.md`. Inputs: `20-plan/plan.md`,
+`20-plan/handoff.md`, `change.md`, `20-plan/80-traceability.md`, `20-plan/evidence/impact.md`; `10-spec/spec.md`
+(C005-REQ-127, C005-AC-127.1, C005-TS-176, C005-COMP-007) read only, since the spec revision has its own re-review
+(CR-42 … CR-59). Code read only to confirm claims: `git show HEAD:src/tracking/task.ts` (the insertion rule of the
+committed bundle), `scripts/test.mjs`, and searches of `tests/` and `evals/chg005/`. The uncommitted implementation
+(`src/tracking/task.ts`, `tests/integration/chg005/C005-TS-176.test.ts`, the rebuilt bundle) was not reviewed.
+`node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan --json`: 0 errors, 0 warnings, 0 info.
+`node plugins/architect/scripts/sdd.mjs trace 005` (without `--write`): TR-02 27/27, TR-03 27/27, TR-05 27/27,
+TR-06 27/27, TR-07 25/25, TR-08 75/75, TR-11 acyclic. I ran no stale check, gate command, `trace --write` or other
+writing command. New findings continue at CR-60.
+
+**Reviewed set.** C005-T-025; C005-TC-077; C005-TS-176, C005-AC-127.1 and C005-REQ-127 as the plan maps them;
+C005-T-016 (Depends on, Preconditions); C005-T-009 (predecessor); C005-T-014 and C005-T-015 (order against Strategy
+rule 5); C005-T-010, C005-T-011 and C005-T-012 (the next lite task reports); C005-RISK-002; C005-COMP-007;
+C005-DOD-002 and C005-DOD-003 (the DoD items that cover C005-REQ-127, `80-traceability.md:45`). In `plan.md`:
+Strategy rule 2 (and rules 3 and 5 where they bear on C005-T-025), milestone 2, the work-breakdown graph and the
+critical path. In `handoff.md`: the Ordered task list, the Rules (conductor rule), the Reporting protocol (stage 2 and
+the frontmatter fallback) and the Definition of change done. The frontmatter keeps `reviewed_ids: all` from the first
+review, as the re-review of 2026-11-17 did. This paragraph gives the set for this re-review.
+
+### Summary (re-review D-001)
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 4 |
+
+New open findings: 0 blocker, 0 major, 4 minor (CR-60 … CR-63). CR-36 … CR-41 are outside the reviewed set and keep
+their recorded status. None of the new findings holds the G3 re-approval.
+
+### New findings (D-001)
+
+### CR-60 — Reports made before C005-T-025's commit, including its own `in-progress` report, still put Completed at between Done when and its checkboxes. The fixed CLI then leaves that line where it is, yet step 4 reads as if no hand move is needed
+- **Severity:** minor
+- **Refs:** C005-T-025, C005-REQ-127, C005-T-011, C005-T-012
+- **Evidence:** "  4. From this commit on, the report fields of CHG-005's own tasks need no move by hand." — `20-plan/plan.md:722`; the section of C005-T-025 ends with "- **Done when:**" and three checkbox lines — `20-plan/plan.md:726-729`; the first command of the Reporting protocol: "node plugins/architect/scripts/sdd.mjs task set <task-id> --status in-progress" — `20-plan/handoff.md:64`. The committed bundle writes Completed at on every lite report: "    text = setLiteField(text, id, "Completed at", report["completed_at"] === null ? "—" : String(report["completed_at"]));" — `src/tracking/task.ts:122` at HEAD, and inserts it after the last bullet line: "    for (let i = at + 1; i < end; i++) if (lines[i]!.startsWith("- **")) last = i;" — `src/tracking/task.ts:96` at HEAD. The fixed rule leaves a field that is already there in place: "A field that the section already holds is replaced in place, as at 0.1.0." — `10-spec/spec.md:323`. The effect of the split: "The checkboxes then belong to Completed at, LINT-TASK-001 reports an empty Done when, and `sdd gate approve` refuses a lite `20-plan` until the lines are moved by hand." — `10-spec/spec.md:323`. Text tasks may be reported first: "they run beside the" / "`src/` chain." — `20-plan/plan.md:46-47`. The workaround appears only in the defect record: "(found on C005-T-001; fields moved by hand, hash unchanged)" — `change.md:16`. The fallback gives the field forms but no position: "writes: `- **Status:** <status>`, `- **Commit:** <sha>`, `- **Completed at:** <YYYY-MM-DD>` and, for a note or a" — `20-plan/handoff.md:86`.
+- **Why it matters:** C005-T-025 is reported `in-progress` before its step 1, with the bundle from C005-T-009's commit. That report inserts "- **Completed at:** —" directly after its "- **Done when:**" (`plan.md:726`). The `done` report after the commit replaces that line in place. So the task that fixes D-001 ends up showing D-001's symptom: LINT-TASK-001 on C005-T-025, and `gate approve` on `20-plan` refused until someone moves the line by hand. That hits the G3 re-approval that closes this revision if C005-T-025 starts before it, and rollback step 4 later. The same applies to C005-T-011 and C005-T-012 if they are reported before C005-T-025's commit, which rule 3 allows. The fields reported so far stand after their checkboxes (for example C005-T-010, `plan.md:612`) and lint reports no error, so the line has been moved by hand each time. The plan does not say this is still needed until the commit, and step 4 invites skipping it.
+- **Suggested fix:** in C005-T-025, choose one of two options. Either keep the task `todo` until its commit, as C005-T-002 does ("This task stays `todo` until step 4 on purpose", `plan.md:309`), or add to step 1 that the Completed at line of the `in-progress` report is moved by hand to after the Done when checkboxes, as for the earlier tasks. Reword step 4: from this commit on, a report adds no misplaced line, and a line that is already misplaced stays where it is. Add a done-check: after the `done` report, `node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan` reports no LINT-TASK-001 (the live case of C005-TS-176). In the hand-off fallback, state the position: after the last field and its continuation lines (the Done when checkboxes).
+- **Status:** open
+
+### CR-61 — No task or step closes D-001, but C005-T-016 requires "no open defect", and its Preconditions do not name C005-T-025
+- **Severity:** minor
+- **Refs:** C005-T-025, C005-T-016, C005-T-022, C005-REQ-127
+- **Evidence:** "- **Depends on:** C005-T-014, C005-T-015, C005-T-025" — `20-plan/plan.md:790`; "- **Preconditions:** C005-T-014 and C005-T-015 done; no open defect." — `20-plan/plan.md:803`; the defect: "status: open, resolution: null, closed_at: null" — `change.md:16`. The done-checks of C005-T-025 (`20-plan/plan.md:726-729`) name the test case, the hash tests and the bundle, but no defect. "DOD-G-07: no open defect of CHG-005." — `20-plan/plan.md:1004`; "- No open defect of CHG-005." — `20-plan/handoff.md:97`. Neither `plan.md` nor `handoff.md` contains `defect close`, and the command block of the Reporting protocol holds only `task set` and `defect add` (`20-plan/handoff.md:64-67`). The floor-run tasks have the done-check "  - [ ] No open defect from this task" — `20-plan/plan.md:757`, `:785`.
+- **Why it matters:** once C005-T-025 is done, D-001 stays open with no owner, no step and no resolution text. By its own precondition C005-T-016 then cannot start, and the gap shows up only when the conductor checks there or at DOD-G-07 in C005-T-022. The Preconditions line also contradicts the Depends on line just above it.
+- **Suggested fix:** add a final step and done-check to C005-T-025: the conductor closes D-001 with the working-tree CLI, on one line, in the form of `10-spec/spec.md:1151`: `node plugins/architect/scripts/sdd.mjs defect close D-001 --change 005 --resolution "<fixed by C005-T-025, commit>"`. Change the Preconditions of C005-T-016 to "C005-T-014, C005-T-015 and C005-T-025 done; no open defect."
+- **Status:** open
+
+### CR-62 — The floor runs may start before C005-T-025, although Strategy rule 5 and the Preconditions of C005-T-014 require all CLI code to be final
+- **Severity:** minor
+- **Refs:** C005-T-025, C005-T-014, C005-T-015
+- **Evidence:** "5. **Evals once, on final text.** The floor runs of DOD-G-01 (C005-T-014, C005-T-015) start when all agent text and" / "   all CLI code are final, so that no text change after them needs a second paid batch." — `20-plan/plan.md:51-52`; "- **Preconditions:** all agent text and CLI code final (the tasks in Depends on done); C005-ADR-002 accepted (Q-riskclass-01)." — `20-plan/plan.md:745`; "- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013" — `20-plan/plan.md:734` and `:762`; "- **Preconditions:** as C005-T-014." — `:773`. The only new edges are "  C005_T_009 --> C005_T_025" / "  C005_T_025 --> C005_T_016" — `20-plan/plan.md:147-148`. C005-T-025 changes CLI code: "  - modify `src/tracking/task.ts` › `setLiteField()`: insertion point after the last field and its continuation lines" and "  - modify `plugins/architect/scripts/sdd.mjs`: rebuilt bundle" — `20-plan/plan.md:714`, `:716`.
+- **Why it matters:** the graph lets C005-T-014 and C005-T-015 run their paid sessions on a bundle that C005-T-025 changes afterwards. The release commit would then ship CLI code that no floor run exercised, which goes against rule 5 and the stated precondition. In practice the effect is small. No eval case under `evals/chg005/` runs `task set`: a search for "task set" and "Completed at" found no match. The fix paragraph already says "A fix in `src/` or `scripts/` that changes no output these sessions depend on reruns no eval case." (`20-plan/plan.md:240`). Still, the plan states an order that its graph does not enforce.
+- **Suggested fix:** add C005-T-025 to Depends on of C005-T-014 and C005-T-015, with the two graph edges. The critical path does not change: C005-T-025 (S) follows the finished C005-T-009, and C005-T-014 already waits for C005-T-011 and C005-T-012. Alternatively, state in rule 5 that C005-T-025 changes no output that the eval sessions read.
+- **Status:** open
+
+### CR-63 — Items linked to C005-T-025 were not updated. The Refs of C005-RISK-002 leave it out, and Strategy rule 2 places it "in the component order of `evidence/impact.md`", where C005-COMP-007 does not include `setLiteField()`
+- **Severity:** minor
+- **Refs:** C005-RISK-002, C005-T-025, C005-COMP-007
+- **Evidence:** "- **Risk refs:** C005-RISK-002" — `20-plan/plan.md:710`; the C005-RISK-002 row ends "| implementer | C005-T-001, C005-T-003, C005-T-004, C005-T-005, C005-T-006, C005-T-008, C005-T-009, C005-T-016, C005-COMP-011 |" — `20-plan/plan.md:1148`; "   C005-T-008, C005-T-009, C005-T-025 (defect D-001), in the component order of `evidence/impact.md` (Per-component sizing)." — `20-plan/plan.md:44`; "| COMP-007 Archive module | `src/archive/plan.ts` | COMP-004 | bundle | same | same | no |" — `20-plan/evidence/impact.md:52`; "| COMP-007 Archive module (REQ-112, REQ-113) | `src/archive/plan.ts` |" — `impact.md:157`; the revised spec component: "- **Name:** `src/archive/plan.ts` (`archiveBlockers()`, `planArchive()`); `src/tracking/task.ts` (`setLiteField()`)" — `10-spec/spec.md:1785`.
+- **Why it matters:** the risk row lists the `src/` tasks that must commit the rebuilt bundle. C005-T-025 is now one of them, so anyone who reads the risk row to find those tasks gets an incomplete list. Rule 2 cites a component order and sizing that do not cover the new target. The survey names `setTask()` only as the writer of the report fields for hash step 2a (`impact.md:39`). C005-T-025's own Verification runs the cap09 folder (`plan.md:724`), so the gap affects navigation, not the checks.
+- **Suggested fix:** add C005-T-025 to the Refs of C005-RISK-002. Reword rule 2 to end "C005-T-009, then C005-T-025 (defect D-001), after the component order of `evidence/impact.md`", or add a `setLiteField()` row to the per-component tables of `evidence/impact.md`.
+- **Status:** open
+
+### Rubric (re-review D-001 set)
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 27/27; C005-REQ-127 is in the Implements field of C005-T-025 (`plan.md:706`), C005-AC-127.1 in its Satisfies AC (`:707`), and the forward trace names C005-T-025, C005-TC-077, C005-DOD-002 and C005-DOD-003 (`80-traceability.md:45`) |
+| plan | P2 Each task has targets, verification and done-checks | CR-60, CR-61 (C005-T-025 has every field of a lite task, `plan.md:703-729`; the gaps are the reports before its commit, the live check and the closing of D-001; also the Preconditions of C005-T-016) |
+| plan | P3 Dependency graph acyclic, milestones coherent | CR-62 (TR-11 acyclic; C005-T-025 is in milestone 2 in the table, `plan.md:77`, and in the graph, `:98`; the critical path of 14 days is unchanged) |
+| plan | P4 Every scenario maps to a planned test | pass: TR-08 75/75; C005-TC-077 (`plan.md:1121`) maps C005-TS-176 at integration level in the check environment, with both Examples rows in its test data, as step 1 of C005-T-025 writes them |
+| plan | P5 Risks cover the hotspots touched | CR-63 (the new target `src/tracking/task.ts` is covered by C005-RISK-002 through the task's Risk refs, but the risk row does not list the task) |
+| plan | P6 Rollout and rollback stated | pass: rollback step 5 (revert a `src/` task's commit with the bundle and reopen the task, `plan.md:226-230`) covers C005-T-025. A revert brings back the 0.1.0 insertion point but does not change the hash, since the field position does not change the approval hash (`10-spec/spec.md:323`), so C005-T-002 need not be repeated. C005-T-025 ships with the rest of 0.1.1 |
+| plan | P7 ADRs for every remaining technical decision | n/a: the revision adds no technical decision. C005-REQ-127 and P-01's answer to Q-d001-01 (`10-spec/questions-log.md:132`) fix the insertion point, and step 2 of C005-T-025 only implements it |
+
+### Checked, not findings (D-001)
+
+- **Hand-off order.** The list has 25 rows (`handoff.md:105-129`), one per task heading of `plan.md` (TR-07 25/25).
+  C005-T-025 is row 10, directly after C005-T-009, which is the last link of the `src/` chain and its only predecessor.
+  Rows 11 to 25 keep their task IDs and titles and are numbered without gaps. The title of row 10 equals the heading
+  (`plan.md:702`). Neither file states a task count or a row number anywhere else (I searched for "24", "25",
+  "tasks", "position" and "row"). The Definition of change done says "Every task other than C005-T-023"
+  (`handoff.md:94`), so nothing else needed renumbering.
+- **Lite reports after row 10.** C005-T-010 is `in-progress` (`plan.md:578`). The brief lists it as done: its commit
+  49f66c7 exists, but its `done` report does not. Its Completed at line already stands after the checkboxes
+  (`plan.md:612`). Its `done` report therefore puts Commit and Notes after that line under both the 0.1.0 rule and the
+  fixed rule, so D-001 does not affect it in either order. C005-T-011 and C005-T-012 come after row 10; only a report
+  made before C005-T-025's commit is affected (CR-60). All report fields written so far (C005-T-001 to C005-T-009 and
+  C005-T-013) stand after their checkboxes, and lint reports no LINT-TASK-001.
+- **Conductor rule.** The rule (`handoff.md:39-45`, `plan.md:21-41`) is unchanged and still reads correctly.
+  C005-T-025 changes neither the hash nor the stale check ("Where the lines stand does not change the approval hash",
+  `10-spec/spec.md:323`). Its reports run the working-tree CLI under stage 2 (`handoff.md:54-56`), so reports get the
+  fix from its commit on. The end of the rule at C005-T-021 step 5 is not affected.
+- **Hash guard.** The done-check "`tests/integration/chg005/C005-TS-167.test.ts` to `C005-TS-171.test.ts` pass
+  unchanged" (`plan.md:728`) confirms that step 2a of C005-IF-005 still removes report lines in their new position. The
+  Verification filter runs only C005-TS-167 of these (`plan.md:724`); the others run in `npm run check` (`:725`). The
+  filter word `tracking` matches no test file, only the helper `tests/integration/cap09/tracking-fixture.ts`. The
+  filters are combined as a union (`scripts/test.mjs:38-39`), so the command still runs.
+- **Critical path and milestones.** The chain C005-T-009 → C005-T-025 (S) → C005-T-016 takes half a day, against two
+  days for C005-T-009 → C005-T-014 (L) → C005-T-016. The stated path and its 14 days (`plan.md:164-167`) therefore
+  hold. Milestone 2 adds C005-TS-176 to its exit criterion and C005-T-025 to its tasks (`plan.md:77`).
+- **Strategy line.** Rule 2 adds C005-T-025 at the end of the one-at-a-time `src/` chain (`plan.md:43-44`). This fits
+  its Depends on and the bundle rule (`handoff.md:28-29`). The citation of `evidence/impact.md` is covered by CR-63.
+- **Insertion rule.** Step 2 of C005-T-025 says where a missing field goes: "the last `- **` bullet and the indented
+  lines that follow it, before the blank lines that end the section" (`plan.md:720`). Both Examples rows of C005-TS-176
+  can check this: the end of the section is the next heading, a task heading or "## Test mapping".
+- **Trace of C005-TC-077.** The generated backward trace lists "C004-T-001" as a task of C005-TC-077
+  (`80-traceability.md:135`), taken from the fixture name in the TC's test data. The approved plan already has the same
+  for C005-TC-050 and `C001-T-075` (`80-traceability.md:108`). This comes from how the generator reads a generated
+  file and is not a plan defect.
+- **Scope.** CR-36 … CR-41 were not re-assessed. Nothing in this re-review needs a decision by P-01.
+
+### Why no further findings (re-review D-001)
+
+- **Plan rubric, P1 and P4.** C005-REQ-127 is the only new requirement. The trace shows it implemented by C005-T-025,
+  tested by C005-TC-077 and covered by C005-DOD-002 and C005-DOD-003; no other requirement changed in this revision.
+  C005-TC-077 fills every column, with the right level, environment, runs and executor, and covers both Examples rows.
+- **P2.** C005-T-025 has Status, Milestone, Depends on, Implements, Satisfies AC, Verified by, Components, Risk refs,
+  Estimate, Intent, Targets, Preconditions, Steps, Verification and Done when. Its targets name the function, the test
+  file and the bundle. Its steps follow the test-first and bundle rules of the hand-off (`handoff.md:26-29`), and step 2
+  states the insertion point in terms the scenario checks. Apart from CR-60 and CR-61, nothing is missing.
+- **P3.** The graph stays acyclic and the critical path stays at 14 days. The new edge to C005-T-016 makes the release
+  commit wait for the fix, as it should. The only ordering gap is CR-62.
+- **P5.** The only new hotspot is `src/tracking/task.ts`. The task cites the bundle risk, and the only gap is the risk
+  row (CR-63). No further risk is needed: TS-176 and LINT-TASK-001 catch a wrong position, and the position does not
+  touch the hash.
+- **P6 and P7.** Rollback step 5 covers a revert of C005-T-025 with no hash consequence. The revision makes no new
+  technical decision.
+
+## Verification — D-001 fixes (2026-11-18)
+
+Focused verification (step 7, before the G3 re-approval) of the fixes for CR-60 … CR-63 of the section "Re-review —
+D-001 revision (2026-11-18)", and a review of the changed plan text for new problems. Diff read:
+`git diff -- .sdd/005-0-1-1-fixes/20-plan/plan.md .sdd/005-0-1-1-fixes/20-plan/handoff.md`. The status-line changes of
+the other reporting session (C005-T-012 `in-progress` and its Completed at line, `plan.md:647`, `:678`) are ignored.
+Spec read only: C005-REQ-125, C005-REQ-127, C005-TS-172, C005-TS-176 … C005-TS-179,
+`10-spec/40-domain/glossary-delta.md:25-26`, `10-spec/dod.md:17`; the spec verification is in
+`10-spec/90-critic-report.md` (CR-49). Code read only to confirm claims, at HEAD: `src/tracking/task.ts:15-21`,
+`:87-122`; `src/cli/commands.ts:572`. The uncommitted code in `src/` and `tests/` was not reviewed.
+`node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan --json`: 0 errors, 0 warnings, 0 info.
+`node plugins/architect/scripts/sdd.mjs trace 005` (no `--write`): TR-06 27/27, TR-07 25/25, TR-08 78/78, TR-11
+acyclic. I ran no stale check, gate command, `trace --write` or other writing command. New findings continue at CR-64.
+
+**Reviewed set.** C005-T-025; C005-T-011 and C005-T-012 (Preconditions); C005-T-014 and C005-T-015 (Depends on,
+Preconditions); C005-T-016 (Depends on, Preconditions); C005-T-017 (Intent, Targets, Steps, Done when);
+C005-RISK-002; C005-TC-077 … C005-TC-080; in `plan.md` Strategy rules 2 and 5, milestone 2 (the milestone of
+C005-T-025), the work-breakdown graph and the critical path; in `handoff.md` the Frontmatter fallback and the paragraph
+"Report field position until C005-T-025 is committed (defect D-001)". The frontmatter keeps `reviewed_ids: all`; this
+paragraph gives the set.
+
+### Resolution of the earlier findings (D-001)
+
+| Finding | Result | Evidence |
+|---|---|---|
+| CR-60 (minor) | resolved | C005-T-025 stays `todo` until its commit: "This task stays `todo` until its commit (step 3) on purpose, as C005-T-002 does" — `plan.md:726`; the same in `handoff.md:98-99`. C005-T-011 and C005-T-012 name the hand move in their Preconditions: "A report of this task made before C005-T-025's commit misplaces its report lines; move them by hand" — `plan.md:633`, `:664`. Step 4 now reads "a line that an earlier report misplaced stays where it is and is moved by hand" — `plan.md:731`. The live LINT-TASK-001 check is in step 4, Verification and Done when (`plan.md:731`, `:736`, `:741`). The fallback gives the position: "that is after the Done when checkboxes, before the blank line" / "that ends the section" — `handoff.md:88-89`; and no G3 approval goes ahead with a LINT-TASK-001 (`handoff.md:103-104`) |
+| CR-61 (minor) | resolved | Step 5 closes D-001 in the usage form of the CLI (`plan.md:732`; usage `'<D-id> --change <NNN> --resolution "<t>"'` — `src/cli/commands.ts:572`), with a done-check (`plan.md:742`) and a hand-off line (`handoff.md:105-107`). The Preconditions of C005-T-016 now match its Depends on: "C005-T-014, C005-T-015 and C005-T-025 done; no open defect (D-001 closed by C005-T-025 step 5)." — `plan.md:816`. The order of steps 4 and 5 is CR-64 |
+| CR-62 (minor) | resolved | "- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025" — `plan.md:747`, `:775`; the edges "C005_T_025 --> C005_T_014" and "C005_T_025 --> C005_T_015" — `plan.md:151-152`; rule 5: "They therefore depend on the" / "last task of the `src/` chain, C005-T-025, as on the text tasks." — `plan.md:54-55`. The critical path now runs through C005-T-025 (checks below) |
+| CR-63 (minor) | resolved | The Refs of C005-RISK-002 list "C005-T-009, C005-T-025, C005-T-016" — `plan.md:1165`; rule 2: "then C005-T-025" / "(defect D-001). Its target `src/tracking/task.ts` belongs to C005-COMP-007 since the D-001 revision of the spec;" / "the survey's per-component tables do not size it." — `plan.md:44-46` |
+
+### Checks named in the brief (verification)
+
+| Check | Result |
+|---|---|
+| C005-TS-179 row 2 (a line misplaced by 0.1.0 is not moved) against C005-REQ-125 and the hand-off | agree. Row 2 expects the Commit and Completed at lines that stand between Done when and the checkbox to be replaced where they stand (`10-spec/spec.md:1163`). The hand-off: "The fixed CLI replaces an existing field in place and does not move it back." (`handoff.md:95-96`), with the hand move after older reports (`:100-102`). C005-REQ-125 has P-01 move the lines before the G3 approval (`10-spec/spec.md:378`), and C005-T-017 puts that statement into the release notes (`plan.md:849`, `:854`, `:862`). C005-T-025 step 4 says the same (`plan.md:731`) |
+| C005-T-025 step 1: the rows that fail on 0.1.0 | holds. Traced against `setLiteField()` at HEAD (`src/tracking/task.ts:92-97`): every row of C005-TS-176 and rows 2 and 3 of C005-TS-177 get the line directly after `- **Done when:**` and fail; rows 1 and 4 of C005-TS-177, C005-TS-178 and the three rows of C005-TS-179 give the expected result (`plan.md:728`) |
+| Test mapping C005-TC-077 … C005-TC-080 | match: 3, 4, 1 and 3 cases (`plan.md:1135-1138`; `10-spec/spec.md:1113-1115`, `:1128-1131`, `:1142`, `:1162-1164`). C005-TC-077 states the two-space indentation and the absent report lines; C005-TC-078 and C005-TC-080 compare the whole file, as the Thens "every other line" ask; C005-TC-080 also compares the line count |
+| Critical path | holds: C005-T-001 (M) … C005-T-009 (M) → C005-T-025 (S) → C005-T-014 (L) … C005-T-023 (S) sums to 14½ days (`plan.md:169-172`). The text chain reaches C005-T-014 at day 5 (C005-T-012 starts at day 4, after C005-T-005) and the `src/` chain at day 7, so "about 2 days of slack" holds (`plan.md:174-175`). C005-T-015 (M) and C005-T-017 (S) stay off the path |
+| First report of C005-T-025, from `todo` to `done` | allowed: `todo: ["in-progress", "dropped", "done"],` — `src/tracking/task.ts:16` |
+| Hand-off paragraph on D-001 | correct for a bundle built before the commit of C005-T-025: "inserts each new report field directly after the last `- **` bullet" (`handoff.md:93-94`) matches `src/tracking/task.ts:95-97` at HEAD |
+
+### Summary (verification)
+
+| blocker | major | minor |
+|---|---|---|
+| 0 | 0 | 2 |
+
+Resolved: CR-60 … CR-63. New open findings: 2 minor (CR-64, CR-65). Neither holds the G3 re-approval.
+
+### New findings (verification)
+
+### CR-64 — C005-T-025 is reported `done` in step 4, before step 5 closes D-001, which is one of its done-checks
+- **Severity:** minor
+- **Refs:** C005-T-025, C005-T-016
+- **Evidence:** "4. Report the task `done`, its first report, with the working-tree CLI of this commit" — `20-plan/plan.md:731`; "5. The conductor, or P-01, closes D-001 with the working-tree CLI, on one line" — `20-plan/plan.md:732`; "  - [ ] D-001 is closed in `change.md` with a resolution that names this task and its commit" — `20-plan/plan.md:742`; "- After the commit of C005-T-025, the conductor or P-01 closes D-001 with the working-tree CLI, on one line:" — `20-plan/handoff.md:105`.
+- **Why it matters:** the task is reported `done` while one of its done-checks is still open, and the close passes to another role after the task shows as done. If step 5 is forgotten, the gap shows only at the Preconditions of C005-T-016 (`plan.md:816`): the situation of CR-61, one step later. The resolution text needs only the commit SHA, which exists after step 3, so nothing requires this order.
+- **Suggested fix:** swap steps 4 and 5: close D-001 right after the commit, then report the task `done` and run the lint. Or drop the D-001 done-check from C005-T-025 and keep the close only as the precondition of C005-T-016, with the hand-off line.
+- **Status:** open
+
+### CR-65 — The exit criterion of milestone 2 names C005-TS-176 but not C005-TS-177, C005-TS-178 and C005-TS-179, which C005-T-025 of the same milestone verifies
+- **Severity:** minor
+- **Refs:** C005-T-025, C005-TS-177, C005-TS-178, C005-TS-179, C005-DOD-002
+- **Evidence:** "the untagged scenarios C005-TS-111, C005-TS-114 to C005-TS-119, C005-TS-122 to C005-TS-140, C005-TS-144 to C005-TS-150, C005-TS-166, C005-TS-175, C005-TS-176 pass in `npm run check`" — `20-plan/plan.md:80`; "- **Verified by:** C005-TS-176 (C005-TC-077), C005-TS-177 (C005-TC-078), C005-TS-178 (C005-TC-079), C005-TS-179 (C005-TC-080)" — `20-plan/plan.md:714`; "C005-TS-166 to C005-TS-171, C005-TS-175 to C005-TS-179" — `10-spec/dod.md:17`.
+- **Why it matters:** the checkable exit of milestone 2 can be met without the three new scenarios, although rows 2 and 3 of C005-TS-177 are, with C005-TS-176, the cases that fail on the 0.1.0 placement (`plan.md:728`). The done-checks of C005-T-025 still run all four, so the gap is in the milestone check, not in the testing.
+- **Suggested fix:** write "C005-TS-175 to C005-TS-179" in the exit criterion of milestone 2.
+- **Status:** open
+
+### Rubric (verification set)
+
+| Rubric | Item | Result |
+|---|---|---|
+| plan | P1 Every requirement covered by a task | pass: TR-06 27/27; C005-REQ-127 → C005-T-025 (`plan.md:712`); C005-REQ-125 → C005-T-017, whose Targets, Steps and Done when name the fourth statement (`plan.md:849`, `:854`, `:862`) |
+| plan | P2 Each task has targets, verification and done-checks | CR-64 |
+| plan | P3 Dependency graph acyclic, milestones coherent | CR-65 (TR-11 acyclic; edges `plan.md:150-155`; critical path of 14½ days and slack of 2 days recomputed) |
+| plan | P4 Every scenario maps to a planned test | pass: TR-08 78/78; C005-TC-077 … C005-TC-080 match the Examples rows of C005-TS-176 … C005-TS-179 |
+| plan | P5 Risks cover the hotspots touched | pass: C005-RISK-002 lists C005-T-025 (`plan.md:1165`); misplaced report lines are handled by the hand-off |
+| plan | P6 Rollout and rollback stated | pass: rollback step 5 covers a revert of C005-T-025 with no hash consequence; the hand-off states what holds before its commit |
+| plan | P7 ADRs for every remaining technical decision | n/a: no new technical decision; the recognition rules come from the glossary delta (`10-spec/40-domain/glossary-delta.md:25-26`) |
+
+### Checked, not findings (verification)
+
+- **Tasks that can still be reported before C005-T-025's commit.** Only C005-T-010, C005-T-011 and C005-T-012: every
+  other open task depends on C005-T-025 or follows it. C005-T-010 already has its Completed at line after the
+  checkboxes (`plan.md:617`), so its `done` report adds Commit and Notes after that line under either rule. The hand-off
+  names the other two (`handoff.md:100`).
+- **Hash of the hand move.** Stage 2 runs the working-tree CLI with the 0.1.1 hash rule, which removes report-field
+  lines wherever they stand (`10-spec/spec.md:1680-1703`), so moving them leaves the hash unchanged, as
+  `handoff.md:101-102` says.
+- **Fallback position.** "Put a field that the section does not hold yet after the" / "last field of the section and
+  its continuation lines" (`handoff.md:87-88`) uses the glossary terms and matches C005-REQ-127. "That is after the Done
+  when checkboxes" holds for this plan, where Done when is the last plan field of every task section.
+- **Working-tree bundle.** The working tree already holds uncommitted changes to `setLiteField()` and a rebuilt bundle
+  (noted in the D-001 re-review of the spec report). A report made with that bundle follows neither the 0.1.0 rule nor
+  a reviewed fix. The hand-off counts from the commit of C005-T-025, which stays correct; that code is outside this
+  review.
+
+### Why no further findings (verification)
+
+- **P1 and P4.** C005-REQ-127 is implemented by C005-T-025, and C005-REQ-125 by C005-T-017, whose Intent, Targets,
+  Steps and Done when now name the fourth statement. TR-06 27/27 and TR-08 78/78; the four new TCs fill every column
+  with the right level, environment, runs and executor.
+- **P2.** C005-T-025 has every field of a lite task. Its targets name the function, four test files and the bundle, and
+  its steps follow the test-first and bundle rules of the hand-off (`handoff.md:26-29`). The added Preconditions
+  sentences of C005-T-011 and C005-T-012 are reporting instructions placed where the implementer reads before starting,
+  which suits them. The only gap is CR-64.
+- **P3.** The graph stays acyclic, and the new edges make the floor runs and the release commit wait for C005-T-025.
+  The critical path and the slack hold. The only gap is CR-65.
+- **P5, P6 and P7.** C005-RISK-002 lists C005-T-025. Rollback step 5 still covers a revert of C005-T-025: the placement
+  does not touch the hash, and the hand-off covers misplaced lines. The revision makes no new technical decision.

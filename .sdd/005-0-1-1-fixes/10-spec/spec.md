@@ -101,9 +101,10 @@ the tracked bundle (E-4).
 - **So that** I can archive a change without marking the archive task done before the archive runs, no change of either profile is archived with open tasks, and reporting lite tasks does not make an approved plan stale
 - **Value / outcome:** goal G-4; the task precondition of C001-REQ-913 holds for both profiles
 - **Priority:** Must · **Size hint:** M · **Capability:** C005-CAP-01
-- **Context & notes:** Q-scope-01 added the item; Q-scope-03 included lite tasks. Today the archive task itself must be done before `sdd archive` runs (E-37, E-38), so C001-T-075 was set done before its archive (E-40). No field or rule identifies an archive task (E-39); Q-archive-01 chose the marker. `task set` and the status block read lite task sections; the precondition does not (E-42, E-43). `commands/archive.md` names the precondition (E-44). Requirement touched: C001-REQ-913 (E-41); tests reaching it: E-45. `task set` writes the report fields of a lite task into the body of `plan.md`, which the approval hash covers, so with C005-REQ-113 every lite archive would need a G3 re-approval; Q-litehash-01 chose to leave those fields out of the hash (critic CR-10). Requirement touched: C001-REQ-806. Six requirements, all for goal G-4, each testable on its own.
-- **Requirements:** C005-REQ-112, C005-REQ-113, C005-REQ-114, C005-REQ-115, C005-REQ-121, C005-REQ-122
-- **Traces to:** ideation §2, §4.1 G-4, §8; Q-scope-01, Q-scope-03, Q-archive-01, Q-litehash-01
+- **Context & notes:** Q-scope-01 added the item; Q-scope-03 included lite tasks. Today the archive task itself must be done before `sdd archive` runs (E-37, E-38), so C001-T-075 was set done before its archive (E-40). No field or rule identifies an archive task (E-39); Q-archive-01 chose the marker. `task set` and the status block read lite task sections; the precondition does not (E-42, E-43). `commands/archive.md` names the precondition (E-44). Requirement touched: C001-REQ-913 (E-41); tests reaching it: E-45. `task set` writes the report fields of a lite task into the body of `plan.md`, which the approval hash covers, so with C005-REQ-113 every lite archive would need a G3 re-approval; Q-litehash-01 chose to leave those fields out of the hash (critic CR-10). Requirement touched: C001-REQ-806. Defect D-001, found when C005-T-001 was reported: `task set` put the missing report fields of a lite task between its Done when field and the checkboxes of that field (E-99); Q-d001-01 chose to fix it in this change (C005-REQ-127). Seven requirements, all for goal G-4, each testable on its own.
+- **Out of scope:** repair by the sdd CLI of task sections in which the sdd CLI 0.1.0 already wrote report-field lines between a field line and that field's indented lines, such as the checkboxes of Done when; P-01 moves those lines by hand, as the 0.1.1 release notes state (C005-REQ-125). Q-placement-01 ("Hand move in notes (Recommended)", `questions-log.md` of this phase, round 7) chose this hand move; critic CR-46.
+- **Requirements:** C005-REQ-112, C005-REQ-113, C005-REQ-114, C005-REQ-115, C005-REQ-121, C005-REQ-122, C005-REQ-127
+- **Traces to:** ideation §2, §4.1 G-4, §8; Q-scope-01, Q-scope-03, Q-archive-01, Q-litehash-01, Q-d001-01, Q-placement-01; D-001
 
 ### C005-US-105 — Read-only commands find archived changes
 - **As a** P-01 spec owner and maintainer
@@ -311,10 +312,20 @@ Delta base: the living specs in `../../_living/` at commit `fef82eb`. System nam
 - **Delta:** ADDED
 - **Pattern:** event-driven
 - **Statement:** WHEN `sdd stale check` runs on a lite change whose `20-plan` phase is `approved` with an approval hash computed with the report-field lines of its task sections included, as the sdd CLI 0.1.0 computes it, THE sdd CLI SHALL set that `20-plan` phase `stale`, with no rule that accepts the hash of the 0.1.0 normalisation.
-- **Rationale:** Q-litehash-02 ("Re-approve G3 once", `questions-log.md` of this phase, round 4): no compatibility code. P-01 revises the plan and re-approves G3 once with the sdd CLI 0.1.1, after which the stored hash follows C005-REQ-121; the 0.1.1 release notes tell P-01 of that one re-approval and of the sdd CLI it needs (C005-REQ-125). The approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1: the sdd CLI 0.1.0 computes the hash with the report-field lines included, so it sets the phase `stale` again whenever the plan holds such a line (critic CR-25). Under C005-REQ-121 the recomputed hash of such a plan leaves out the report-field lines that its stored hash includes. The two hashes therefore differ even when nothing changed since the approval, and C001-REQ-810 sets the phase `stale`. A stored approval records no version of the hash rule (E-96). Full changes and the other phases are not affected (C005-REQ-121). At `fef82eb` no lite change of this repository has an approved `20-plan` (registry: CHG-003, CHG-004 and CHG-005 at `not-started`); CHG-005 becomes such a change if its G3 approval is made with the sdd CLI 0.1.0.
+- **Rationale:** Q-litehash-02 ("Re-approve G3 once", `questions-log.md` of this phase, round 4): no compatibility code. P-01 revises the plan and re-approves G3 once with the sdd CLI 0.1.1, after which the stored hash follows C005-REQ-121; the 0.1.1 release notes tell P-01 of that one re-approval and of the sdd CLI it needs (C005-REQ-125). If the sdd CLI 0.1.0 reported tasks of the plan, a task section may hold report-field lines between `- **Done when:**` and its checkboxes (E-99; D-001), which C005-REQ-127 does not move; LINT-TASK-001 then reads Done when as empty, and that G3 approval refuses with ERR-CLI-010 (`src/gate/gate.ts:138-139`) until P-01 moves the lines by hand, as the release notes also state (C005-REQ-125; Q-placement-01, "Hand move in notes (Recommended)", round 7; critic CR-46). The approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1: the sdd CLI 0.1.0 computes the hash with the report-field lines included, so it sets the phase `stale` again whenever the plan holds such a line (critic CR-25). Under C005-REQ-121 the recomputed hash of such a plan leaves out the report-field lines that its stored hash includes. The two hashes therefore differ even when nothing changed since the approval, and C001-REQ-810 sets the phase `stale`. A stored approval records no version of the hash rule (E-96). Full changes and the other phases are not affected (C005-REQ-121). At `fef82eb` no lite change of this repository has an approved `20-plan` (registry: CHG-003, CHG-004 and CHG-005 at `not-started`); CHG-005 becomes such a change if its G3 approval is made with the sdd CLI 0.1.0.
 - **Stories:** C005-US-104
 - **Priority:** Must
 - **Acceptance:** C005-AC-122.1
+
+### C005-REQ-127 — Place of a report-field line in a lite task section
+- **Delta:** ADDED
+- **Pattern:** event-driven
+- **Statement:** WHEN `sdd task set` writes a report field into a lite task section of `20-plan/plan.md`, THE sdd CLI SHALL write the field's line in place of the section's first field line of that field, or, when the section holds no field line of that field, directly after the section's last field line and its continuation lines, or, when the section holds no field line, directly after the section's heading line.
+- **Rationale:** defect D-001 of this change, found when C005-T-001 was reported on 2026-11-17; P-01's answer to Q-d001-01 ("Fix in CHG-005 (Recommended)": one requirement and one task, `questions-log.md` of this phase, round 6). Field line and continuation line: glossary delta; the continuation lines of a field line are the lines that LINT-TASK-001 reads as that field's value (`src/lint/spec.ts:180`), so a blank line or an unindented line ends them (critic CR-42). The sdd CLI 0.1.0 replaces the first line of the section that begins with `- **<name>:**` and otherwise inserts the field after the last line of the section that begins with `- **` (E-99), or after the heading line when there is none (`src/tracking/task.ts:95` at `9eae3b2`). In a task section whose last field is `- **Done when:**` with its checkbox lines, the Commit, Notes and Completed at lines therefore land between that field and its checkboxes. The checkboxes then belong to Completed at, LINT-TASK-001 reports an empty Done when, and `sdd gate approve` refuses a lite `20-plan` until the lines are moved by hand. Only the place of a missing field changes: it now follows the continuation lines of the last field line. The replacement in place and the place after the heading line are 0.1.0 behaviour, stated here because no living requirement places a field line of a lite task: C001-REQ-901 writes the frontmatter of a task file only (`../../_living/CAP-tracking-archive.md:58`), and C001-REQ-618 names the fields of a lite task section, not where `sdd task set` writes them (`../../_living/CAP-planning.md:405`; critic CR-44). The statement has one outcome, the place of the written line, and its three cases exclude each other. Lines that the sdd CLI 0.1.0 already wrote keep their place, since a field that the section holds is replaced in place; P-01 moves them by hand, as P-01's answer to Q-placement-01 decided ("Hand move in notes (Recommended)", `questions-log.md` of this phase, round 7; C005-REQ-125; C005-US-104, Out of scope). Where the lines stand does not change the approval hash: step 2a of C005-IF-005 removes them wherever they are in the task section.
+- **Stories:** C005-US-104
+- **Priority:** Must
+- **Acceptance:** C005-AC-127.1
+- **Open items:** the values that `sdd task set` writes into the report-field lines (E-99) stay as at 0.1.0; no living requirement states them for a lite task section (C001-REQ-901 covers task-file frontmatter), and this requirement states only where the lines go.
 
 ### C005-REQ-116 — Read-only subcommands on an archived change
 - **Delta:** ADDED
@@ -364,8 +375,8 @@ Delta base: the living specs in `../../_living/` at commit `fef82eb`. System nam
 ### C005-REQ-125 — Release notes on the one G3 re-approval of a lite plan
 - **Delta:** ADDED
 - **Pattern:** ubiquitous
-- **Statement:** THE 0.1.1 release notes SHALL state, for a lite change whose `20-plan` phase was approved with the sdd CLI 0.1.0, that the first `sdd stale check` of the sdd CLI 0.1.1 sets that phase `stale`, that one revision of the phase and one G3 approval with the sdd CLI 0.1.1 make it `approved` again, and that the approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1.
-- **Rationale:** Q-litehash-02 ("Re-approve G3 once", `questions-log.md` of this phase, round 4): no compatibility code, so P-01 learns of the one re-approval from the release notes. The stale result: C005-REQ-122; the hash rule after the re-approval: C005-REQ-121. The two CLI versions give a lite plan different hashes in both directions (critic CR-25): a G3 approval made with the sdd CLI 0.1.0 is undone by the first stale check of the sdd CLI 0.1.1, and an approval made with the sdd CLI 0.1.1 is undone by a later stale check of the sdd CLI 0.1.0 (C005-REQ-122), so "one re-approval" holds only with the sdd CLI 0.1.1 at the approval and at every later stale check. The three parts are one outcome, the one-time procedure, checked together by one review (C005-AC-125.1). Separate from C005-REQ-120, since the procedure and the `SDD.md` sentence can each be present or missing on its own.
+- **Statement:** THE 0.1.1 release notes SHALL state, for a lite change whose `20-plan` phase was approved with the sdd CLI 0.1.0, that the first `sdd stale check` of the sdd CLI 0.1.1 sets that phase `stale`, that one revision of the phase and one G3 approval with the sdd CLI 0.1.1 make it `approved` again, that before that G3 approval P-01 moves each report-field line that stands between a field line, such as `- **Done when:**`, and that field's indented lines, such as its checkbox lines, to directly after those indented lines, and that the approval holds only while every later `sdd stale check` of the change runs the sdd CLI 0.1.1.
+- **Rationale:** Q-litehash-02 ("Re-approve G3 once", `questions-log.md` of this phase, round 4): no compatibility code, so P-01 learns of the one re-approval from the release notes. The stale result: C005-REQ-122; the hash rule after the re-approval: C005-REQ-121. The two CLI versions give a lite plan different hashes in both directions (critic CR-25): a G3 approval made with the sdd CLI 0.1.0 is undone by the first stale check of the sdd CLI 0.1.1, and an approval made with the sdd CLI 0.1.1 is undone by a later stale check of the sdd CLI 0.1.0 (C005-REQ-122), so "one re-approval" holds only with the sdd CLI 0.1.1 at the approval and at every later stale check. The hand move: if the sdd CLI 0.1.0 reported tasks of such a plan, it may have written report-field lines between a field and its indented lines (E-99; D-001). C005-REQ-127 changes only where a missing field goes and replaces a field that the section holds in place, so those lines stay where they are; LINT-TASK-001 then reads the field, such as Done when, as empty, and the G3 approval refuses with ERR-CLI-010 until they are moved (C005-REQ-122; critic CR-46). The sdd CLI repairs no such section, and the release notes tell P-01 to move the lines by hand: P-01's answer to Q-placement-01 ("Hand move in notes (Recommended)", `questions-log.md` of this phase, round 7; C005-US-104, Out of scope). The fix of D-001 for later reports is C005-REQ-127 (Q-d001-01, round 6). The four parts are one outcome, the one-time procedure, checked together by one review (C005-AC-125.1). Separate from C005-REQ-120, since the procedure and the `SDD.md` sentence can each be present or missing on its own.
 - **Stories:** C005-US-106
 - **Priority:** Must
 - **Acceptance:** C005-AC-125.1
@@ -1075,6 +1086,84 @@ Scenario: C005-TS-171 — after one re-approval, task reports leave the plan app
   And "change.md" gives "20-plan" the status "approved"
 ```
 
+#### C005-AC-127.1 — A report-field line of a lite task replaces that field's line, or directly follows the last field line and its continuation lines, or directly follows the heading line
+```gherkin
+Scenario Outline: C005-TS-176 — missing report fields written directly after the two indented checkbox lines of Done when
+  Given an active lite change 004 whose "20-plan/plan.md" holds the task section "C004-T-001" that begins with exactly these lines, in this order:
+    """
+    ### C004-T-001 — CSV export
+    - **Status:** in-progress
+    - **Targets:**
+      - add src/export/csv.ts
+    - **Verification:**
+      - npm test
+    - **Done when:**
+      - [ ] CSV header written
+      - [ ] CSV rows written
+    """
+  And <next>
+  When "sdd task set C004-T-001 --status done --commit a1b2c3d --note "CSV export done"" runs
+  Then the lines "  - [ ] CSV header written" and "  - [ ] CSV rows written" directly follow the line "- **Done when:**", in this order
+  And the lines "- **Commit:** a1b2c3d", "- **Notes:** CSV export done" and "- **Completed at:** " followed by today's date directly follow the line "  - [ ] CSV rows written", in this order
+  And the line directly after the line "- **Completed at:** " followed by today's date is <after>
+  And the line "- **Status:** done" stands where "- **Status:** in-progress" stood
+  And "sdd lint 004" reports no LINT-TASK-001 finding for "C004-T-001"
+  Examples:
+    | next                                                                                                                                                        | after                                                                     |
+    | the section ends with the line "  - [ ] CSV rows written", and the line directly after the section is the heading line "### C004-T-002 — CSV download"     | the heading line "### C004-T-002 — CSV download"                          |
+    | the section ends with a blank line after "  - [ ] CSV rows written", and the line directly after the section is the heading line "## Test mapping"         | the blank line that ends the section                                      |
+    | the section ends with the line "  - [ ] CSV rows written", which is the last line of the file, ended by a line break                                       | none: the line "- **Completed at:** " with today's date ends the file, ended by a line break |
+```
+
+```gherkin
+Scenario Outline: C005-TS-177 — place of a missing report field after the last field line, by the form of the lines that follow it
+  Given an active lite change 004 whose "20-plan/plan.md" holds the task section "C004-T-001" with exactly these lines, in this order: "### C004-T-001 — CSV export", "- **Status:** todo", "- **Done when:**", then <tail>, where "" stands for a blank line
+  And the line directly after the section is the heading line "## Test mapping"
+  When "sdd task set C004-T-001 --status in-progress" runs
+  Then the line "- **Status:** in-progress" stands where "- **Status:** todo" stood
+  And the line "- **Completed at:** —" stands directly after the line <before> and directly before <after>
+  And every other line of the file keeps its content and its order
+  Examples:
+    | tail                                                                 | before                           | after                              |
+    | "  - [ ] CSV header written", "- **Archive task:** true", ""         | "- **Archive task:** true"       | a blank line                       |
+    | "  - [ ] CSV header written", "", "  - [ ] CSV rows written", ""     | "  - [ ] CSV header written"     | a blank line                       |
+    | "  - [ ] CSV header written", "- [ ] CSV rows written", ""           | "  - [ ] CSV header written"     | the line "- [ ] CSV rows written"  |
+    | "- [ ] CSV header written", ""                                       | "- **Done when:**"               | the line "- [ ] CSV header written" |
+```
+
+Readings of the insertion point listed by critic CR-42 (`90-critic-report.md`) that each row of C005-TS-177 rules out:
+row 1 (a last field with no continuation line) rules out "every line up to the next field or the end of the section"
+(c), which also takes the trailing blank line; row 2 (a blank line, then an indented line) rules out the Markdown list
+item (b), reading (c) and the 0.1.0 place (directly after `- **Done when:**`); row 3 (an unindented `- [ ]` line after
+an indented one) rules out reading (c) and the 0.1.0 place; row 4 (an unindented `- [ ]` line directly after the field
+line) rules out reading (c). Rows 1 and 4 keep the 0.1.0 result.
+
+```gherkin
+Scenario: C005-TS-178 — report fields of a task section with no field line written directly after its heading line
+  Given an active lite change 004 whose "20-plan/plan.md" holds the task section "C004-T-001" with exactly these lines, in this order: "### C004-T-001 — CSV export", "Write the CSV export.", ""
+  And the line directly after the section is the heading line "## Test mapping"
+  When "sdd task set C004-T-001 --status in-progress" runs
+  Then the line "- **Status:** in-progress" directly follows the line "### C004-T-001 — CSV export"
+  And the line "- **Completed at:** —" directly follows the line "- **Status:** in-progress"
+  And the line "Write the CSV export." directly follows the line "- **Completed at:** —"
+```
+
+```gherkin
+Scenario Outline: C005-TS-179 — report field that the section holds replaced where its first field line stands
+  Given an active lite change 004 whose "20-plan/plan.md" holds the task section "C004-T-001" with exactly these lines, in this order: "### C004-T-001 — CSV export", "- **Status:** in-progress", "- **Done when:**", then <lines>, where "" stands for a blank line
+  And the line directly after the section is the heading line "## Test mapping"
+  When "sdd task set C004-T-001 --status done --commit a1b2c3d" runs
+  Then the line "- **Status:** done" stands where "- **Status:** in-progress" stood
+  And the line "- **Commit:** a1b2c3d" stands where the line "- **Commit:** 0a0a0a0" stood
+  And the line "- **Completed at:** " followed by today's date stands where the line "- **Completed at:** —" stood
+  And the file has as many lines as before, and every other line keeps its content and its place
+  Examples:
+    | lines                                                                                                 |
+    | "  - [ ] CSV header written", "- **Commit:** 0a0a0a0", "- **Completed at:** —", ""                    |
+    | "- **Commit:** 0a0a0a0", "- **Completed at:** —", "  - [ ] CSV header written", ""                    |
+    | "- **Commit:** 0a0a0a0", "  - [ ] CSV header written", "- **Commit:** 0b0b0b0", "- **Completed at:** —", "" |
+```
+
 #### C005-AC-116.1 — Read-only subcommands run on an archived change
 ```gherkin
 Scenario Outline: C005-TS-146 — read-only subcommand on an archived change
@@ -1183,14 +1272,15 @@ Scenario: C005-TS-154 — SDD.md sentence in the 0.1.1 release notes
   And they give, as its replacement, the text that "sdd init" 0.1.1 writes in the section "If you are implementing a change" in C005-TS-126
 ```
 
-#### C005-AC-125.1 — Release notes state the one G3 re-approval of a lite plan approved with the sdd CLI 0.1.0
+#### C005-AC-125.1 — Release notes state the one G3 re-approval of a lite plan approved with the sdd CLI 0.1.0 and the hand move before it
 ```gherkin
 @review
-Scenario: C005-TS-172 — G3 re-approval stated in the 0.1.1 release notes
+Scenario: C005-TS-172 — G3 re-approval and hand move stated in the 0.1.1 release notes
   Given the 0.1.1 release notes
   When P-01 reviews them
   Then they state that the first "sdd stale check" of the sdd CLI 0.1.1 reports stale the "20-plan" phase of a lite change approved with the sdd CLI 0.1.0
   And they state that one revision of that phase and one G3 approval with the sdd CLI 0.1.1 make it approved again
+  And they state that, before that G3 approval, P-01 moves each report-field line that stands between a field line, such as "- **Done when:**", and that field's indented lines, such as its checkbox lines, to directly after those indented lines
   And they state that this approval holds only while every later "sdd stale check" of the change runs the sdd CLI 0.1.1
 ```
 
@@ -1216,6 +1306,7 @@ Scenario: C005-TS-172 — G3 re-approval stated in the 0.1.1 release notes
 | C005-REQ-115 | TS-145 | TS-144 | TS-145 | TS-144 | n/a | n/a | n/a: the misuse this rule guards against, a second marked task, is its error case TS-144 |
 | C005-REQ-121 | TS-167 | TS-169 | TS-168 | TS-168 (the rows "different": a plan edit outside the report fields still changes the hash) | n/a | n/a | n/a: text written into a report field stays outside the hash, as text in the report key of a task file does (C001-REQ-806); the steps, title and marker of a task stay inside (TS-168) |
 | C005-REQ-122 | TS-170 | TS-171 | TS-170 | n/a: the rule reports a state and refuses nothing; the refusal that follows from a stale 20-plan is that of C005-REQ-112 (G3 not approved) | n/a | n/a: a repeated stale check compares the same stored hash and sets the same status (C001-REQ-810) | n/a: the stored hash is written only by "sdd gate approve" (C001-CON-14), not by a user input |
+| C005-REQ-127 | TS-176 (row 1) | TS-176 (row 2: a blank line ends the section, before another section); TS-178 (no field line: directly after the heading line) | TS-177 (row 1: last field with no continuation line; row 2: a blank line, then an indented line; rows 3, 4: an unindented "- [ ]" line); TS-176 (row 3: the section ends the file); TS-179 (row 2: a field line that stands before the checkbox lines is replaced there, not moved) | n/a: the rule places a line and refuses nothing; a malformed status is refused by C001-REQ-902, unchanged | n/a | TS-179 (a field that the section holds is replaced in place of its first field line, C005-REQ-127, so a repeated "sdd task set" adds no line; row 3: two field lines of one field) | n/a: the field values are P-01's own options of "sdd task set" |
 | C005-REQ-116 | TS-146 | TS-147 | n/a: a change number matches an archived folder or no folder; the no-folder case is TS-148 | TS-148 | n/a | n/a | n/a: the change number is the only input, and the resolver refuses malformed numbers as today (C001-IF-01) |
 | C005-REQ-117 | TS-149 | TS-150 | TS-147, TS-149 (the same subcommand refused only in its writing form: "archive 001" without "--dry-run", "trace 001 --write") | TS-149, TS-150, TS-166 | n/a | TS-149 | TS-150 (an ID of the archived change in place of its number); a writing subcommand that names no change is outside the requirement (C005-US-105, Out of scope) |
 | C005-REQ-118 | TS-152 | n/a: one release with a fixed package set | n/a: one version value, 0.1.1 | n/a: a refused Copilot release check is C002-REQ-617, unchanged | n/a | n/a | n/a: release by P-01 only |
@@ -1608,7 +1699,8 @@ line of every task section, each line with its line terminator.
   `* **Status:**`, `- Status:` or an indented bullet, is kept, so a hand edit in an unexpected form makes the phase
   stale instead of hiding a content change (fail safe).
 - Lines are removed, not blanked, so the result does not depend on whether `sdd task set` replaced a field or inserted
-  it after the last bullet of the section (E-99).
+  it, nor on where in the section it inserted it: at the place C005-REQ-127 gives, or, with the sdd CLI 0.1.0, after
+  the last bullet of the section (E-99).
 
 The task section as approved at G3 and the same section after `sdd task set C004-T-002 --status done --commit 3f2a1c9`
 normalise to the same text, the third block:
@@ -1757,15 +1849,15 @@ Every entry reuses or modifies a component of CHG-001 or CHG-002; "as before" re
 - **Evidence:** E-57 (`src/lint/engine.ts:112,123-124` › `lintWorkspace()`, layer: grep: a named change is selected among non-archived folders only); E-66 (`src/lint/engine.ts:112,122-126` › `lintWorkspace()`, layer: grep, with two CLI runs); E-77 (`src/lint/rules/hand-001.ts:26-27` › `hand001`, layer: grep: no version check); E-88 (`src/lint/rules/task-004.ts:10,49-61` › `LITE_FIELDS`, layer: grep)
 
 #### C005-COMP-007 — Tracking and archive module
-- **Name:** `src/archive/plan.ts` (`archiveBlockers()`, `planArchive()`)
+- **Name:** `src/archive/plan.ts` (`archiveBlockers()`, `planArchive()`); `src/tracking/task.ts` (`setLiteField()`)
 - **Status:** modified
 - **Modifies:** C001-COMP-06
-- **Responsibility:** as before, plus: take the tasks of the archive preconditions per profile (task files; lite task sections of `20-plan/plan.md`) and skip the task with the archive-task marker (C005-IF-001, Archive preconditions)
-- **Realizes:** C005-REQ-112, C005-REQ-113
+- **Responsibility:** as before, plus: take the tasks of the archive preconditions per profile (task files; lite task sections of `20-plan/plan.md`) and skip the task with the archive-task marker (C005-IF-001, Archive preconditions); write a report field that a lite task section does not hold yet at the place C005-REQ-127 gives
+- **Realizes:** C005-REQ-112, C005-REQ-113, C005-REQ-127
 - **Interfaces:** C005-IF-001, C005-IF-002
 - **Depends on:** C005-COMP-005, C005-COMP-006
 - **Owned data:** `_living/*.md` and `_archive/`, as before
-- **Evidence:** E-37 (`src/archive/plan.ts:94` › `archiveBlockers()`, layer: serena: every `50-tasks/` file counted, the archive task included); E-94 (`src/archive/plan.ts:94-108` › `archiveBlockers()`, layer: grep: lite task sections not read); E-42 (`src/tracking/task.ts:48-72` › `findTask()`, layer: serena: how a lite task section is read); E-65 (`src/cli/commands.ts:462-473` › `archiveCmd()`, layer: grep: the archive plan refuses an archived folder with ERR-CLI-014)
+- **Evidence:** E-37 (`src/archive/plan.ts:94` › `archiveBlockers()`, layer: serena: every `50-tasks/` file counted, the archive task included); E-94 (`src/archive/plan.ts:94-108` › `archiveBlockers()`, layer: grep: lite task sections not read); E-42 (`src/tracking/task.ts:48-72` › `findTask()`, layer: serena: how a lite task section is read); E-65 (`src/cli/commands.ts:462-473` › `archiveCmd()`, layer: grep: the archive plan refuses an archived folder with ERR-CLI-014); E-99 (`src/tracking/task.ts:86-100,117-122` › `setLiteField()`, `setTask()`, layer: grep: a lite report field that the section does not hold is inserted after the last `- **` line of the section)
 
 #### C005-COMP-008 — Templates
 - **Name:** `plugins/architect/templates/full/20-plan/handoff.md`, `plugins/architect/templates/lite/20-plan/handoff.md`, `plugins/architect/templates/README.md`
@@ -1850,7 +1942,7 @@ runtime flow; C005-COMP-013 realizes it.
 | Entity | Written by | Read by | Store | Change |
 |---|---|---|---|---|
 | Archive-task marker | C005-COMP-002 (the planner) | C005-COMP-007, C005-COMP-006 | task file frontmatter, or a task section of `20-plan/plan.md` | new optional key and field (C005-IF-002); the lite field stays inside the approval hash |
-| Report fields of a lite task section (Status, Commit, Notes, Completed at) | `sdd task set` (C005-COMP-007, tracking part, code unchanged); P-02 by hand through the fallback | C005-COMP-007 (archive preconditions), C005-COMP-005 (status block) | task sections of a lite `20-plan/plan.md` | now outside the approval hash of `20-plan` (C005-IF-005 §2) |
+| Report fields of a lite task section (Status, Commit, Notes, Completed at) | `sdd task set` (C005-COMP-007, tracking part; placement of a missing field changed by C005-REQ-127); P-02 by hand through the fallback | C005-COMP-007 (archive preconditions), C005-COMP-005 (status block) | task sections of a lite `20-plan/plan.md` | now outside the approval hash of `20-plan` (C005-IF-005 §2) |
 | Approval hash of a lite `20-plan` | C005-COMP-009 (`gate approve`) | C005-COMP-009 (`stale check`, `gate show`, `hash`) | `approved_hash` in `change.md`, `hash` in `approvals.json` | computed without the report-field lines; a hash stored by sdd 0.1.0 is not converted, the phase is approved once more (C005-IF-005 §4) |
 | Pre-phase round | C005-COMP-001 | P-01, the critic | `questions-log.md` of `10-spec/` or `20-plan/` | new placement and fixed line (C005-IF-004) |
 | Install line | C005-COMP-005 (lite scaffold), C005-COMP-002 (the planner) | P-02, C005-COMP-006 | `20-plan/handoff.md` | new line before bare commands (C005-IF-003 §3) |
@@ -2173,6 +2265,7 @@ sequenceDiagram
 | G-3, D-035 | the hand-off templates, the `SDD.md` text and the README give plugin-path forms (E-72, E-79, E-81); the npm build rewrites the template lines (E-75) | the install line with the version, then bare `sdd`, in every place (C005-IF-003); the CLI fills `{{VERSION}}`, the planner uses `sdd --version`, LINT-HAND-003 checks open plans; the npm rewrite finds nothing to change | C005-COMP-002, C005-COMP-005, C005-COMP-006, C005-COMP-008, C005-COMP-010, C005-COMP-011 |
 | G-4, archive | every `50-tasks/` file counts, the archive task included; lite tasks are not read (E-37, E-94) | the marked task is skipped and lite task sections count (C005-IF-001, C005-IF-002); LINT-TASK-005 keeps the marker on one task | C005-COMP-002, C005-COMP-003, C005-COMP-006, C005-COMP-007 |
 | G-4, lite plan hash | the approval hash removes only frontmatter (E-97), while `sdd task set` writes the report fields into the body of a lite `plan.md` (E-99); the first lite task report after G3 makes `20-plan` stale at the next `sdd stale check` (E-98), and `sdd archive` then refuses (E-100) | the report-field lines of lite task sections are left out of the hash (C005-IF-005); every other line and file hashes as before; a lite plan approved with sdd 0.1.0 goes stale once and is approved again, with no compatibility code | C005-COMP-009 |
+| G-4, D-001 | `sdd task set` inserts a report field that a lite task section does not hold yet after the last `- **` line of the section, which in the lite template puts it between Done when and its checkboxes (E-99) | the field goes where C005-REQ-127 places it; the section bounds and the replacement of a field that the section already holds stay as at 0.1.0 (E-99) | C005-COMP-007 |
 | G-5, archived lookup | every lookup by number searches `.sdd/NNN-*` only and gives ERR-CLI-002 (E-46, E-48, E-57) | read-only invocations find the folder under `.sdd/_archive/`; writing invocations refuse with ERR-CLI-014 (C005-IF-001) | C005-COMP-004, C005-COMP-006, C005-COMP-009 |
 | G-6, release | version 0.1.0 (E-5) | 0.1.1 in `plugin.json`; packages, tarball, npm publish and release notes (C005-REQ-118, C005-REQ-119, C005-REQ-120, C005-REQ-125) | C005-COMP-010, C005-COMP-011, C005-COMP-012, C005-COMP-013 |
 

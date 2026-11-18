@@ -84,8 +84,28 @@ sdd defect add --ref <ID> --summary "<what is wrong>"
 **Frontmatter fallback** (when no CLI can be run): a lite task has no task file and no frontmatter. Edit the
 report fields of the task section in `.sdd/005-0-1-1-fixes/20-plan/plan.md` in the exact form that `sdd task set`
 writes: `- **Status:** <status>`, `- **Commit:** <sha>`, `- **Completed at:** <YYYY-MM-DD>` and, for a note or a
-blocked reason, `- **Notes:** <text>`, each on one line. From the commit of C005-T-001, lines in that form stay
-outside the approval hash (C005-IF-005); a line in another form, a continuation line included, makes `20-plan` stale.
+blocked reason, `- **Notes:** <text>`, each on one line. Put a field that the section does not hold yet after the
+last field of the section and its continuation lines, that is after the Done when checkboxes, before the blank line
+that ends the section; replace a field that the section holds in place. From the commit of C005-T-001, lines in that
+form stay outside the approval hash (C005-IF-005); a line in another form, a continuation line included, makes
+`20-plan` stale.
+
+**Report field position until C005-T-025 is committed (defect D-001).** A `task set` run with a bundle built before
+the commit of C005-T-025 inserts each new report field directly after the last `- **` bullet, so a Completed at,
+Commit or Notes line lands between `- **Done when:**` and its checkboxes. The fixed CLI replaces an existing field in
+place and does not move it back. Therefore:
+
+- C005-T-025 stays `todo` until its commit; its first report is the `done` report after that commit and after D-001
+  is closed (`plan.md`, C005-T-025 step 6).
+- After any report made with an older bundle (C005-T-011 and C005-T-012 among them, if reported before that commit),
+  move the misplaced lines by hand to the position the fallback above gives; 0.1.1 has no repair code for them
+  (Q-placement-01). Only the position changes, so the approval hash does not.
+- Before any G3 approval of `20-plan`, the re-approval that closes the D-001 revision included,
+  `node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan` reports no LINT-TASK-001.
+- After the commit of C005-T-025 and its passing tests, the conductor or P-01 closes D-001 with the working-tree CLI,
+  on one line:
+  `node plugins/architect/scripts/sdd.mjs defect close D-001 --change 005 --resolution "Fixed by C005-T-025, commit <sha>"`
+  (`plan.md`, C005-T-025 step 5). C005-T-016 does not start while D-001 is open.
 
 The archive task C005-T-023 is set `in-progress` before `sdd archive` runs and keeps that status in the archive
 (C005-REQ-112, Open items).
@@ -111,18 +131,19 @@ The archive task C005-T-023 is set `in-progress` before `sdd archive` runs and k
 | 7 | C005-T-007 | Planning skill: versioned install line and archive-task marker | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
 | 8 | C005-T-008 | Archive preconditions: archive-task marker and lite task sections | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
 | 9 | C005-T-009 | CLI front-end: archived lookup for read-only and writing invocations | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 10 | C005-T-010 | New-change procedure in `phase-ideation`, `commands/new.md` and the conductor | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 11 | C005-T-011 | Eval cases of the kind round | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 12 | C005-T-012 | Pre-phase round: interview-protocol §5 and the conductor rule | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 13 | C005-T-013 | Plugin README step 6 and the plugin-path scan | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 14 | C005-T-014 | Eval floor on Claude Code: create-change scenarios | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 15 | C005-T-015 | Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 16 | C005-T-016 | Version 0.1.1, release build and checks | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 17 | C005-T-017 | Release notes 0.1.1 and release procedure | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 18 | C005-T-024 | Copilot CLI injection suite on the 0.1.1 package | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 19 | C005-T-018 | Manual Copilot VS Code runs and the Copilot release checklist | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 20 | C005-T-019 | Publish `architect-sdd` 0.1.1 on npm | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 21 | C005-T-020 | C005-NFR-001 check in three shells | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 22 | C005-T-021 | Release 0.1.1 on both hosts | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 23 | C005-T-022 | DoD evidence and close preconditions | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
-| 24 | C005-T-023 | Archive CHG-005 into living specs | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 10 | C005-T-025 | Lite report fields written after the task's field list (D-001) | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 11 | C005-T-010 | New-change procedure in `phase-ideation`, `commands/new.md` and the conductor | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 12 | C005-T-011 | Eval cases of the kind round | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 13 | C005-T-012 | Pre-phase round: interview-protocol §5 and the conductor rule | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 14 | C005-T-013 | Plugin README step 6 and the plugin-path scan | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 15 | C005-T-014 | Eval floor on Claude Code: create-change scenarios | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 16 | C005-T-015 | Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 17 | C005-T-016 | Version 0.1.1, release build and checks | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 18 | C005-T-017 | Release notes 0.1.1 and release procedure | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 19 | C005-T-024 | Copilot CLI injection suite on the 0.1.1 package | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 20 | C005-T-018 | Manual Copilot VS Code runs and the Copilot release checklist | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 21 | C005-T-019 | Publish `architect-sdd` 0.1.1 on npm | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 22 | C005-T-020 | C005-NFR-001 check in three shells | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 23 | C005-T-021 | Release 0.1.1 on both hosts | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 24 | C005-T-022 | DoD evidence and close preconditions | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |
+| 25 | C005-T-023 | Archive CHG-005 into living specs | `.sdd/005-0-1-1-fixes/20-plan/plan.md` |

@@ -41,7 +41,9 @@ Sequencing rules:
      dispatch for CHG-004), which do not hash CHG-005.
 2. **One `src/` task at a time.** Every `src/` task rebuilds and commits the tracked bundle in its own commit
    (C005-RISK-002), so the `src/` tasks form one chain: C005-T-001, C005-T-003, C005-T-004, C005-T-005, C005-T-006,
-   C005-T-008, C005-T-009, in the component order of `evidence/impact.md` (Per-component sizing).
+   C005-T-008, C005-T-009 in the component order of `evidence/impact.md` (Per-component sizing), then C005-T-025
+   (defect D-001). Its target `src/tracking/task.ts` belongs to C005-COMP-007 since the D-001 revision of the spec;
+   the survey's per-component tables do not size it.
 3. **Text tasks beside the chain.** The new-change procedure (C005-T-010, C005-T-011), the pre-phase round
    (C005-T-012) and the planning skill (C005-T-007) change only plugin text, tests and eval cases; they run beside the
    `src/` chain. Each text task updates the tests that pin the lines it moves, in the same commit (E-9, E-36;
@@ -49,7 +51,8 @@ Sequencing rules:
 4. **Measure, then grow.** C005-T-010 records the body sizes of the conductor and its preloaded skills before the
    `## New change` section lands; C005-T-012 and C005-T-016 measure again (C005-DOD-004; C005-RISK-006).
 5. **Evals once, on final text.** The floor runs of DOD-G-01 (C005-T-014, C005-T-015) start when all agent text and
-   all CLI code are final, so that no text change after them needs a second paid batch.
+   all CLI code are final, so that no text change after them needs a second paid batch. They therefore depend on the
+   last task of the `src/` chain, C005-T-025, as on the text tasks.
 6. **Release order** as for 0.1.0 (`docs/release-procedure-0.1.0.md`, Order), with the Copilot evidence first: the
    release commit (C005-T-016); the Copilot CLI injection suite on the 0.1.1 package (C005-T-024) and the release
    notes (C005-T-017); the manual VS Code runs, the checklist record and a release-check dry run that prints
@@ -74,7 +77,7 @@ Lite plans give milestones no ID; tasks name their milestone by number.
 | Milestone | Goal | Exit criterion (checkable) | Tasks |
 |---|---|---|---|
 | 1 — Dogfood base | The 0.1.1 hash rule exists and CHG-005's G3 approval follows it | `node plugins/architect/scripts/sdd.mjs stale check 005` after a `task set` on this change reports `20-plan` approved | C005-T-001, C005-T-002 |
-| 2 — CLI and template fixes | Every CLI and template change of C005-IF-001, C005-IF-002, C005-IF-003 and C005-IF-005 is in the working tree, with the rebuilt bundle | the untagged scenarios C005-TS-111, C005-TS-114 to C005-TS-119, C005-TS-122 to C005-TS-140, C005-TS-144 to C005-TS-150, C005-TS-166, C005-TS-175 pass in `npm run check`; `npm run build` leaves `plugins/architect/scripts/sdd.mjs` unchanged | C005-T-003, C005-T-004, C005-T-005, C005-T-006, C005-T-008, C005-T-009, C005-T-013 |
+| 2 — CLI and template fixes | Every CLI and template change of C005-IF-001, C005-IF-002, C005-IF-003 and C005-IF-005 is in the working tree, with the rebuilt bundle | the untagged scenarios C005-TS-111, C005-TS-114 to C005-TS-119, C005-TS-122 to C005-TS-140, C005-TS-144 to C005-TS-150, C005-TS-166, C005-TS-175, C005-TS-176 to C005-TS-179 pass in `npm run check`; `npm run build` leaves `plugins/architect/scripts/sdd.mjs` unchanged | C005-T-003, C005-T-004, C005-T-005, C005-T-006, C005-T-008, C005-T-009, C005-T-013, C005-T-025 |
 | 3 — Agent text and evals | The new-change procedure, the pre-phase round and the planner rules are in the shared text and meet the DOD-G-01 floor on Claude Code | the 25 `@eval` scenarios of C005-DOD-001 meet the floor of their class in C005-ADR-002; the size checks of C005-DOD-004 pass | C005-T-007, C005-T-010, C005-T-011, C005-T-012, C005-T-014, C005-T-015 |
 | 4 — Release 0.1.1 | `architect-sdd` 0.1.1 on npm, then both host packages at 0.1.1, with release notes and the Copilot release record | `npm view architect-sdd@0.1.1 version` prints `0.1.1`; `docs/releases/copilot/0.1.1/release.json` holds outcome `released`; the GitHub release 0.1.1 is published; the conductor's plugin CLI prints `0.1.1` | C005-T-016, C005-T-017, C005-T-024, C005-T-018, C005-T-019, C005-T-020, C005-T-021 |
 | 5 — Close | DoD evidence complete and CHG-005 archived into the living specs | `docs/release-0.1.1-evidence.md` covers C005-DOD-001 to C005-DOD-009 and DOD-G-01 to DOD-G-07; `.sdd/_archive/005-0-1-1-fixes/` exists | C005-T-022, C005-T-023 |
@@ -95,6 +98,7 @@ flowchart LR
     C005_T_008["T-008 archive preconditions"]
     C005_T_009["T-009 archived lookup"]
     C005_T_013["T-013 README + path scan"]
+    C005_T_025["T-025 lite report field placement (D-001)"]
   end
   subgraph M3["3 — Agent text and evals"]
     C005_T_007["T-007 planning skill"]
@@ -143,6 +147,10 @@ flowchart LR
   C005_T_011 --> C005_T_015
   C005_T_012 --> C005_T_015
   C005_T_013 --> C005_T_015
+  C005_T_009 --> C005_T_025
+  C005_T_025 --> C005_T_014
+  C005_T_025 --> C005_T_015
+  C005_T_025 --> C005_T_016
   C005_T_014 --> C005_T_016
   C005_T_015 --> C005_T_016
   C005_T_016 --> C005_T_017
@@ -158,13 +166,13 @@ flowchart LR
   C005_T_022 --> C005_T_023
 ```
 
-**Critical path** (longest chain by estimate; S = ½ day, M = 1 day, L = 2 days; about 14 working days, P-01 wait
+**Critical path** (longest chain by estimate; S = ½ day, M = 1 day, L = 2 days; about 14½ working days, P-01 wait
 time and calendar pacing of paid runs excluded): C005-T-001 (M) → C005-T-002 (S) → C005-T-003 (M) → C005-T-004 (M) →
-C005-T-005 (S) → C005-T-006 (S) → C005-T-008 (M) → C005-T-009 (M) → C005-T-014 (L) → C005-T-016 (M) → C005-T-024 (S)
-→ C005-T-018 (M) → C005-T-019 (S) → C005-T-020 (S) → C005-T-021 (M) → C005-T-022 (S) → C005-T-023 (S).
+C005-T-005 (S) → C005-T-006 (S) → C005-T-008 (M) → C005-T-009 (M) → C005-T-025 (S) → C005-T-014 (L) → C005-T-016 (M)
+→ C005-T-024 (S) → C005-T-018 (M) → C005-T-019 (S) → C005-T-020 (S) → C005-T-021 (M) → C005-T-022 (S) → C005-T-023 (S).
 
 The text chain C005-T-010 (L) → C005-T-011 (M) / C005-T-012 (M) runs beside the `src/` chain and joins it at
-C005-T-014 with 1 day of slack.
+C005-T-014 with about 2 days of slack by estimate (C005-T-012 also waits for C005-T-005).
 
 ### Evals and budget
 
@@ -622,7 +630,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Targets:**
   - add `evals/chg005/C005-TS-158.eval.mjs` to `C005-TS-163.eval.mjs`, `C005-TS-173.eval.mjs`, `C005-TS-174.eval.mjs`
   - modify `plugins/architect/skills/phase-ideation/SKILL.md` › `## New change`, only if a dev run shows a text gap
-- **Preconditions:** C005-T-010 done.
+- **Preconditions:** C005-T-010 done. A report of this task made before C005-T-025's commit misplaces its report lines; move them by hand (`handoff.md`, Reporting protocol, report field position).
 - **Steps:**
   1. Write the eight cases on the case workspace of C005-TS-101.
   2. One dev run of each case (ten sessions).
@@ -636,7 +644,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Dev-run cost recorded in the one-line report note
 
 ### C005-T-012 — Pre-phase round: interview-protocol §5 and the conductor rule
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-005, C005-T-010
 - **Implements:** C005-REQ-103, C005-REQ-104
@@ -653,7 +661,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - modify `tests/integration/cap01/constructs.test.ts`: conductor pins, if the edit moves them
   - add `evals/chg005/C005-TS-108.eval.mjs`, `C005-TS-109.eval.mjs`, `C005-TS-110.eval.mjs`, `C005-TS-112.eval.mjs`, `C005-TS-113.eval.mjs`
   - modify `docs/release-0.1.1-evidence.md` › section "Sizes": the figures after this task
-- **Preconditions:** C005-T-005 done (the lint accepts the log, C005-REQ-126) and C005-T-010 done (conductor pins in a known state).
+- **Preconditions:** C005-T-005 done (the lint accepts the log, C005-REQ-126) and C005-T-010 done (conductor pins in a known state). A report of this task made before C005-T-025's commit misplaces its report lines; move them by hand (`handoff.md`, Reporting protocol, report field position).
 - **Steps:**
   1. Write the five eval cases (C005-TS-112 has two Examples rows).
   2. Edit §5 and the conductor item; update the pins in the same commit.
@@ -667,6 +675,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The five eval cases pass one dev run each
   - [ ] Sizes after the edit are in section "Sizes" of `docs/release-0.1.1-evidence.md`, inside the limits of C005-DOD-004
   - [ ] `npm run check` passes
+- **Completed at:** —
 
 ### C005-T-013 — Plugin README step 6 and the plugin-path scan
 - **Status:** done
@@ -696,10 +705,47 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Commit:** 9cccb0d
 - **Notes:** README step 6 with the plugin.json version; plugin-path scan; TS-129..133 pass; check 10/10
 
+### C005-T-025 — Lite report fields written after the task's field list (D-001)
+- **Status:** todo
+- **Milestone:** 2 — CLI and template fixes
+- **Depends on:** C005-T-009
+- **Implements:** C005-REQ-127
+- **Satisfies AC:** C005-AC-127.1
+- **Verified by:** C005-TS-176 (C005-TC-077), C005-TS-177 (C005-TC-078), C005-TS-178 (C005-TC-079), C005-TS-179 (C005-TC-080)
+- **Components:** C005-COMP-007
+- **Risk refs:** C005-RISK-002
+- **Estimate:** S
+- **Intent:** `sdd task set` inserts a report field that a lite task section does not hold yet directly after the section's last field line and its continuation lines (terms: `../10-spec/40-domain/glossary-delta.md` §1), so that the Commit, Notes and Completed at lines no longer split `- **Done when:**` from its checkboxes (defect D-001; C005-REQ-127). The two other cases of C005-REQ-127 stay as at 0.1.0 and are now tested: a field that the section holds is replaced where its first field line stands (C005-TS-179), and a section with no field line gets the field directly after its heading line (C005-TS-178).
+- **Targets:**
+  - modify `src/tracking/task.ts` › `setLiteField()`: field-line and continuation-line recognition as the glossary defines them; insertion point after the last field line and its continuation lines
+  - add `tests/integration/chg005/C005-TS-176.test.ts`: 3 Examples rows (rewrite of the existing untracked file, see step 1)
+  - add `tests/integration/chg005/C005-TS-177.test.ts`: 4 Examples rows
+  - add `tests/integration/chg005/C005-TS-178.test.ts`: one scenario
+  - add `tests/integration/chg005/C005-TS-179.test.ts`: 3 Examples rows
+  - modify `plugins/architect/scripts/sdd.mjs`: rebuilt bundle
+- **Preconditions:** C005-T-009 done (bundle chain). This task stays `todo` until its commit (step 3) on purpose, as C005-T-002 does: an `in-progress` report made with a bundle built before that commit would insert its Completed at line directly after `- **Done when:**`, and the fixed rule then leaves that line in place (`handoff.md`, Reporting protocol, report field position).
+- **Steps:**
+  1. Write the four test files of C005-TC-077 to C005-TC-080 (Test mapping): `C005-TS-176.test.ts` with its 3 Examples rows (section followed by a heading line; by a blank line and `## Test mapping`; at the end of the file), `C005-TS-177.test.ts` with its 4 rows, `C005-TS-178.test.ts`, and `C005-TS-179.test.ts` with its 3 rows. The existing untracked `tests/integration/chg005/C005-TS-176.test.ts` was written for the old 2-row scenario; rewrite it to the 3-row scenario of the revised spec. On the 0.1.0 insertion point, every row of C005-TS-176 and rows 2 and 3 of C005-TS-177 fail; rows 1 and 4 of C005-TS-177, C005-TS-178 and C005-TS-179 keep the 0.1.0 result and pass as regression checks.
+  2. In `setLiteField()`, keep the section bounds of 0.1.0 and recognise lines by the glossary definitions (`../10-spec/40-domain/glossary-delta.md` §1): a field line begins at its first character with `- **`, a field name and `:**` (the `- **<name>:**` form, not any line that begins with `- **`); a continuation line is not blank, begins with a space or a tab, and directly follows a field line or another continuation line, so a blank line, a line that begins with any other character (an unindented `- [ ]` line included) or the end of the section ends them. Then apply the three cases of C005-REQ-127: replace the section's first field line of that field in place; when the section holds no field line of that field, insert directly after the last field line and its continuation lines; when it holds no field line, insert directly after the heading line.
+  3. Run `npm run build`; commit source, the four test files and bundle together with a message starting with C005-T-025.
+  4. On the commit, run the first two Verification commands; both pass before D-001 is closed.
+  5. The conductor, or P-01, closes D-001 with the working-tree CLI, on one line: `node plugins/architect/scripts/sdd.mjs defect close D-001 --change 005 --resolution "Fixed by C005-T-025, commit <sha>"`.
+  6. After D-001 is closed, report the task `done`, its first report, with the working-tree CLI of this commit: `node plugins/architect/scripts/sdd.mjs task set C005-T-025 --status done --commit <sha> --note "<summary>"`. Then run `node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan`: it reports no LINT-TASK-001 (the live case of C005-TS-176). From this commit on, a report adds no misplaced line; a line that an earlier report misplaced stays where it is and is moved by hand (`handoff.md`, Reporting protocol; Q-placement-01).
+- **Verification:**
+  - `npm test -- chg005/C005-TS-176 chg005/C005-TS-177 chg005/C005-TS-178 chg005/C005-TS-179 chg005/C005-TS-167 cap09 tracking`
+  - `npm run check`
+  - `node plugins/architect/scripts/sdd.mjs lint 005 --phase 20-plan` after step 6: no LINT-TASK-001
+- **Done when:**
+  - [ ] The four test cases in Verified by pass, every Examples row included: `tests/integration/chg005/C005-TS-176.test.ts` (3 rows, rewritten from the 2-row file), `C005-TS-177.test.ts` (4 rows), `C005-TS-178.test.ts`, `C005-TS-179.test.ts` (3 rows)
+  - [ ] `tests/integration/chg005/C005-TS-167.test.ts` to `C005-TS-171.test.ts` pass unchanged
+  - [ ] Rebuilt bundle committed with the source
+  - [ ] D-001 is closed in `change.md` with a resolution that names this task and its commit
+  - [ ] Reported `done` only after the commit and the closing of D-001, and `lint 005 --phase 20-plan` then reports no LINT-TASK-001
+
 ### C005-T-014 — Eval floor on Claude Code: create-change scenarios
 - **Status:** todo
 - **Milestone:** 3 — Agent text and evals
-- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013
+- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124
 - **Satisfies AC:** C005-AC-101.1, C005-AC-102.1, C005-AC-123.1, C005-AC-124.1
 - **Verified by:** C005-TS-101 (C005-TC-001), C005-TS-102 (C005-TC-002), C005-TS-103 (C005-TC-003), C005-TS-104 (C005-TC-004), C005-TS-105 (C005-TC-005), C005-TS-106 (C005-TC-006), C005-TS-107 (C005-TC-007), C005-TS-158 (C005-TC-056), C005-TS-159 (C005-TC-057), C005-TS-160 (C005-TC-058), C005-TS-161 (C005-TC-059), C005-TS-162 (C005-TC-060), C005-TS-163 (C005-TC-061), C005-TS-173 (C005-TC-071), C005-TS-174 (C005-TC-072)
@@ -727,7 +773,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 ### C005-T-015 — Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios
 - **Status:** todo
 - **Milestone:** 3 — Agent text and evals
-- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013
+- **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025
 - **Implements:** C005-REQ-103, C005-REQ-104, C005-REQ-107, C005-REQ-114
 - **Satisfies AC:** C005-AC-103.1, C005-AC-104.1, C005-AC-107.1, C005-AC-114.1
 - **Verified by:** C005-TS-108 (C005-TC-008), C005-TS-109 (C005-TC-009), C005-TS-110 (C005-TC-010), C005-TS-112 (C005-TC-012), C005-TS-113 (C005-TC-013), C005-TS-120 (C005-TC-020), C005-TS-121 (C005-TC-021), C005-TS-141 (C005-TC-041), C005-TS-142 (C005-TC-042), C005-TS-143 (C005-TC-043)
@@ -755,7 +801,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 ### C005-T-016 — Version 0.1.1, release build and checks
 - **Status:** todo
 - **Milestone:** 4 — Release 0.1.1
-- **Depends on:** C005-T-014, C005-T-015
+- **Depends on:** C005-T-014, C005-T-015, C005-T-025
 - **Implements:** C005-REQ-118
 - **Satisfies AC:** C005-AC-118.1
 - **Verified by:** C005-TS-152 (C005-TC-051), C005-TS-129 (C005-TC-029), C005-TS-130 (C005-TC-030), C005-TS-131 (C005-TC-031)
@@ -768,7 +814,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - modify `plugins/architect/README.md` › step 6: `architect-sdd@0.1.1`
   - modify `plugins/architect/scripts/sdd.mjs`: rebuilt at 0.1.1
   - modify `docs/release-0.1.1-evidence.md` › sections "Check", "Coverage", "Sizes"
-- **Preconditions:** C005-T-014 and C005-T-015 done; no open defect.
+- **Preconditions:** C005-T-014, C005-T-015 and C005-T-025 done; no open defect (D-001 closed by C005-T-025 step 5).
 - **Steps:**
   1. Host versions first. `node plugins/architect/scripts/sdd.mjs host-version vscode` prints `vscode 1.145.2` and `copilot-chat 0.73.0`, the `host.tested_versions` of `plugins/architect/targets/copilot.json`; `copilot --version` prints 1.0.98, the `copilot-cli` value of `docs/spikes/S-08-copilot-vscode.md`. Any difference stops the task and the conductor asks P-01: the release check refuses a drifted version (ERR-REL-006), and changing a tested version changes `plugins/` or the spike record, so it must land before the release commit. P-01 keeps VS Code, GitHub Copilot Chat and Copilot CLI at these versions, updates off, until C005-T-018 and C005-T-024 are done.
   2. Bump the version in the three files and README step 6; run `npm run build`.
@@ -799,14 +845,14 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Components:** C005-COMP-013
 - **Risk refs:** C005-RISK-008
 - **Estimate:** S
-- **Intent:** write the 0.1.1 release notes with the old and the new `SDD.md` sentence and the one G3 re-approval of a lite plan, the CHANGELOG entry, and the release procedure that P-01 follows.
+- **Intent:** write the 0.1.1 release notes with the old and the new `SDD.md` sentence and the one G3 re-approval of a lite plan with the hand move of misplaced report-field lines before it, the CHANGELOG entry, and the release procedure that P-01 follows.
 - **Targets:**
-  - add `docs/releases/github-release-notes-0.1.1.md`: the fixes; the 0.1.0 sentence (E-79) quoted and its replacement (C005-IF-003 §4); the three statements of C005-REQ-125
+  - add `docs/releases/github-release-notes-0.1.1.md`: the fixes; the 0.1.0 sentence (E-79) quoted and its replacement (C005-IF-003 §4); the four statements of C005-REQ-125 (stale at the first 0.1.1 stale check; one revision and one G3 approval; the hand move of report-field lines that stand between a field line and its indented lines, before that approval; the approval holds only with 0.1.1 at every later stale check)
   - modify `CHANGELOG.md` › entry 0.1.1
   - add `docs/release-procedure-0.1.1.md`, adapted from `docs/release-procedure-0.1.0.md` (order, versions, paths; rollback steps of this plan's Strategy)
 - **Preconditions:** C005-T-016 done.
 - **Steps:**
-  1. Write the notes and the CHANGELOG entry.
+  1. Write the notes, with all four statements of C005-REQ-125 the hand move included, and the CHANGELOG entry.
   2. Adapt the release procedure; its checks name the 0.1.1 files of `dist/`.
   3. P-01 reviews the draft notes against C005-TS-154 and C005-TS-172; the review of the published notes follows in C005-T-022.
 - **Verification:**
@@ -814,6 +860,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - `git diff --stat <release commit> HEAD -- src scripts plugins` prints nothing
 - **Done when:**
   - [ ] Notes, CHANGELOG entry and procedure committed
+  - [ ] The notes hold the four statements of C005-REQ-125, the hand move included
   - [ ] P-01's draft review recorded
 
 ### C005-T-024 — Copilot CLI injection suite on the 0.1.1 package
@@ -1086,6 +1133,10 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 | C005-TC-074 | C005-TS-114 | manual | section C005-NFR-001 of `docs/nfr-results.md` (C005-DOD-008) | the Method of C005-NFR-001 on the Reporting protocol that C005-TS-114 specifies; new copy of a lite fixture change scaffolded by sdd 0.1.1: task A `todo`, task B `in-progress`, requirement R; empty `NPM_CONFIG_PREFIX` first on PATH | shells | once per shell (3) | P-01, or the implementer on REF-WIN with registry access |
 | C005-TC-075 | C005-TS-156 | eval | carried to CHG-003; nearest existing case: OpenCode row of `evals/targets/question-tool/TS-219.eval.mjs` | `fx-bootstrap` with 1 change, on OpenCode | OpenCode eval runner, in CHG-003 | not run in CHG-005 (carried, Q-opencode-01; DOD-G-01 waiver at the close, C005-DOD-001) | CHG-003 implementer |
 | C005-TC-076 | C005-TS-152 | eval | `evals/injection/injection.eval.mjs` (`INJ-01` … `INJ-22`) and `evals/targets/copilot-guard/TS-359.eval.mjs`; summary `docs/releases/copilot/0.1.1/injection.json` | the 0.1.1 Copilot package of the release commit (`dist/copilot/`); the 23 planted-instruction cases of release 0.1.0; model substitution `claude-opus-5.5=claude-sonnet-5.5` | copilot-cli | once per case (dev tier), in batches by the spending rule of C005-T-024 | conductor, on P-01's Copilot plan |
+| C005-TC-077 | C005-TS-176 | integration | `tests/integration/chg005/C005-TS-176.test.ts` | 3 Examples rows: lite change 004 whose task section C004-T-001 holds Status `in-progress`, non-empty Targets and Verification, and Done when with two checkbox lines indented by two spaces as its last field, with no Commit, Notes or Completed at line; the section ends with the second checkbox line directly before the task section `C004-T-002`, ends with a blank line directly before `## Test mapping`, or ends with the second checkbox line at the end of the file (final line break); today's date read by the test | check | every check | implementer |
+| C005-TC-078 | C005-TS-177 | integration | `tests/integration/chg005/C005-TS-177.test.ts` | 4 Examples rows of the lines after Done when (Archive task marker last; blank line then indented checkbox; unindented `- [ ]` after an indented one; unindented `- [ ]` directly after Done when), each followed by `## Test mapping`; whole-file comparison with the expected text | check | every check | implementer |
+| C005-TC-079 | C005-TS-178 | integration | `tests/integration/chg005/C005-TS-178.test.ts` | task section C004-T-001 with a heading, one plain text line and a blank line, no field line, followed by `## Test mapping` | check | every check | implementer |
+| C005-TC-080 | C005-TS-179 | integration | `tests/integration/chg005/C005-TS-179.test.ts` | 3 Examples rows: Commit and Completed at after the checkbox, the same two lines before it (the 0.1.0 place), two Commit lines; line count and whole-file comparison before and after; today's date read by the test | check | every check | implementer |
 <!-- Guidance: one row per test case, defining every TC that a task lists under Verified by; Level is unit, integration, e2e, eval or manual. -->
 
 Environments: **check** — Node.js 20 or later on REF-WIN, `npm test` and `npm run check`; each test builds its workspace in a
@@ -1112,7 +1163,7 @@ C005-TS-152 reviews (Q-injection-01).
 | ID | Risk | Likelihood | Impact | Mitigation | Trigger | Owner | Refs |
 |---|---|---|---|---|---|---|---|
 | C005-RISK-001 | CHG-005's `20-plan` becomes stale after its re-approval because a hashing command runs the 0.1.0 plugin CLI (an `sdd-auditor` dispatch, `/architect:revise`, `/architect:gate`, `/architect:plan`, or a routine `stale check` without a change number by the conductor), or because a rollback brings the 0.1.0 hash rule back (rollback steps 1, 3, 5); `sdd archive 005` then refuses | medium | high | C005-T-002 re-approves under the new rule; Strategy rule 1 and the hand-off's Reporting protocol limit every hashing command on CHG-005, the conductor's included, to the working-tree CLI until C005-T-021 step 5 installs plugin 0.1.1; the rollback steps name their consequence; C005-T-023 checks before the archive; rollback step 4 | `stale check` reports `20-plan` stale, or `gate show 005 20-plan` shows a stale phase | conductor | C005-T-002, C005-T-021, C005-T-022, C005-T-023, C005-COMP-009 |
-| C005-RISK-002 | A `src/` task commits without the rebuilt bundle; `npm run check` does not compare the bundle with `src/` (E-129), so the plugin ships stale code | medium | high | Every `src/` task rebuilds and commits the bundle and checks that `npm run build` leaves it unchanged; C005-T-016 repeats the check on the release commit | `git status --short plugins/architect/scripts/sdd.mjs` not empty after `npm run build` | implementer | C005-T-001, C005-T-003, C005-T-004, C005-T-005, C005-T-006, C005-T-008, C005-T-009, C005-T-016, C005-COMP-011 |
+| C005-RISK-002 | A `src/` task commits without the rebuilt bundle; `npm run check` does not compare the bundle with `src/` (E-129), so the plugin ships stale code | medium | high | Every `src/` task rebuilds and commits the bundle and checks that `npm run build` leaves it unchanged; C005-T-016 repeats the check on the release commit | `git status --short plugins/architect/scripts/sdd.mjs` not empty after `npm run build` | implementer | C005-T-001, C005-T-003, C005-T-004, C005-T-005, C005-T-006, C005-T-008, C005-T-009, C005-T-025, C005-T-016, C005-COMP-011 |
 | C005-RISK-003 | Text edits move lines that tests pin (E-9, E-36), and the check fails in a later task | high | low | Each text task updates the pins it moves in the same commit (C005-T-003, C005-T-008, C005-T-010, C005-T-012) | a pinned-line test fails | implementer | C005-T-003, C005-T-008, C005-T-010, C005-T-012, C005-COMP-001, C005-COMP-003 |
 | C005-RISK-004 | The hash change alters the hash of full changes or of other phases, so golden hashes and stored approvals no longer match | low | high | C005-T-001 limits step 2a to the lite `20-plan/plan.md`; C005-TS-168, C005-TS-169 and the golden tests of CHG-001 must pass unchanged | a cap08 golden test fails, or `stale check` sets an unexpected phase stale | implementer | C005-T-001, C005-COMP-009 |
 | C005-RISK-005 | The lite branch of the archive runs for the first time on CHG-005 itself (E-43) and fails or misplaces files | medium | medium | C005-T-008 tests lite archives (C005-TS-138 to C005-TS-140); C005-T-023 runs the dry run first and P-01 confirms the preview | dry run lists unexpected blockers or living-file actions | conductor | C005-T-008, C005-T-023, C005-COMP-007 |
