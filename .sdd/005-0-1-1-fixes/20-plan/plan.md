@@ -580,7 +580,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** L1-L4 lookup in resolveChange and changeOfId; ERR-CLI-014 on writing; TS-146..150,166 pass; hash 001 20-plan matches; check 10/10
 
 ### C005-T-010 — New-change procedure in `phase-ideation`, `commands/new.md` and the conductor
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-002
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124
@@ -614,10 +614,12 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The procedure text exists once, in `phase-ideation` (C005-CON-06)
   - [ ] The seven eval cases pass one dev run each
   - [ ] `npm run check` passes
-- **Completed at:** —
+- **Completed at:** 2026-11-18
+- **Commit:** 49f66c7
+- **Notes:** New-change section in phase-ideation and commands/new.md; 7 eval cases pass a dev run; sizes recorded in release-0.1.1-evidence
 
 ### C005-T-011 — Eval cases of the kind round
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-010
 - **Implements:** C005-REQ-123, C005-REQ-124
@@ -642,9 +644,12 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The eight eval cases pass one dev run each
   - [ ] Any section edit passed `npm run check`
   - [ ] Dev-run cost recorded in the one-line report note
+- **Commit:** e42cc89
+- **Notes:** Kind-round eval cases; 10/10 dev sessions pass; no text fix needed
+- **Completed at:** 2026-11-18
 
 ### C005-T-012 — Pre-phase round: interview-protocol §5 and the conductor rule
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-005, C005-T-010
 - **Implements:** C005-REQ-103, C005-REQ-104
@@ -675,7 +680,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The five eval cases pass one dev run each
   - [ ] Sizes after the edit are in section "Sizes" of `docs/release-0.1.1-evidence.md`, inside the limits of C005-DOD-004
   - [ ] `npm run check` passes
-- **Completed at:** —
+- **Completed at:** 2026-11-18
+- **Commit:** 75ee6e5
+- **Notes:** Pre-phase round in interview-protocol section 5 and conductor rule; 6/6 dev cases pass after the TS-109 fixture fix
 
 ### C005-T-013 — Plugin README step 6 and the plugin-path scan
 - **Status:** done
@@ -706,7 +713,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** README step 6 with the plugin.json version; plugin-path scan; TS-129..133 pass; check 10/10
 
 ### C005-T-025 — Lite report fields written after the task's field list (D-001)
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 2 — CLI and template fixes
 - **Depends on:** C005-T-009
 - **Implements:** C005-REQ-127
@@ -741,6 +748,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Rebuilt bundle committed with the source
   - [ ] D-001 is closed in `change.md` with a resolution that names this task and its commit
   - [ ] Reported `done` only after the commit and the closing of D-001, and `lint 005 --phase 20-plan` then reports no LINT-TASK-001
+- **Commit:** ec447bb
+- **Notes:** setLiteField places a missing report field after the last field line and its continuation lines (C005-REQ-127); TS-176..179 pass; npm run check 10/10
+- **Completed at:** 2026-11-18
 
 ### C005-T-014 — Eval floor on Claude Code: create-change scenarios
 - **Status:** todo
