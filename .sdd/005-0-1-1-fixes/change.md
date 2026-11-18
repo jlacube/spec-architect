@@ -14,6 +14,7 @@ stopped: null
 owners: []
 defects:
   - { id: D-001, ref: C005-REQ-121, summary: "sdd task set on a lite task inserts Commit, Notes and Completed at between the Done when field and its checkboxes, so LINT-TASK-001 reports an empty Done when (found on C005-T-001; fields moved by hand, hash unchanged)", reporter: "Jerome LACUBE", date: 2026-11-17, status: closed, resolution: "Fixed by C005-T-025, commit ec447bb", closed_at: 2026-11-18 }
+  - { id: D-002, ref: C005-TS-109, summary: "TS-109 fixture spec has no import task, so the scripted answer 'No, import first' is out of scope and the conductor rightly asks a follow-up round (9/10 runs log 2 rounds); fixture gap, not agent text", reporter: "Jerome LACUBE", date: 2026-11-18, status: open, resolution: null, closed_at: null }
 waivers: []
 ---
 # CHG-005 — 0.1.1 fixes

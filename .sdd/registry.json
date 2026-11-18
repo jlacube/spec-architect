@@ -1,6 +1,6 @@
 {
   "sdd_version": 1,
-  "generated_at": "2026-11-18T18:27:35Z",
+  "generated_at": "2026-11-18T20:22:09Z",
   "changes": [
     {
       "id": "CHG-001",
@@ -3568,9 +3568,9 @@
         "status": "in-progress",
         "tasks": {
           "total": 25,
-          "done": 14,
+          "done": 13,
           "blocked": 0,
-          "in_progress": 0
+          "in_progress": 2
         },
         "last_report": null
       },
@@ -3584,6 +3584,16 @@
           "status": "closed",
           "resolution": "Fixed by C005-T-025, commit ec447bb",
           "closed_at": "2026-11-18"
+        },
+        {
+          "id": "D-002",
+          "ref": "C005-TS-109",
+          "summary": "TS-109 fixture spec has no import task, so the scripted answer 'No, import first' is out of scope and the conductor rightly asks a follow-up round (9/10 runs log 2 rounds); fixture gap, not agent text",
+          "reporter": "Jerome LACUBE",
+          "date": "2026-11-18",
+          "status": "open",
+          "resolution": null,
+          "closed_at": null
         }
       ],
       "waivers": []

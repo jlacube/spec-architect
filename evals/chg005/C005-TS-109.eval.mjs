@@ -7,7 +7,7 @@ const ANSWER = "No, import first";
 export default prePhaseCase({
   id: "C005-TS-109",
   title: "Answer after the G2 approval goes to the 20-plan log",
-  fixture: changeAtGate({ gate: "G2" }),
+  fixture: changeAtGate({ gate: "G2", withImport: true }),
   prompt: "G2 is approved. Before the plan starts, ask me whether the export task comes before the import task",
   reply: ANSWER,
   watch: [`${DIR}/10-spec/questions-log.md`, `${DIR}/20-plan/questions-log.md`],

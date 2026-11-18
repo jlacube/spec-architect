@@ -84,6 +84,17 @@ status: draft
 - **Extracted instructions:** none
 `;
 
+// Import scope of `changeAtGate({ withImport: true })` (C005-TS-109; defect D-002 of CHG-005).
+const IMPORT_FROM = "Goal: export the orders of a date range as CSV. Non-goal: other formats.";
+const IMPORT_TO = "Goal: export the orders of a date range as CSV, and import orders from a CSV file. Non-goal: other formats.";
+const IMPORT_REQ =
+  "\n### C002-REQ-102 — Import orders\n- **Pattern:** event-driven\n- **Statement:** WHEN a manager uploads a CSV file of orders, THE export service SHALL add the orders of that file.\n- **Rationale:** ideation Goals\n- **Stories:** C002-US-102\n- **Priority:** Must\n- **Acceptance:** C002-AC-102.1\n";
+const IMPORT_STORY =
+  "\n### C002-US-102 — Import orders\n- **As a** shop manager\n- **I want** to import orders from CSV\n- **So that** I stop typing them by hand\n- **Value / outcome:** no manual typing\n- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-01\n- **Context & notes:** none\n- **Requirements:** C002-REQ-102\n- **Traces to:** IDEA\n";
+const IMPORT_AC =
+  "\n## C002-REQ-102\n\n#### C002-AC-102.1 — Import added\n```gherkin\nScenario: C002-TS-102 — import a CSV file\n  Given a CSV file of two orders\n  When the manager uploads it\n  Then both orders are added\n```\n";
+const IMPORT_ROW = "| C002-REQ-102 | TS-102 | n/a: one path | n/a: no limit in v1 | n/a: no error path in v1 | n/a: no roles | n/a: single request | n/a: no abuse vector in v1 |\n";
+
 const SPEC_LOG = `---
 id: "C002-SPEC-QLOG"
 artifact: spec/questions-log
@@ -107,14 +118,16 @@ function approve(root, phase) {
  * 10-spec questions log exists (G2 cases). `preRound`: text of round 1 already in 10-spec/questions-log.md
  * (C005-TS-110).
  */
-export function changeAtGate({ gate = "G1", specDraft = false, preRound = null } = {}) {
+export function changeAtGate({ gate = "G1", specDraft = false, preRound = null, withImport = false } = {}) {
   return (root) => {
     git(root, "init", "-q");
     sdd(root, "init");
     constitution(root, "approved");
     sdd(root, "change", "new", "Coupon codes", "--profile", "lite", "--kind", "greenfield");
     sdd(root, "change", "new", "Export to CSV", "--profile", "full", "--kind", "greenfield");
-    write(root, `${DIR}/00-ideation/ideation.md`, IDEATION);
+    // `withImport` (C005-TS-109, defect D-002 of CHG-005): the change also imports orders from CSV, so a
+    // question on the order of the export and import tasks is in scope after G2.
+    write(root, `${DIR}/00-ideation/ideation.md`, withImport ? IDEATION.split(IMPORT_FROM).join(IMPORT_TO) : IDEATION);
     write(root, `${DIR}/00-ideation/questions-log.md`, IDEATION_LOG);
     edit(root, `${DIR}/change.md`, (t) => t.replace(/^( {2}00-ideation: \{ status: )not-started/m, "$1in-review"));
     sdd(root, "gate", "approve", "002", "00-ideation", "--note", "Approve", "--by", "p01");
@@ -125,6 +138,12 @@ export function changeAtGate({ gate = "G1", specDraft = false, preRound = null }
       write(root, `${CAP}/stories.md`, "---\nid: C002-CAP-01\nartifact: spec/stories\n---\n\n### C002-US-101 — Export orders\n- **As a** shop manager\n- **I want** to export orders as CSV\n- **So that** I stop copying them by hand\n- **Value / outcome:** no manual copying\n- **Priority:** Must · **Size hint:** S · **Capability:** C002-CAP-01\n- **Context & notes:** none\n- **Requirements:** C002-REQ-101\n- **Traces to:** IDEA\n");
       write(root, `${CAP}/acceptance.md`, "---\nid: C002-CAP-01\nartifact: spec/acceptance\n---\n\n## C002-REQ-101\n\n#### C002-AC-101.1 — Export written\n```gherkin\nScenario: C002-TS-101 — export a date range\n  Given orders in November\n  When the manager exports November\n  Then one CSV file holds those orders\n```\n\n| REQ | happy | alternate | boundary | error | authorization | concurrency/idempotency | abuse |\n|---|---|---|---|---|---|---|---|\n| C002-REQ-101 | TS-101 | n/a: one path | n/a: no limit in v1 | n/a: no error path in v1 | n/a: no roles | n/a: single request | n/a: no abuse vector in v1 |\n");
       write(root, `${DIR}/10-spec/70-dod.md`, "---\nid: C002-SPEC-DOD\nartifact: spec/dod\n---\n# Definition of done\n\n| ID | Statement | Evidence type | Covers |\n|---|---|---|---|\n| C002-DOD-001 | Acceptance tests pass | test-report | C002-REQ-101 |\n");
+      if (withImport) {
+        edit(root, `${CAP}/requirements.md`, (t) => t + IMPORT_REQ);
+        edit(root, `${CAP}/stories.md`, (t) => t + IMPORT_STORY);
+        edit(root, `${CAP}/acceptance.md`, (t) => t.split("\n| REQ | happy").join(IMPORT_AC + "\n| REQ | happy") + IMPORT_ROW);
+        edit(root, `${DIR}/10-spec/70-dod.md`, (t) => t.split("| C002-REQ-101 |").join("| C002-REQ-101, C002-REQ-102 |"));
+      }
       // G2 through the CLI, as in a real workspace: approvals.json record and Gate log row (a status edited
       // by hand alone made the conductor stop on the missing record, dev run of 2026-11-18).
       edit(root, `${DIR}/change.md`, (t) => t.replace(/^( {2}10-spec: \{ status: )not-started/m, "$1in-review").replace(/^phase: .*$/m, "phase: 10-spec"));

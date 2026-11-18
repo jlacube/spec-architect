@@ -649,7 +649,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-18
 
 ### C005-T-012 — Pre-phase round: interview-protocol §5 and the conductor rule
-- **Status:** done
+- **Status:** in-progress
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-005, C005-T-010
 - **Implements:** C005-REQ-103, C005-REQ-104
@@ -680,9 +680,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The five eval cases pass one dev run each
   - [ ] Sizes after the edit are in section "Sizes" of `docs/release-0.1.1-evidence.md`, inside the limits of C005-DOD-004
   - [ ] `npm run check` passes
-- **Completed at:** 2026-11-18
+- **Completed at:** —
 - **Commit:** 75ee6e5
-- **Notes:** Pre-phase round in interview-protocol section 5 and conductor rule; 6/6 dev cases pass after the TS-109 fixture fix
+- **Notes:** Reopened for D-002: TS-109 fixture gets an import task in its approved spec
 
 ### C005-T-013 — Plugin README step 6 and the plugin-path scan
 - **Status:** done
@@ -753,7 +753,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-18
 
 ### C005-T-014 — Eval floor on Claude Code: create-change scenarios
-- **Status:** todo
+- **Status:** in-progress
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-007, C005-T-009, C005-T-011, C005-T-012, C005-T-013, C005-T-025
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124
@@ -779,6 +779,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Every case meets its floor, or P-01 has decided on the result below it
   - [ ] Results, cost and running total are in `docs/release-0.1.1-evidence.md`
   - [ ] No open defect from this task
+- **Completed at:** —
 
 ### C005-T-015 — Eval floor on Claude Code: pre-phase, planner and archive-marker scenarios
 - **Status:** todo
