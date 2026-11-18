@@ -85,6 +85,7 @@ export function newChangeCase({ id, title, prompt, fixture = caseWorkspace(), re
       root = r;
       calls = [];
       current = null;
+      reply?.reset?.();
       fixture(r);
     },
     allowTools: ["Write", "Edit", "Bash", "Read", "Glob", "Grep"],

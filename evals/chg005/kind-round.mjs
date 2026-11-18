@@ -7,7 +7,9 @@ export const kindCalls = (calls) => calls.map((c, i) => (c.questions.some(isKind
 /** A reply function: the profile `lite`, and for the kind question the `n`-th entry of `kinds` (free text or a kind). */
 export function liteThen(kinds) {
   let kindRound = 0;
-  return (q) => {
+  // The case object lives across the runs of a scenario: newChangeCase calls reset() in each run's fixture
+  // (a counter kept from run 1 made runs 2 and 3 answer the last kind first, milestone run of 2026-11-18).
+  const reply = (q) => {
     if (isProfileQuestion(q)) return pick(q, /\blite\b/i);
     if (isKindQuestion(q)) {
       const a = kinds[Math.min(kindRound, kinds.length - 1)];
@@ -16,6 +18,10 @@ export function liteThen(kinds) {
     }
     return q.options[0].label;
   };
+  reply.reset = () => {
+    kindRound = 0;
+  };
+  return reply;
 }
 
 /** The kind call at index `k` of kindCalls comes before any sdd change new call, with no folder `.sdd/002-*` then. */

@@ -306,14 +306,20 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
     sub("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0),
     // Revision D-044 (critic CR-141): cfg-bare deferred to the follow-up change 'Cost and token efficiency', refused by capCheck.
     { ...sub("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, 30, 6.0), deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044)" },
+    // CHG-005 (P-01, 2026-11-18): four planner cases at the session cap 1.00 USD, no rerun cap.
+    { row: "C005-TS-121", file: "evals/chg005/C005-TS-121.eval.mjs", host: "claude-code", auth: "subscription", usd: 0.5, turns: 30, sessionUsd: 1.0, rerunUsd: null },
+    { row: "C005-TS-141", file: "evals/chg005/C005-TS-141.eval.mjs", host: "claude-code", auth: "subscription", usd: 0.5, turns: 30, sessionUsd: 1.0, rerunUsd: null },
+    { row: "C005-TS-142", file: "evals/chg005/C005-TS-142.eval.mjs", host: "claude-code", auth: "subscription", usd: 0.5, turns: 30, sessionUsd: 1.0, rerunUsd: null },
+    { row: "C005-TS-143", file: "evals/chg005/C005-TS-143.eval.mjs", host: "claude-code", auth: "subscription", usd: 0.5, turns: 30, sessionUsd: 1.0, rerunUsd: null },
   ]);
   // 90 rows: TS-634 and INJ-21 (revision D-035) of the paid class and 88 of the Claude Code subscription
   // class, 17 of rule 1 (TS-226-blocking from revision D-037, TS-511 from revision D-039, the two toy-g3 rows
   // from revision D-042), 70 of rule 2
   // (TS-320 from revision D-038, the forty-three release-standard rows from revision D-040)
   // and one (TS-421-agent) in neither list.
-  assert.equal(CAP_EXCEPTIONS.length, 90);
-  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
+  // CHG-005 adds four rows at a session cap (P-01, 2026-11-18): 94 rows; the counts below are of the other 90.
+  assert.equal(CAP_EXCEPTIONS.length, 94);
+  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription" && !("sessionUsd" in e));
   assert.equal(subs.length, 88);
   assert.equal(subs.filter((e) => e.rule === 1).length, 17);
   assert.equal(subs.filter((e) => e.rule === 2).length, 70);
@@ -326,8 +332,8 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
   assert.ok(subs.every((e) => [1.5, 3.0, 6.0].includes(e.rerunUsd as number)));
   assert.equal(subs.filter((e) => e.rerunUsd === 1.5).length, 71);
   assert.ok(subs.filter((e) => e.rerunUsd === 1.5).every((e) => e.rule !== 1));
-  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21"]);
-  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0]]);
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.rerunUsd === null).map((e) => e.row), ["TS-634", "INJ-21", "C005-TS-121", "C005-TS-141", "C005-TS-142", "C005-TS-143"]);
+  assert.deepEqual(CAP_EXCEPTIONS.filter((e) => "sessionUsd" in e).map((e) => [e.row, e.host, e.auth, (e as { sessionUsd?: number }).sessionUsd]), [["INJ-21", "opencode", null, 1.0], ["C005-TS-121", "claude-code", "subscription", 1.0], ["C005-TS-141", "claude-code", "subscription", 1.0], ["C005-TS-142", "claude-code", "subscription", 1.0], ["C005-TS-143", "claude-code", "subscription", 1.0]]);
   // Revision D-042: both rows of evals/toy/toy-g3.eval.mjs have a rule-1 row, in the file's order.
   assert.deepEqual(CAP_EXCEPTIONS.filter((e) => e.file === "evals/toy/toy-g3.eval.mjs").map((e) => [e.row, (e as { rule?: number | null }).rule, e.rerunUsd]), [["toy-g3-cfg-full", 1, 6.0], ["toy-g3-cfg-bare", 1, 6.0]]);
   // Revision D-037: of evals/cap02/TS-226.eval.mjs only TS-226-blocking has a row.

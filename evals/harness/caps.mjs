@@ -216,6 +216,12 @@ export const CAP_EXCEPTIONS = Object.freeze([
   SUB("toy-g3-cfg-full", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD),
   // Defect D-044 (critic CR-141): cfg-bare deferred to the follow-up change 'Cost and token efficiency'; capCheck refuses the row, which that change re-enables.
   Object.freeze({ ...SUB("toy-g3-cfg-bare", "evals/toy/toy-g3.eval.mjs", 1, DEFAULT_MAX_TURNS, TOY_CHAIN_RERUN_USD), deferred: "deferred to the follow-up change 'Cost and token efficiency' (defect D-044)" }),
+  // CHG-005 (P-01, 2026-11-18, cap check of C005-T-015): the four planner cases whose dev run ended at the
+  // 0.50 USD cap, every session at the session cap 1.00 USD, no rerun cap.
+  Object.freeze({ row: "C005-TS-121", file: "evals/chg005/C005-TS-121.eval.mjs", host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns: DEFAULT_MAX_TURNS, sessionUsd: 1.0, rerunUsd: null }),
+  Object.freeze({ row: "C005-TS-141", file: "evals/chg005/C005-TS-141.eval.mjs", host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns: DEFAULT_MAX_TURNS, sessionUsd: 1.0, rerunUsd: null }),
+  Object.freeze({ row: "C005-TS-142", file: "evals/chg005/C005-TS-142.eval.mjs", host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns: DEFAULT_MAX_TURNS, sessionUsd: 1.0, rerunUsd: null }),
+  Object.freeze({ row: "C005-TS-143", file: "evals/chg005/C005-TS-143.eval.mjs", host: "claude-code", auth: "subscription", usd: DEFAULT_MAX_BUDGET_USD, turns: DEFAULT_MAX_TURNS, sessionUsd: 1.0, rerunUsd: null }),
 ]);
 
 /**
