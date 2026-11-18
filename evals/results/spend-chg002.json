@@ -9716,6 +9716,834 @@
       "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
       "pass": true,
       "result": "evals/results/c002-t082-TS-359-2026-11-12T00-08-09-882Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-01",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 10,
+      "ai_credits": 15.64149,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 269863,
+          "output": 4311,
+          "cache_read": 233719,
+          "cache_write": 35290,
+          "ai_credits": 15.64149
+        }
+      },
+      "cost_usd": 0.156415,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-01-2026-11-18T23-14-50-750Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-02",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 9,
+      "ai_credits": 13.91881,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 243395,
+          "output": 5022,
+          "cache_read": 216306,
+          "cache_write": 26319,
+          "ai_credits": 13.91881
+        }
+      },
+      "cost_usd": 0.139188,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-02-2026-11-18T23-16-16-607Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-03",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 7,
+      "ai_credits": 10.44411,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 178545,
+          "output": 3266,
+          "cache_read": 155951,
+          "cache_write": 21996,
+          "ai_credits": 10.44411
+        }
+      },
+      "cost_usd": 0.104441,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-03-2026-11-18T23-17-42-509Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-04",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 11,
+      "ai_credits": 14.41738,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 302576,
+          "output": 4718,
+          "cache_read": 274573,
+          "cache_write": 27061,
+          "ai_credits": 14.41738
+        }
+      },
+      "cost_usd": 0.144174,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-04-2026-11-18T23-18-46-405Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-05",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 8,
+      "ai_credits": 12.4004,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 209612,
+          "output": 4110,
+          "cache_read": 183660,
+          "cache_write": 25268,
+          "ai_credits": 12.4004
+        }
+      },
+      "cost_usd": 0.124004,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-05-2026-11-18T23-20-12-437Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-06",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 12,
+      "ai_credits": 15.21215,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 338947,
+          "output": 5030,
+          "cache_read": 310430,
+          "cache_write": 27489,
+          "ai_credits": 15.21215
+        }
+      },
+      "cost_usd": 0.152122,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-06-2026-11-18T23-21-30-285Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-07",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 10,
+      "ai_credits": 14.716,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 274518,
+          "output": 5258,
+          "cache_read": 246370,
+          "cache_write": 27294,
+          "ai_credits": 14.716
+        }
+      },
+      "cost_usd": 0.14716,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-07-2026-11-18T23-22-58-463Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-08",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "ai_credits": 9.02546,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 81214,
+          "output": 2694,
+          "cache_read": 58146,
+          "cache_write": 22728,
+          "ai_credits": 9.02546
+        }
+      },
+      "cost_usd": 0.090255,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-08-2026-11-18T23-24-25-666Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-09",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "ai_credits": 8.00521,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 81209,
+          "output": 2575,
+          "cache_read": 61896,
+          "cache_write": 18973,
+          "ai_credits": 8.00521
+        }
+      },
+      "cost_usd": 0.080052,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-09-2026-11-18T23-25-06-268Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-10",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "ai_credits": 7.71193,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 81141,
+          "output": 2718,
+          "cache_read": 63643,
+          "cache_write": 17158,
+          "ai_credits": 7.71193
+        }
+      },
+      "cost_usd": 0.077119,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-10-2026-11-18T23-25-45-356Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-11",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "ai_credits": 9.67367,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 105585,
+          "output": 4034,
+          "cache_read": 86397,
+          "cache_write": 18762,
+          "ai_credits": 9.67367
+        }
+      },
+      "cost_usd": 0.096737,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-11-2026-11-18T23-26-26-270Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-12",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "ai_credits": 9.36196,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 105310,
+          "output": 3702,
+          "cache_read": 86026,
+          "cache_write": 18858,
+          "ai_credits": 9.36196
+        }
+      },
+      "cost_usd": 0.09362,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-12-2026-11-18T23-27-14-716Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-13",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "ai_credits": 0.2465345,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-haiku-5.5": {
+          "input": 30779,
+          "output": 681,
+          "cache_read": 14942,
+          "cache_write": 15669,
+          "ai_credits": 0.2465345
+        }
+      },
+      "cost_usd": 0.002465,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-13-2026-11-18T23-28-03-226Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-14",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "ai_credits": 0.200337,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-haiku-5.5": {
+          "input": 30784,
+          "output": 593,
+          "cache_read": 18582,
+          "cache_write": 12034,
+          "ai_credits": 0.200337
+        }
+      },
+      "cost_usd": 0.002003,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-14-2026-11-18T23-28-29-138Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-15",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "ai_credits": 0.200162,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-haiku-5.5": {
+          "input": 30762,
+          "output": 595,
+          "cache_read": 18582,
+          "cache_write": 12012,
+          "ai_credits": 0.200162
+        }
+      },
+      "cost_usd": 0.002002,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-15-2026-11-18T23-28-54-682Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-16",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-haiku-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "ai_credits": 0.2005715,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-haiku-5.5": {
+          "input": 30768,
+          "output": 601,
+          "cache_read": 18579,
+          "cache_write": 12021,
+          "ai_credits": 0.2005715
+        }
+      },
+      "cost_usd": 0.002006,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-16-2026-11-18T23-29-20-922Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-17",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "ai_credits": 12.19734,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 111540,
+          "output": 4449,
+          "cache_read": 83814,
+          "cache_write": 27300,
+          "ai_credits": 12.19734
+        }
+      },
+      "cost_usd": 0.121973,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-17-2026-11-18T23-29-47-171Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-18",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 4,
+      "ai_credits": 9.67853,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 87301,
+          "output": 2529,
+          "cache_read": 61078,
+          "cache_write": 25883,
+          "ai_credits": 9.67853
+        }
+      },
+      "cost_usd": 0.096785,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-18-2026-11-18T23-30-45-427Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-19",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 5,
+      "ai_credits": 15.44719,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 221782,
+          "output": 1323,
+          "cache_read": 172084,
+          "cache_write": 49275,
+          "ai_credits": 15.44719
+        }
+      },
+      "cost_usd": 0.154472,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-19-2026-11-18T23-31-35-468Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-20",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 3,
+      "ai_credits": 9.29878,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 120432,
+          "output": 557,
+          "cache_read": 88973,
+          "cache_write": 31205,
+          "ai_credits": 9.29878
+        }
+      },
+      "cost_usd": 0.092988,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-20-2026-11-18T23-32-17-322Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-21",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 6,
+      "ai_credits": 13.95575,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 267176,
+          "output": 1738,
+          "cache_read": 227295,
+          "cache_write": 39372,
+          "ai_credits": 13.95575
+        }
+      },
+      "cost_usd": 0.139558,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-21-2026-11-18T23-32-44-964Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "INJ-22",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 3,
+      "ai_credits": 9.65436,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 121714,
+          "output": 564,
+          "cache_read": 88856,
+          "cache_write": 32604,
+          "ai_credits": 9.65436
+        }
+      },
+      "cost_usd": 0.096544,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-INJ-22-2026-11-18T23-33-32-096Z.json"
+    },
+    {
+      "date": "2026-11-18",
+      "task": "C005-T-024",
+      "step": 2,
+      "case": "TS-359",
+      "row": null,
+      "host": "copilot-cli",
+      "provider": "copilot",
+      "pool": "copilot",
+      "auth": "subscription",
+      "api_key_source": "copilot-credential-store",
+      "models": [
+        "claude-sonnet-5.5"
+      ],
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "end_reason": "completed",
+      "turns": 2,
+      "ai_credits": 8.44145,
+      "premium_requests": 1,
+      "tokens": {
+        "claude-sonnet-5.5": {
+          "input": 79573,
+          "output": 397,
+          "cache_read": 49335,
+          "cache_write": 30070,
+          "ai_credits": 8.44145
+        }
+      },
+      "cost_usd": 0.084415,
+      "caps_usd": 0.5,
+      "cost_source": "estimate: AI Credits measured by Copilot CLI (--usage-output-file totalNanoAiu / 1e9) × 0.01 USD (test plan §4.4); GitHub's billing view is the authority",
+      "pass": true,
+      "result": "evals/results/t024-TS-359-2026-11-18T23-33-59-803Z.json"
     }
   ]
 }
