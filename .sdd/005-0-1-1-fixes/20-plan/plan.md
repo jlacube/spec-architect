@@ -815,7 +815,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** 11 cases at floor (TS-109 10/10 after D-002); planner cases at the 1.00 USD cap exception; 8 regression sessions pass
 
 ### C005-T-016 — Version 0.1.1, release build and checks
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-014, C005-T-015, C005-T-025
 - **Implements:** C005-REQ-118
@@ -850,7 +850,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The four release files are in `dist/` at version 0.1.1
   - [ ] The `sha512-` integrity of `dist/architect-sdd-0.1.1.tgz` is in section "Check" of `docs/release-0.1.1-evidence.md`
   - [ ] The local pre-check passed in the three shells
-- **Completed at:** —
+- **Completed at:** 2026-11-19
+- **Commit:** 2fec7a8
+- **Notes:** Release commit 2fec7a8: check 10 PASS, 4 packages, smoke 14/14, integrity recorded, local pre-check 5/5 in pwsh, cmd and Git Bash
 
 ### C005-T-017 — Release notes 0.1.1 and release procedure
 - **Status:** todo
