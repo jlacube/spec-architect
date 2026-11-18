@@ -319,7 +319,7 @@ test("C002-TS-679 (supporting): CAP_EXCEPTIONS holds exactly the rows of the C00
   // and one (TS-421-agent) in neither list.
   // CHG-005 adds four rows at a session cap (P-01, 2026-11-18): 94 rows; the counts below are of the other 90.
   assert.equal(CAP_EXCEPTIONS.length, 94);
-  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription" && !("sessionUsd" in e));
+  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription" && !("sessionUsd" in e)) as Array<(typeof CAP_EXCEPTIONS)[number] & { rule?: number | null }>;
   assert.equal(subs.length, 88);
   assert.equal(subs.filter((e) => e.rule === 1).length, 17);
   assert.equal(subs.filter((e) => e.rule === 2).length, 70);
@@ -349,7 +349,7 @@ test("C002-TS-679 (supporting, revision D-040): every row of the 3-run class of 
   assert.ok(line, "the 3-run row of C001-ADR-003");
   const numbers = line!.split("|")[2]!.replace(/C001-TC-/g, "").split(",").map((n) => n.trim());
   assert.equal(numbers.length, 65);
-  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription");
+  const subs = CAP_EXCEPTIONS.filter((e) => e.host === "claude-code" && e.auth === "subscription") as Array<(typeof CAP_EXCEPTIONS)[number] & { rule?: number | null }>;
   const files = new Set<string>();
   for (const n of numbers) {
     // C001-TC-612 and C001-TC-613 run on the one row of evals/cap06/impact.eval.mjs, and the cfg-full
