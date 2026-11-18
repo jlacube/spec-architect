@@ -855,7 +855,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** Release commit 2fec7a8: check 10 PASS, 4 packages, smoke 14/14, integrity recorded, local pre-check 5/5 in pwsh, cmd and Git Bash
 
 ### C005-T-017 — Release notes 0.1.1 and release procedure
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-016
 - **Implements:** C005-REQ-120, C005-REQ-125
@@ -881,7 +881,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Notes, CHANGELOG entry and procedure committed
   - [ ] The notes hold the four statements of C005-REQ-125, the hand move included
   - [ ] P-01's draft review recorded
-- **Completed at:** —
+- **Completed at:** 2026-11-19
+- **Commit:** 3935ca4
+- **Notes:** P-01 approved the draft notes against C005-TS-154 and C005-TS-172 on 2026-11-19 (Approve draft); published-notes review in C005-T-022
 
 ### C005-T-024 — Copilot CLI injection suite on the 0.1.1 package
 - **Status:** todo
