@@ -649,7 +649,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-18
 
 ### C005-T-012 — Pre-phase round: interview-protocol §5 and the conductor rule
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 3 — Agent text and evals
 - **Depends on:** C005-T-005, C005-T-010
 - **Implements:** C005-REQ-103, C005-REQ-104
@@ -680,9 +680,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] The five eval cases pass one dev run each
   - [ ] Sizes after the edit are in section "Sizes" of `docs/release-0.1.1-evidence.md`, inside the limits of C005-DOD-004
   - [ ] `npm run check` passes
-- **Completed at:** —
-- **Commit:** 75ee6e5
-- **Notes:** Reopened for D-002: TS-109 fixture gets an import task in its approved spec
+- **Completed at:** 2026-11-18
+- **Commit:** ad8bc93
+- **Notes:** TS-109 fixture gets an import requirement (D-002); release tier 10/10
 
 ### C005-T-013 — Plugin README step 6 and the plugin-path scan
 - **Status:** done
