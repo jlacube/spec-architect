@@ -75,6 +75,86 @@ After C005-T-012 (interview-protocol §5, pre-phase round; conductor item 6):
 | copilot inlined phase-plan | 2087 |
 | copilot conductor inlined total | 51136 |
 
+At the release commit `2fec7a8` (C005-T-016 step 3), measured from `plugins/architect/` and the generated
+`dist/copilot/agents/sdd-conductor.agent.md`: every figure equals the table "After C005-T-012" (conductor body 5027,
+preloaded skills total 46922, Copilot conductor inlined total 51136). The largest SKILL.md body is phase-ideation,
+11820 characters. All inside the 24,000 and 64,000 limits of C005-DOD-004; PLG-SIZE-001 and TGT-SIZE-001 report no
+finding in `npm run check` (plugin and target structure steps).
+
+## Check
+
+C005-T-016 (DOD-G-02), 2026-11-18 and 2026-11-19, on REF-WIN (Windows 11, Git Bash 5.2.26, Node 22.22.3, npm 10.9.8).
+
+**Host versions before the release commit** (step 1): `sdd host-version vscode` prints `vscode 1.145.2` and
+`copilot-chat 0.73.0`, the `host.tested_versions` of `plugins/architect/targets/copilot.json`; `copilot --version`
+prints `GitHub Copilot CLI 1.0.98.`, the `copilot-cli` value of `docs/spikes/S-08-copilot-vscode.md`.
+
+**Version 0.1.1** (step 2): `1ea5f2a` sets 0.1.1 in `plugins/architect/.claude-plugin/plugin.json`, `package.json`
+and `package-lock.json`, and `architect-sdd@0.1.1` in step 6 of `plugins/architect/README.md`; `npm run build` wrote
+`plugins/architect/scripts/sdd.mjs (architect-plugin@0.1.1)`.
+
+**`npm run check`** (step 3):
+
+| Commit | Exit | Time | Steps | Tests (pass / fail / skip) | Lint fixtures | Encoding (files written by the CLI) |
+|---|---|---|---|---|---|---|
+| `1ea5f2a` | 1 | about 20 min | typecheck FAIL, the other nine PASS | 1,992 / 0 / 2 | 64 / 64 | 0 of 634 |
+| `2fec7a8` | **0** | 1,149 s | **10 PASS** | 1,992 / 0 / 2 of 1,994 | 64 / 64 | 0 of 634 |
+
+The typecheck failure at `1ea5f2a` was in a test file only: `tests/integration/cap06/cap-exceptions.test.ts` read
+`rule` on cap-exception rows whose union type, since the four session-cap rows of `1874eed`, includes rows without
+that property (TS2339, 8 errors). The tests themselves passed. `2fec7a8` types the two row lists with an optional
+`rule`; it changes no file under `src/`, `scripts/` or `plugins/` (`git diff --stat 1ea5f2a 2fec7a8 -- src scripts
+plugins` is empty). **`2fec7a8` is the release commit.**
+
+Skipped tests: `a symbolic link to the launcher … resolves to the install` (symbolic links need a privilege on
+Windows) and `lookup (POSIX): a regular file with execute permission` (POSIX only). Encoding scope (a): fx-large 0 of
+622 and fx-empty 0 of 12 files violate UTF-8 without BOM, LF; scope (b), reported only: 1 of 419 `.sdd/` files.
+Structure checks: 17 checks, 0 errors; targets copilot (49 files) and opencode (45 files), 13 checks each, 0 errors;
+tarball check of a fresh pack (63 files) 0 errors, SPDX 0 errors. After `npm run check`, `npm run build` leaves
+`plugins/architect/scripts/sdd.mjs` unchanged (`git status --short` prints nothing for it).
+
+**Packages** (step 4): `npm run package` wrote `dist/architect-sdd-0.1.1.tgz` (373,533 bytes),
+`dist/architect-copilot-0.1.1.zip` (303,494), `dist/architect-0.1.1.zip` (269,959) and
+`dist/architect-0.1.1-plugin.zip` (262,774), and the OpenCode package, which is not released (CHG-003).
+
+**npm package** (step 5):
+
+| Command | Exit | Result |
+|---|---|---|
+| `npm run smoke:npm` | 0 | PASS, 14 / 14 probes, Node.js v22.22.3, shells bash and pwsh, 10.7 s |
+| `node scripts/check/tarball.mjs dist/architect-sdd-0.1.1.tgz` | 0 | 63 files, TGT-NPM-001 0 errors, SPDX 0 errors |
+| integrity of `dist/architect-sdd-0.1.1.tgz` (release procedure §2) | 0 | `sha512-vEbfnWWfmUdOGqEVtFAxMFWsQ4tjeFUoqFeqKWvpefXR0X7J34mv8/Moh5BuVXW5ONGfcgti7rQxlAQrmm9Caw==` |
+
+SHA-256 of `dist/architect-copilot-0.1.1.zip`: `4a8ee3930854b4942e5ab340600ddf485ccd9a87fd9cfc859aa696a807c3a33a`.
+
+**Local pre-check of C005-NFR-001** (step 5; C005-RISK-009), 2026-11-19: the Method of C005-NFR-001 with the local
+tarball in place of the registry. A lite fixture change scaffolded by the 0.1.1 CLI (`sdd init`, `sdd change new
+"Precheck fixture" --profile lite --kind greenfield`; task A `C001-T-001` todo, task B `C001-T-002` in-progress,
+requirement R `C001-REQ-101`), copied new for each shell. In each shell `NPM_CONFIG_PREFIX` pointed to a new empty
+folder, first on PATH; then `npm install -g <repo>/dist/architect-sdd-0.1.1.tgz` and the four commands of the
+scaffolded Reporting protocol with only the placeholders filled.
+
+| Shell | Install | `sdd --version` | `task set` A in-progress | `task set` A done | `task set` B blocked | `defect add --ref` R | State afterwards |
+|---|---|---|---|---|---|---|---|
+| PowerShell 7.6.10 | 0 | 0.1.1 | 0 | 0 | 0 | 0 | A done, B blocked, D-001 open on C001-REQ-101 |
+| Command Prompt | 0 | 0.1.1 | 0 | 0 | 0 | 0 | the same |
+| Git Bash 5.2.26 | 0 | 0.1.1 | 0 | 0 | 0 | 0 | the same |
+
+5 of 5 in each shell. The `sdd` that ran was the one in the new prefix in each shell (`Get-Command`, `where`,
+`command -v`). The binding check with the published package is C005-T-020.
+
+## Coverage
+
+C005-DOD-003 (C001-NFR-502), coverage step of `npm run check` at the release commit `2fec7a8`, Node 22.22.3:
+
+| Measure | Covered | Threshold |
+|---|---|---|
+| lines | **95.83%** (10,336 / 10,786) | 85.00% |
+| branches | **83.28%** (4,920 / 5,908) | 75.00% |
+
+At 0.1.0 (`b6f1509`): 95.60% lines, 83.22% branches (`docs/release-0.1.0-evidence.md` §2.1). As at 0.1.0, the report
+names `src/mcp/handlers.ts` as not loaded by any test; the figure covers all of `src/` and passes.
+
 ## Evals
 
 C005-T-014 and C005-T-015 (DOD-G-01, C005-ADR-002): every Claude Code eval session of CHG-005, in the order it ran,
