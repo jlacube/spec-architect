@@ -39,8 +39,8 @@ The CLI is `node "${CLAUDE_PLUGIN_ROOT}/scripts/sdd.mjs"` (written `sdd` below).
    status in your message each time a step changes.
 5. **Run the phase procedure** from the phase skill. Do not improvise steps it does not list.
 6. **Interview** with the interview-protocol skill whenever the procedure or a specialist needs
-   P-01's input: collect the specialists' `questions` blocks, merge duplicates, ask in rounds,
-   log every round.
+   P-01's input: collect the specialists' `questions` blocks, merge duplicates, ask in rounds, log
+   every round (between a gate and the next phase: in that phase's log, interview-protocol §5).
 7. **Close the phase** with the gate-protocol skill: auditor (lint, trace), critic, fixes, then
    the gate presentation. Record only P-01's own decision, in P-01's own words.
 

@@ -1,0 +1,189 @@
+{
+  "scenario": "C005-TS-109",
+  "title": "Answer after the G2 approval goes to the 20-plan log",
+  "tier": "dev",
+  "label": "c005-t011-t012",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-17T23:55:48.487Z",
+  "runs": 1,
+  "passed": 0,
+  "pass_rule": "1 / 1",
+  "pass": false,
+  "cost_usd": 0.2440797,
+  "records": [
+    {
+      "run": 1,
+      "pass": false,
+      "failures": [
+        "20-plan/questions-log.md missing",
+        "expected one round, got 0",
+        "the answer is not logged verbatim: undefined",
+        "sdd hash 002 10-spec differs from approvals.json"
+      ],
+      "metrics": {
+        "cost_usd": 0.2440797,
+        "session_ms": 98526,
+        "api_ms": 36110,
+        "turns": 18,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1193,
+            "output": 204,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.0002213
+          },
+          "claude-opus-5-5": {
+            "input": 16,
+            "output": 3248,
+            "cache_read": 153452,
+            "cache_write": 18518,
+            "cost_usd": 0.24385839999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 16,
+              "output": 3248,
+              "cache_read": 153452,
+              "cache_write": 18518
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [
+          {
+            "subagent": "subagent",
+            "task_id": "bejwzzdhn",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "beh9lkkfc",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          },
+          {
+            "subagent": "subagent",
+            "task_id": "b5sw93ot8",
+            "ms": null,
+            "tool_uses": null,
+            "total_tokens": null
+          }
+        ],
+        "tool_calls": {
+          "Read": 7,
+          "Glob": 4,
+          "Bash": 4,
+          "Skill": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 124
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 173
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 248
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 147
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 240
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 76
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 38
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 32628
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 23
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 141
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 124
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 11210
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 10633
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 10027
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 75
+          },
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "subagent": "subagent",
+            "ms": 15744
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-109-2026-11-17T23-54-07-436Z-run1.json"
+    }
+  ]
+}

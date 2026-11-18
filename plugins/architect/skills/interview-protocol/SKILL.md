@@ -87,6 +87,16 @@ create it on first use) immediately after P-01 answers:
 ```
 
 - Rounds are numbered from 1 per phase; the date is today's date.
+- **Pre-phase round.** After the approval of G1 or G2 and before the next phase starts (`10-spec` or
+  `20-plan` still `not-started`), no phase is open: append the round to `questions-log.md` in the next
+  phase's folder, never to the approved phase's log (its approval hash covers it). Create the file on
+  first use with the frontmatter `id: "C<NNN>-SPEC-QLOG"`, `artifact: spec/questions-log`,
+  `change: "CHG-<NNN>"`, `phase: 10-spec`, `status: draft` (after G2: `PLAN-QLOG`, `plan/questions-log`,
+  `20-plan`) and the title `# CHG-<NNN> — Questions log (<phase>)`. Between the round heading and its
+  first question write this line (after G2: G2 and `20-plan`):
+  **Pre-phase round:** answered after the approval of G1, before `10-spec` started.
+  Rounds after the phase starts continue the numbering, without that line. No rule applies after G3 or
+  a Stop.
 - The **Answer** is P-01's text exactly as given: same words, case and punctuation, free text
   included. Never paraphrase, correct or shorten it. For a multi-select answer keep the
   separator P-01's tool returned.

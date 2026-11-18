@@ -57,3 +57,20 @@ inlined `## Skill:` sections of `npm run generate -- --target copilot`).
 | copilot inlined phase-spec | 6300 | 6300 |
 | copilot inlined phase-plan | 2087 | 2087 |
 | copilot conductor inlined total | 47748 | 50272 |
+
+After C005-T-012 (interview-protocol §5, pre-phase round; conductor item 6):
+
+| Measure | After C005-T-012 |
+|---|---|
+| conductor body | 5027 |
+| phase-ideation SKILL.md body | 11820 |
+| interview-protocol SKILL.md body | 8134 |
+| conductor preloaded skills total | 46922 |
+| copilot inlined sdd-conventions | 9089 |
+| copilot inlined interview-protocol | 10012 |
+| copilot inlined options-analysis | 3716 |
+| copilot inlined gate-protocol | 8114 |
+| copilot inlined phase-ideation | 11818 |
+| copilot inlined phase-spec | 6300 |
+| copilot inlined phase-plan | 2087 |
+| copilot conductor inlined total | 51136 |

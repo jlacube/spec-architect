@@ -156,12 +156,12 @@ for (const t of TARGETS) {
 for (const t of TARGETS) {
   test(`C002-TC-117 (C002-TS-117): the interview wiring section takes the ${NAME[t]} variant, in the skill and every inlining agent`, () => {
     const path = "skills/interview-protocol/SKILL.md";
-    assert.equal(sourceLine(path, 126), `## ${WIRING_SECTION}`);
-    assert.ok(sourceText(path).split("\n").slice(125).join("\n").includes("AskUserQuestion"), "the source section names AskUserQuestion");
+    assert.equal(sourceLine(path, 136), `## ${WIRING_SECTION}`);
+    assert.ok(sourceText(path).split("\n").slice(135).join("\n").includes("AskUserQuestion"), "the source section names AskUserQuestion");
     const g = generated(t);
     const doc = g.docs.get(path)!;
     const expected = variantText(t, "interview-protocol");
-    assert.equal(linesFrom(doc, 126), expected, "the variant in place of the section");
+    assert.equal(linesFrom(doc, 136), expected, "the variant in place of the section");
     assert.ok(!doc.body.includes("AskUserQuestion"));
     // Copilot: both names of the question tool (C002-IF-001 §6.1; C002-T-077, defect D-051).
     assert.ok(t === "opencode" ? expected.includes("`question` tool") : expected.includes("`askQuestions`") && expected.includes("`ask_user`"), "the host question tool");

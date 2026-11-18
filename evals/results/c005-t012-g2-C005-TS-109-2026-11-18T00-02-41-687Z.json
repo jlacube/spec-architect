@@ -1,0 +1,137 @@
+{
+  "scenario": "C005-TS-109",
+  "title": "Answer after the G2 approval goes to the 20-plan log",
+  "tier": "dev",
+  "label": "c005-t012-g2",
+  "agent": "architect:sdd-conductor",
+  "host": "claude-code",
+  "target": "claude-code",
+  "auth": "subscription",
+  "api_key_source": "none",
+  "measured_at": "2026-11-18T00:03:24.512Z",
+  "runs": 1,
+  "passed": 1,
+  "pass_rule": "1 / 1",
+  "pass": true,
+  "cost_usd": 0.240387,
+  "records": [
+    {
+      "run": 1,
+      "pass": true,
+      "failures": [],
+      "metrics": {
+        "cost_usd": 0.240387,
+        "session_ms": 40650,
+        "api_ms": 35886,
+        "turns": 13,
+        "result_subtype": "success",
+        "tokens_by_model": {
+          "claude-haiku-5-5": {
+            "input": 1193,
+            "output": 19,
+            "cache_read": 0,
+            "cache_write": 0,
+            "cost_usd": 0.00012880000000000001
+          },
+          "claude-opus-5-5": {
+            "input": 18,
+            "output": 2916,
+            "cache_read": 180251,
+            "cache_write": 18227,
+            "cost_usd": 0.24025819999999998
+          }
+        },
+        "tokens_by_agent": {
+          "main": {
+            "models": [
+              "claude-opus-5-5"
+            ],
+            "tokens": {
+              "input": 18,
+              "output": 2916,
+              "cache_read": 180251,
+              "cache_write": 18227
+            },
+            "output": "derived"
+          }
+        },
+        "subagents": [],
+        "tool_calls": {
+          "Bash": 1,
+          "Read": 4,
+          "Glob": 2,
+          "Grep": 1,
+          "Skill": 1,
+          "AskUserQuestion": 1,
+          "Write": 1
+        },
+        "tool_timings": [
+          {
+            "tool": "Bash",
+            "agent": "main",
+            "ms": 228
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 91
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 146
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 77
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 73
+          },
+          {
+            "tool": "Read",
+            "agent": "main",
+            "ms": 101
+          },
+          {
+            "tool": "Grep",
+            "agent": "main",
+            "ms": 176
+          },
+          {
+            "tool": "Skill",
+            "agent": "main",
+            "ms": 24
+          },
+          {
+            "tool": "AskUserQuestion",
+            "agent": "main",
+            "ms": 19
+          },
+          {
+            "tool": "Glob",
+            "agent": "main",
+            "ms": 136
+          },
+          {
+            "tool": "Write",
+            "agent": "main",
+            "ms": 588
+          }
+        ]
+      },
+      "auth": "subscription",
+      "api_key_source": "none",
+      "target": "claude-code",
+      "claude_code_version": "2.1.325",
+      "caps": {
+        "turns": 20,
+        "usd": 0.5
+      },
+      "transcript": "evals/results/transcripts/C005-TS-109-2026-11-18T00-02-41-687Z-run1.json"
+    }
+  ]
+}
