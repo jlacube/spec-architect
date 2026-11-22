@@ -949,7 +949,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** Checklist 27/27 sdd-mcp-server steps passed (record vscode-2026-11-22-0.1.1.md); TS-155 both rows, TS-157, TS-164, TS-165 passed; release-check dry run released
 
 ### C005-T-019 — Publish `architect-sdd` 0.1.1 on npm
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-017, C005-T-018
 - **Implements:** C005-REQ-119
@@ -973,6 +973,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Done when:**
   - [ ] `architect-sdd` 0.1.1 is public with `latest: 0.1.1`
   - [ ] The record is committed
+- **Commit:** 551a1c8
+- **Notes:** architect-sdd 0.1.1 published by P-01 2026-11-22T09:21:12Z, latest 0.1.1, registry integrity equals the checked tarball
+- **Completed at:** 2026-11-22
 
 ### C005-T-020 — C005-NFR-001 check in three shells
 - **Status:** todo
