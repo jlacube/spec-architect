@@ -363,3 +363,27 @@ the dormant workflow.
 
 Also seen: the workspace lint (`sdd lint`, all changes) reports 9 × LINT-DELTA-001 in CHG-002 (C001
 IDs cited before CHG-001 is archived into `_living/`); `sdd lint 001` reports 0 findings.
+
+## 8. C005-NFR-001: reporting commands of a 0.1.1 hand-off, three shells (CHG-005)
+
+C005-T-020 (C005-DOD-008), 2026-11-22, REF-WIN (Windows 11, Node 22.22.3), with the **published**
+`architect-sdd@0.1.1` (npm, 2026-11-22T09:21:12Z, `docs/releases/architect-sdd/0.1.1.md`). Threshold: 5 of 5 in
+each of PowerShell 7, Command Prompt and Git Bash.
+
+**Method as specified.** A lite fixture change scaffolded by the sdd CLI 0.1.1 (`sdd init`, `sdd change new
+"Precheck fixture" --profile lite --kind greenfield`; task A `C001-T-001` todo, task B `C001-T-002` in-progress,
+requirement R `C001-REQ-101`), copied new for each shell. In each shell `NPM_CONFIG_PREFIX` pointed to a new empty
+folder, first on PATH; then the install line of the scaffolded Reporting protocol, `npm install -g
+architect-sdd@0.1.1`, and its four commands with only the placeholders filled, in the order of the Method.
+
+| Shell | Install line | `task set` A in-progress | `task set` A done | `task set` B blocked | `defect add --ref` R | Score | State afterwards |
+|---|---|---|---|---|---|---|---|
+| PowerShell 7.6.10 | exit 0 (`sdd --version` 0.1.1) | exit 0 | exit 0 | exit 0 | exit 0 | **5 / 5** | `plan.md`: A done, B blocked; `change.md`: D-001 open on C001-REQ-101 |
+| Command Prompt | exit 0 (`sdd --version` 0.1.1) | exit 0 | exit 0 | exit 0 | exit 0 | **5 / 5** | the same |
+| Git Bash 5.2.26 | exit 0 (`sdd --version` 0.1.1) | exit 0 | exit 0 | exit 0 | exit 0 | **5 / 5** | the same |
+
+In each shell the `sdd` that ran was the one in the new prefix (`Get-Command`, `where`, `command -v`; in Command
+Prompt `where` also lists the executor's own global installs after it, which PATH order does not reach). Command
+outputs: `C001-T-001: todo → in-progress`, `C001-T-001: in-progress → done`, `C001-T-002: in-progress → blocked`,
+`D-001: open on C001-REQ-101 (CHG-001)`. **C005-NFR-001 met.** The same check with the local tarball passed 5 / 5 in
+each shell before publication (`docs/release-0.1.1-evidence.md`, section "Check").
