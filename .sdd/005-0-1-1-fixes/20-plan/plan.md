@@ -1067,7 +1067,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-22
 
 ### C005-T-023 — Archive CHG-005 into living specs
-- **Status:** todo
+- **Status:** in-progress
 - **Archive task:** true
 - **Milestone:** 5 — Close
 - **Depends on:** C005-T-022
@@ -1093,6 +1093,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Done when:**
   - [ ] `.sdd/_archive/005-0-1-1-fixes/` exists and the living files carry the MODIFIED and ADDED requirements
   - [ ] The archive commit SHA is recorded in `docs/release-0.1.1-evidence.md` (DOD-G-06)
+- **Completed at:** —
 
 ## Test mapping
 | TC | TS | Level | Location | Test data | Environment | Runs | Executor |
