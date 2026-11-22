@@ -978,7 +978,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-22
 
 ### C005-T-020 — C005-NFR-001 check in three shells
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-019
 - **Implements:** C005-REQ-105
@@ -1000,6 +1000,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Done when:**
   - [ ] 5 of 5 recorded in each of the three shells
   - [ ] A shell below 5 of 5 has a defect and P-01's decision recorded
+- **Commit:** e7d13c4
+- **Notes:** Published architect-sdd 0.1.1: install line + 4 Reporting protocol commands 5/5 in PowerShell 7, Command Prompt and Git Bash (docs/nfr-results.md section 8)
+- **Completed at:** 2026-11-22
 
 ### C005-T-021 — Release 0.1.1 on both hosts
 - **Status:** todo
