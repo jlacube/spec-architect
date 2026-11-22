@@ -1038,7 +1038,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-22
 
 ### C005-T-022 — DoD evidence and close preconditions
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 5 — Close
 - **Depends on:** C005-T-021
 - **Implements:** C005-REQ-118, C005-REQ-119, C005-REQ-120, C005-REQ-125
@@ -1062,6 +1062,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Every DoD item has its evidence in `docs/release-0.1.1-evidence.md`
   - [ ] P-01's waiver decision on C005-TS-156 is recorded
   - [ ] No open defect
+- **Commit:** 98d8969
+- **Notes:** Every DoD item has its evidence (DOD-G-06 at C005-T-023); P-01 reviewed the published release (TS-152, 154, 172 pass) and waived C005-TS-156 (carried to CHG-003); interface review: IF-001..005 match
+- **Completed at:** 2026-11-22
 
 ### C005-T-023 — Archive CHG-005 into living specs
 - **Status:** todo
