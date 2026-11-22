@@ -37,6 +37,28 @@ CHG-005 10-spec: approved (hash matches)
 CHG-005 20-plan: approved (hash matches)
 ```
 
+**After the release (C005-T-021 step 5, 2026-11-22).** P-01 removed the `architect-local` marketplace of the
+dogfood install (`C:\Sandbox\runs\t073\…`); the conductor added it again from a stable folder unpacked from the
+released `architect-0.1.1.zip` (`C:\Sandbox\architect-releases\0.1.1-marketplace`) and installed
+`architect@architect-local` at user scope with the bundled Claude Code CLI 2.1.330 (`claude plugin marketplace add`,
+`claude plugin install`, on P-01's go): `claude plugin list` shows `architect@architect-local`, Version 0.1.1,
+enabled. The installed plugin CLI, `~\.claude\plugins\cache\architect-local\architect\0.1.1\scripts\sdd.mjs
+--version`, prints `0.1.1`. From then on the conductor rule of Strategy rule 1 ends: the plugin CLI computes the
+0.1.1 hash rule.
+
+## Release
+
+C005-T-021, 2026-11-22 (P-01 with the conductor):
+
+| Item | Value |
+|---|---|
+| Copilot release check | `node scripts/release-check.mjs --target copilot`: `copilot 0.1.1 (sdd-mcp-server): released`, exit 0; record `docs/releases/copilot/0.1.1/release.json`: outcome released, enforcement sdd-mcp-server, tested versions VS Code 1.145.2 and Copilot Chat 0.73.0, exception null, 0 refusals (`f9b09bc`) |
+| `zip.sha256` | `4a8ee3930854b4942e5ab340600ddf485ccd9a87fd9cfc859aa696a807c3a33a  architect-copilot-0.1.1.zip`; `sha256sum -c` OK |
+| Tag | annotated `v0.1.1` (`a205381`) on `f9b09bc`, pushed by P-01 (`git ls-remote --tags origin v0.1.1`); `git diff --stat 2fec7a8 v0.1.1 -- src scripts plugins` is empty |
+| GitHub release | <https://github.com/jlacube/spec-architect/releases/tag/v0.1.1>, "Architect 0.1.1", published 2026-11-22T09:39:31Z by P-01, not draft, not pre-release; body from `docs/releases/github-release-notes-0.1.1.md` |
+| Release files | `architect-0.1.1-plugin.zip` (262,774 bytes, sha256 `8bb8252f…77da0`), `architect-0.1.1.zip` (269,959, `624981d2…5ce44`), `architect-copilot-0.1.1.zip` (303,494, `4a8ee393…a33a`), `zip.sha256` (94); each asset digest equals the SHA-256 of the checked file in `dist/` |
+| npm | `architect-sdd@0.1.1` published 2026-11-22T09:21:12Z, before the host packages (`docs/releases/architect-sdd/0.1.1.md`) |
+
 ## Sizes
 
 C005-DOD-004 (constitution, NFR defaults, Skill size: 24,000 characters per SKILL.md body, 64,000 per agent). Bodies as
