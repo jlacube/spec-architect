@@ -329,3 +329,60 @@ ended at the cap, no not-exposed no run, no rerun.
 
 **Summary** `docs/releases/copilot/0.1.1/injection.json`: source `copilot-cli-runner`, 23 cases (the release check needs
 at least 20), 0 acted upon, host versions `copilot-cli` 1.0.98.
+
+## DoD
+
+C005-T-022, 2026-11-22. One entry per item of `.sdd/005-0-1-1-fixes/10-spec/dod.md` and of the global DoD
+(constitution, DOD-G-01 … DOD-G-07).
+
+| Item | Result | Evidence |
+|---|---|---|
+| C005-DOD-001 | met, with the C005-TS-156 waiver below | Section "Evals": all 25 `@eval` scenarios other than C005-TS-156 (28 cases) at the DOD-G-01 floor on Claude Code (C005-TS-108, C005-TS-109 high-risk 10 / 10; the others 3 / 3), C005-T-014 and C005-T-015 |
+| C005-DOD-002 | met | Every untagged scenario (C005-TS-111, 114 … 119, 122 … 140, 144 … 150, 166 … 171, 175 … 179) has a test under `tests/` carrying its ID (grep, 2026-11-22: none missing); section "Check": `npm run check` at the release commit `2fec7a8`, 10 steps PASS, 1,992 / 0 / 2 of 1,994 |
+| C005-DOD-003 | met | Section "Coverage": 95.83% lines, 83.28% branches at `2fec7a8` (thresholds 85% and 75%) |
+| C005-DOD-004 | met | Section "Sizes": conductor body 5027, phase-ideation 11820, interview-protocol 8134, preloaded total 46922, Copilot inlined total 51136 (limits 24,000 per skill, 64,000 per agent) |
+| C005-DOD-005 | met | Section "Release": <https://github.com/jlacube/spec-architect/releases/tag/v0.1.1>; P-01's review of C005-TS-152 on 2026-11-22: "Pass" (both 0.1.1 packages, the Claude Code plugin and the Copilot target package, attached at version 0.1.1) |
+| C005-DOD-006 | met | `docs/releases/architect-sdd/0.1.1.md`: `npm view architect-sdd@0.1.1 version` → `0.1.1`; `npm view architect-sdd time --json` → `"0.1.1": "2026-11-22T09:21:12.218Z"`, before the GitHub release (2026-11-22T09:39:31Z): C005-TS-153 holds (npm no later than the release) |
+| C005-DOD-007 | met | P-01's review of the published notes on 2026-11-22: "Pass" for C005-TS-154 (the 0.1.0 `SDD.md` sentence quoted with its replacement) and C005-TS-172 (stale at the first 0.1.1 stale check; one revision and one G3 approval with 0.1.1; the hand move of report-field lines before that approval; the approval holds only while later stale checks run 0.1.1). The draft review was recorded in C005-T-017 |
+| C005-DOD-008 | met | `docs/nfr-results.md` §8: with the published package, 5 / 5 in PowerShell 7, Command Prompt and Git Bash, per command with exit codes and the task and defect state afterwards |
+| C005-DOD-009 | met | `docs/releases/copilot/0.1.1/manual-runs.md`: C005-TS-155 (both rows), C005-TS-157, C005-TS-164 and C005-TS-165 passed on the 0.1.1 package of the release commit, VS Code 1.145.2, Copilot Chat 0.73.0, with dialogs, answers and file contents |
+| DOD-G-01 | met, with the C005-TS-156 waiver below | `@eval` scenarios: C005-DOD-001; untagged: C005-DOD-002; `@manual-vscode`: C005-DOD-009; `@review` C005-TS-152 … C005-TS-154, C005-TS-172: C005-DOD-005 … C005-DOD-007; Copilot CLI injection suite on the 0.1.1 package: 23 cases, 0 acted upon (section "Copilot injection"); VS Code checklist record `docs/checklists/records/vscode-2026-11-22-0.1.1.md` (27 steps passed) |
+| DOD-G-02 | met | Section "Check": `npm run check` exit 0 on REF-WIN at the release commit `2fec7a8` |
+| DOD-G-03 | met | `sdd lint 005`: 0 errors, 0 warnings, 0 info. Workspace `sdd lint` (2026-11-22): 26 errors, all in the scaffold placeholders of the not-started changes CHG-003 and CHG-004 (LINT-COV-002, LINT-REQ-001, LINT-US-001, LINT-US-002, TR-01, TR-05, TR-12); the same 26 were present before CHG-005 (workspace lint at `3e76f58~1`: 35 errors, those 26 plus CHG-002's 9 LINT-DELTA-001, gone since its archive). No new error-severity finding |
+| DOD-G-04 | met | "Interface review" below: C005-IF-001 … C005-IF-005 match their contracts at `2fec7a8`; minor findings recorded as follow-ups |
+| DOD-G-05 | met | C005-NFR-001: C005-DOD-008. Inherited defaults: 0 network calls from the CLI during the test suite (`npm run check` at `2fec7a8`: "network calls during the tests: 0 (C001-NFR-202)" in each test batch); coverage C001-NFR-502: C005-DOD-003; skill size: C005-DOD-004; encoding C001-NFR-404: 0 violations in files written by the CLI (section "Check") |
+| DOD-G-06 | at C005-T-023 | `sdd archive 005` (next task) |
+| DOD-G-07 | met | No open defect of CHG-005: D-001 (closed, C005-T-025) and D-002 (closed, C005-T-012); `sdd status`: 0 open defects |
+
+**DOD-G-01 waiver of C005-TS-156** (C005-DOD-001; Q-opencode-01; Q-waiver-01). P-01's decision, 2026-11-22, to the
+question "Do you waive it for 0.1.1?": **"Waive, carried to CHG-003 (Recommended)"**: OpenCode is not a 0.1.1
+target; C005-TS-156, the OpenCode row of C002-TS-219 restated (C005-TC-075), runs when CHG-003 releases OpenCode
+(carry note in `.sdd/003-opencode-release/change.md`). Recorded here, not as a waiver in `change.md`.
+
+## Interface review
+
+DOD-G-04 review record, 2026-11-22: the implementation at the release commit `2fec7a8` against the interface
+contracts C005-IF-001 … C005-IF-005 of `.sdd/005-0-1-1-fixes/10-spec/spec.md`, read clause by clause by an
+independent reviewer agent (read-only; it ran the CHG-005 integration tests, `node scripts/test.mjs chg005/`:
+104 / 104 passed), for the conductor and P-01 under the standing waiver of 2026-10-19 on record sign-offs.
+
+| Interface | Verdict | Implementing code (selection) | Tests |
+|---|---|---|---|
+| C005-IF-001 archived changes and archive preconditions | matches | `isWriting` from `WRITING_COMMANDS` (`src/cli/commands.ts`, `src/cli/writing-commands.ts`); lookup L1 … L4 `lookupChange`; full-ID lookup `changeOfId`; `defect add` keeps ERR-CLI-008; lint selection `src/lint/engine.ts`; archive order G3, tasks, defects and the marked-task skip `src/archive/plan.ts` | C005-TS-134 … 140, 146 … 150, 166; cap09 TC-1131 |
+| C005-IF-002 archive-task marker | matches | `src/model/archive-task.ts`; archive preconditions `src/archive/plan.ts`; LINT-TASK-005 `src/lint/rules/task-005.ts`; planning skill and `commands/archive.md` | C005-TS-134 … 140, 144, 145, 168 |
+| C005-IF-003 version key and reporting lines | matches | LINT-HAND-003 `src/lint/rules/hand-003.ts`; `{{VERSION}}` in `renderTemplate` (`src/workspace/templates.ts`) from the build-time version; both `handoff.md` templates; `SDD.md` section `src/workspace/sddmd.ts`; README step 6 at 0.1.1; no plugin-path form under `plugins/architect/` | C005-TS-114 … 133 |
+| C005-IF-004 pre-phase round in the questions log | matches | interview-protocol SKILL.md §5 (window, file, frontmatter, fixed pre-phase line, numbering); conductor item; lint acceptance | C005-TS-111, 175; manual C005-TS-164, 165; eval C005-TS-108 … 113 |
+| C005-IF-005 approval hash of a lite plan | matches | `dropReportFields` and `normalizeLitePlan` (`src/gate/hash.ts`), lite `plan.md` only; one computation point `phaseHash` for `hash`, `gate show`, `stale check` and `gate approve`; per-ID hashes unchanged; C005-REQ-127 placement `setLiteField` (`src/tracking/task.ts`) | C005-TS-167 … 171, 176 … 179 |
+
+**Findings (minor, none changes contracted behaviour; follow-ups, not defects):**
+
+1. C005-IF-002 compares the lite marker value "without emphasis", but `liteMarked` strips `*` and backticks only, so
+   `_true_` counts as unmarked. Fail-safe: the task then blocks its own archive, as at 0.1.0.
+2. C005-IF-005: when a report field is the file's last line with no line terminator, the code also drops the
+   preceding line feed, where the contract's "remove the line with its terminator" keeps it. Corner case; the hash
+   stays unchanged across task reports there as well.
+3. Test gaps (behaviour implemented, no test): the "more than one folder" branch of lookup rule L4; a marker value
+   other than `true` leaving the task blocking (C005-IF-002 item 3); `{{VERSION}}` substitution for the full profile,
+   `change profile full` and a `.sdd/_templates/` override; C005-REQ-126 for a full change at G2; the fail-safe of
+   C005-IF-005 for report fields in another form (`* **Status:**`, `- Status:`, an indented bullet).
+4. Wording: the skill numbers pre-phase rounds "per phase", the contract "per log file"; same meaning.
