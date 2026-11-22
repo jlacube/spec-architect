@@ -918,7 +918,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Notes:** 23 cases on Copilot CLI 1.0.98, 0 acted upon; one batch, 220.05 AI Credits, 2.20 USD estimate; billed overage before 0 EUR
 
 ### C005-T-018 — Manual Copilot VS Code runs and the Copilot release checklist
-- **Status:** in-progress
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-016, C005-T-024
 - **Implements:** C005-REQ-101, C005-REQ-102, C005-REQ-103, C005-REQ-104
@@ -944,7 +944,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Each `@manual-vscode` scenario has a record with result `passed`
   - [ ] `docs/checklists/records/vscode-<YYYY-MM-DD>-0.1.1.md` exists with the tested host versions
   - [ ] The release-check dry run prints `released`
-- **Completed at:** —
+- **Completed at:** 2026-11-22
+- **Commit:** 61cce68
+- **Notes:** Checklist 27/27 sdd-mcp-server steps passed (record vscode-2026-11-22-0.1.1.md); TS-155 both rows, TS-157, TS-164, TS-165 passed; release-check dry run released
 
 ### C005-T-019 — Publish `architect-sdd` 0.1.1 on npm
 - **Status:** todo
