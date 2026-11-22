@@ -1005,7 +1005,7 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
 - **Completed at:** 2026-11-22
 
 ### C005-T-021 — Release 0.1.1 on both hosts
-- **Status:** todo
+- **Status:** done
 - **Milestone:** 4 — Release 0.1.1
 - **Depends on:** C005-T-019, C005-T-020
 - **Implements:** C005-REQ-118
@@ -1033,6 +1033,9 @@ The sdd CLI gets no new log, trace event or metric (spec, Cross-cutting concerns
   - [ ] Both host packages are released at 0.1.1
   - [ ] The GitHub release 0.1.1 is published and its link recorded
   - [ ] The installed plugin is 0.1.1 and the conductor's `sdd --version` output is in section "Dogfood" of `docs/release-0.1.1-evidence.md`
+- **Commit:** 36caf76
+- **Notes:** Copilot release check released; tag v0.1.1 on f9b09bc and GitHub release published by P-01 2026-11-22; assets equal the checked files; installed plugin CLI prints 0.1.1
+- **Completed at:** 2026-11-22
 
 ### C005-T-022 — DoD evidence and close preconditions
 - **Status:** todo
