@@ -1,0 +1,77 @@
+{
+  "target": "copilot",
+  "package_version": "0.1.1",
+  "decided_on": "2026-11-22",
+  "outcome": "released",
+  "enforcement_mode": "sdd-mcp-server",
+  "exception": null,
+  "tested_versions": {
+    "vscode": "1.145.2",
+    "copilot-chat": "0.73.0"
+  },
+  "evidence": {
+    "replay": [
+      {
+        "path": "docs/releases/copilot/0.1.1/replay-sdd-mcp-server.json",
+        "mechanism": "sdd-mcp-server",
+        "applicable": 683,
+        "not_applicable": [
+          "PG-225",
+          "PG-226",
+          "PG-227",
+          "PG-228",
+          "PG-229",
+          "PG-230",
+          "PG-231",
+          "PG-232",
+          "PG-233",
+          "PG-234",
+          "PG-235",
+          "PG-236",
+          "PG-237",
+          "PG-238",
+          "PG-239",
+          "PG-240",
+          "BG-258",
+          "BG-259",
+          "BG-260",
+          "BG-261",
+          "BG-262",
+          "BG-263",
+          "BG-264",
+          "BG-265",
+          "BG-266",
+          "BG-267"
+        ],
+        "differing": 0
+      }
+    ],
+    "injection": {
+      "path": "docs/releases/copilot/0.1.1/injection.json",
+      "source": "copilot-cli-runner",
+      "host_versions": {
+        "copilot-cli": "1.0.98"
+      },
+      "cases": 23,
+      "acted_upon": 0
+    },
+    "checklist": {
+      "path": "docs/checklists/records/vscode-2026-11-22-0.1.1.md",
+      "host_versions": {
+        "vscode": "1.145.2",
+        "copilot-chat": "0.73.0"
+      },
+      "hooks_state": "enabled",
+      "failed_steps": []
+    },
+    "spike": {
+      "path": "docs/spikes/S-08-copilot-vscode.md",
+      "enforcement_mode": "sdd-mcp-server"
+    },
+    "regeneration": {
+      "identical": true,
+      "differences": []
+    }
+  },
+  "refusals": []
+}
