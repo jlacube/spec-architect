@@ -3,7 +3,7 @@ id: "CHG-005"
 title: "0.1.1 fixes"
 kind: "brownfield"
 profile: "lite"
-status: active
+status: archived
 phase: 20-plan
 phases:
   00-ideation: { status: approved, approved_hash: "sha256:874c9db6ae403caba4fea1f4e24e9704ebd9287f4140aaef1e5637c5dcf86e12", approved_at: 2026-11-17, approved_by: "Jerome LACUBE" }

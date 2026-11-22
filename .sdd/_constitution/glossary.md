@@ -1,7 +1,7 @@
 ---
 id: GLOSSARY
 artifact: constitution/glossary
-updated: 2026-11-16
+updated: 2026-11-22
 ---
 # Glossary
 
@@ -162,6 +162,21 @@ updated: 2026-11-16
 | Writing `sdd` subcommand | An `sdd` subcommand that writes files, such as `change new`, `trace --write`, `task set`, `serena-config` and `serena-launch`; the full list is the table of C002-IF-008 §1.2 (C002-REQ-607, C002-REQ-521) |
 | Data-folder argument | The folder that `sdd serena-config` and `sdd serena-launch` write Serena's configuration and data into: a folder path or the option `--user-data` (C002-REQ-515, C002-REQ-517) |
 | MSIX AppData redirection | A Windows platform condition: a process started by an application installed as an MSIX package, such as the Claude desktop app, writes under `%LOCALAPPDATA%` into `%LOCALAPPDATA%\Packages\<package>\LocalCache\Local\…` instead, a folder that processes started outside the package do not see (defect D-013 item 7; C002-REQ-515) |
+| Create-change request | A request by P-01 that a new change be created: the new-change command (`/architect:new` on Claude Code, its generated prompt file on Copilot VS Code) or a request in plain words to the conductor (Q-newchange-01; C005-REQ-101) |
+| New-change procedure | What the conductor does on a create-change request before the change exists: the size estimate against the constitution's profile thresholds, the new-change round, a further round for the kind after each kind answer that names no single kind and does not decline the change, then `sdd change new` with both options; an answer that declines the change ends the procedure with no change created (ideation §4.1 G-1; C005-REQ-101, C005-REQ-102, C005-REQ-123, C005-REQ-124) |
+| New-change round | The first interview round of the new-change procedure: the profile proposal with its size estimate (C005-REQ-101) and, unless the create-change request gives the option `--kind`, the kind question (C005-REQ-123). A further round, which asks only for the kind, follows when the kind answer of this round or of a further round names no single kind (C005-REQ-124) |
+| Change kind | `greenfield`, `brownfield` or `mixed`: the `kind` field of a change's `change.md`, set by the option `--kind` of `sdd change new`, which applies `greenfield` when the option is missing (C005-REQ-102, C005-REQ-123) |
+| Pre-phase round | An interview round that P-01 answers after the approval of gate G1 or G2 and before the next phase starts; logged in the next phase's `questions-log.md` and marked as given before the phase started (Q-postgate-01; C005-REQ-103, C005-REQ-104); the lint result on that log: C005-REQ-126 |
+| Install line | The one-time command `npm install -g architect-sdd@<version>` that comes before the bare `sdd` reporting commands in text for implementers, with `<version>` written as the bare semantic version of the plugin, never as a placeholder (Q-handoff-01; C005-REQ-105 to C005-REQ-110) |
+| Frontmatter fallback | The paragraph of the Reporting protocol section, after its CLI commands, that tells an implementer who cannot run the sdd CLI to edit the task file's frontmatter `status` and fill `report.commit`, `report.completed_at` and `report.notes` (C001-REQ-616). The lite hand-off template gives the same paragraph, although a lite task is a section of `20-plan/plan.md` with report fields and no task file: a known limitation kept by ideation §4.2 item 5 (C005-US-103, Out of scope) |
+| Report fields | The bullet fields Status, Commit, Notes and Completed at of a task section of a lite `20-plan/plan.md`, which `sdd task set` writes; the lite counterpart of the `status` and `report` keys of a task file's frontmatter. Their lines are outside the approval hash (Q-litehash-01; C005-REQ-121); where `sdd task set` writes them: C005-REQ-127 |
+| Field line | A line of a task section (bounds: C005-IF-005 §2) that begins, at its first character, with `- **`, a field name and `:**`, such as `- **Done when:**`; it is a field line of the field it names. An indented bullet, such as the checkbox line `  - [ ] CSV header written`, is no field line (C005-REQ-127) |
+| Continuation line | A line of a task section that is not blank, begins with a space or a tab, and directly follows a field line or another continuation line of that field line; it is a continuation line of that field line. A blank line (empty, or holding only spaces and tabs), a line that begins with any other character (a field line, an unindented list line such as `- [ ] CSV header written`, a heading line) and the end of the task section each end the continuation lines; an indented line after a blank line is no continuation line. A field line directly followed by such a line has none. These are the lines that LINT-TASK-001 reads as the field's value (`src/lint/spec.ts:180`) (C005-REQ-127) |
+| Archive task | A task whose work is to run `sdd archive` for its own change, such as C001-T-075; the sdd CLI recognises it only by the archive-task marker (Q-archive-01; C005-IF-002) |
+| Archive-task marker | The optional frontmatter key of a full-profile task file, or the optional bullet field of a lite task section, that marks the task as its change's archive task; name and values: C005-IF-002 (Q-archive-01; C005-REQ-112, C005-REQ-114) |
+| Archived change | A change whose folder `sdd archive` has moved to `.sdd/_archive/` and whose `change.md` status is `archived` |
+| Change resolver | The part of the sdd CLI that turns the change number, or the full ID, given to a subcommand into a change folder; at 0.1.0 it searches `.sdd/NNN-*` only, and CHG-005 adds the lookup rules of C005-IF-001 |
+| Read-only `sdd` subcommand | An `sdd` subcommand run in a form that writes no file: a subcommand absent from the table of writing `sdd` subcommands (C002-IF-008 §1.2, `WRITING_COMMANDS`), `status` or `trace` without `--write`, or `archive` with `--dry-run`. Those that name a change: `gate show`, `hash`, `lint`, `trace` without `--write`, `archive --dry-run` (C005-IF-001; C005-REQ-116) |
 
 ## System names (allowed after `THE` in EARS statements)
 | Name | Component |
@@ -221,3 +236,7 @@ updated: 2026-11-16
 | Copilot CLI eval runner | The eval runner that drives Copilot CLI |
 | manual VS Code checklist | The recorded manual verification of Copilot VS Code |
 | release check | The release decision of C002-DEC-005 for one target |
+| Reporting protocol section of `handoff.md` | The hand-off section with the install line, the reporting CLI commands and the frontmatter fallback (C001-REQ-616), written by the planner and, for a lite change, scaffolded by the sdd CLI |
+| plugin README | `plugins/architect/README.md`, the README of the source plugin (C005-COMP-010); the system name "README" of the constitution is the repository's root `README.md` |
+| 0.1.1 release | The GitHub release of Architect 0.1.1 that P-01 publishes, with the Claude Code plugin package (the plugin with its local marketplace) and the Copilot target package with its checksum, as for 0.1.0 (`docs/releases/github-release-notes-0.1.0.md`) |
+| 0.1.1 release notes | The release notes of the 0.1.1 release |

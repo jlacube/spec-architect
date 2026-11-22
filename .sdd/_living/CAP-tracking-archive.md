@@ -1,7 +1,7 @@
 ---
 capability: tracking-archive
 inventory_only: false
-updated: 2026-11-16
+updated: 2026-11-22
 ---
 
 # Tracking and archive (`C001-CAP-09`)
@@ -271,22 +271,68 @@ Scenario: C001-TS-913 — unrelated repository
   Then the session-start hook exits 0 with empty standard output and empty standard error
 ```
 
-### C001-REQ-913 — Archive preconditions
-- **Source:** CHG-001, archived 2026-11-16
+### C005-REQ-112 — Archive preconditions without the archive task
+- **Source:** CHG-005, archived 2026-11-22
 - **Pattern:** unwanted-behaviour
-- **Statement:** IF `sdd archive <change>` is requested while gate G3 is not approved, a task has a status other than `done` or `dropped`, or a defect is open, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-009` listing every unmet precondition.
-- **Rationale:** living specs describe implemented behaviour only
-- **Stories:** C001-US-906
+- **Statement:** IF `sdd archive <change>` is requested while gate G3 is not approved, a task without the archive-task marker has a status other than `done` or `dropped`, or a defect is open, THEN THE sdd CLI SHALL refuse with error `ERR-CLI-009` listing every unmet precondition.
+- **Rationale:** Q-archive-01 ("Marker in the task", `questions-log.md` of this phase); ideation §4.1 G-4. Today the archive task blocks its own archive until it is done, so it is set done before the archive it performs (E-37, E-38, E-40). The status of a task with the archive-task marker is no precondition, whatever it is; a change without a marked task keeps the rule of C001-REQ-913, every task counted (Q-archive-01: no marker fails safe). The tasks of a lite change: C005-REQ-113 (Q-scope-03).
+- **Stories:** C005-US-104
 - **Priority:** Must
-- **Acceptance:** C001-AC-913.1
+- **Acceptance:** C005-AC-112.1
+- **Evidence:** E-37 — `src/archive/plan.ts:94-108` › `archiveBlockers()` (every file of `20-plan/50-tasks/` done or dropped, the archive task included; layer: serena); E-39 — `src/archive/plan.ts:94-108` › `archiveBlockers()` (no field or rule identifies an archive task; layer: grep); E-41 — `.sdd/_living/CAP-tracking-archive.md:274-281` › `C001-REQ-913` (live statement; layer: grep); E-89 — `.sdd/_archive/001-architect-agent-suite/20-plan/50-tasks/T-075-archive-chg001.md:1-17` › `C001-T-075` (set done before `sdd archive 001`, E-40; layer: grep)
+- **Open items:** after the archive, the archive task keeps the status it had when `sdd archive` ran, since no task can be set on an archived change (E-93; C005-REQ-117).
 
-#### C001-AC-913.1 — Preconditions listed
+#### C005-AC-112.1 — Archive refused on unmet preconditions, the marked archive task excepted
 ```gherkin
-Scenario: C001-TS-914 — archive refused
-  Given change "004" with G3 approved, task "C004-T-032" "in-progress" and defect "D-002" open
-  When the user runs "$SDD archive 004"
-  Then the exit code is 2 and standard error contains "ERR-CLI-009", "C004-T-032" and "D-002"
-  And no file in ".sdd/_living" or ".sdd/004-*" is modified
+Scenario Outline: C005-TS-134 — marked archive task does not block, whatever its status
+  Given an active full-profile change 003 with gate G3 approved and no open defect
+  And the task files "C003-T-001" and "C003-T-002" with status "done"
+  And the task file "C003-T-003" "Archive CHG-003 into living specs" with the archive-task marker and status "<status>"
+  When "sdd archive 003" runs
+  Then the exit code is 0
+  And the folder ".sdd/_archive/003-*" exists and no folder ".sdd/003-*" exists
+  And "C003-T-003" keeps the status "<status>"
+  Examples:
+    | status      |
+    | todo        |
+    | in-progress |
+    | blocked     |
+```
+
+```gherkin
+Scenario: C005-TS-135 — without a marked task the archive task still blocks
+  Given an active full-profile change 003 with gate G3 approved and no open defect
+  And the task files "C003-T-001" and "C003-T-002" with status "done"
+  And the task file "C003-T-003" "Archive CHG-003 into living specs" without the archive-task marker and with status "in-progress"
+  When "sdd archive 003" runs
+  Then the command fails with ERR-CLI-009 naming "C003-T-003"
+  And the folder ".sdd/003-*" is still in place and no folder ".sdd/_archive/003-*" exists
+```
+
+```gherkin
+Scenario: C005-TS-136 — every unmet precondition listed
+  Given an active full-profile change 003 whose gate G3 is not approved and whose defect "D-001" is open
+  And the task file "C003-T-002" without the archive-task marker and with status "in-progress"
+  And the task file "C003-T-003" with the archive-task marker and status "todo"
+  When "sdd archive 003" runs
+  Then the command fails with ERR-CLI-009
+  And the message names gate G3, "C003-T-002" and "D-001"
+  And the message does not name "C003-T-003"
+  And no file under ".sdd/" differs from its content before the run
+```
+
+```gherkin
+Scenario Outline: C005-TS-137 — statuses of an unmarked task
+  Given an active full-profile change 003 with gate G3 approved and no open defect
+  And the task file "C003-T-002" without the archive-task marker and with status "<status>", every other task "done"
+  When "sdd archive 003" runs
+  Then <outcome>
+  Examples:
+    | status      | outcome                                              |
+    | done        | the exit code is 0 and the change is archived        |
+    | dropped     | the exit code is 0 and the change is archived        |
+    | todo        | the command fails with ERR-CLI-009 naming "C003-T-002" |
+    | blocked     | the command fails with ERR-CLI-009 naming "C003-T-002" |
 ```
 
 ### C001-REQ-914 — Archive ADDED requirements
@@ -507,3 +553,4 @@ Scenario: C001-TS-924 — reopen a closed defect
 
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
+| C001-REQ-913 | superseded by C005-REQ-112 | CHG-005 | 2026-11-22 |  |

@@ -1,7 +1,7 @@
 ---
 capability: gates
 inventory_only: false
-updated: 2026-11-16
+updated: 2026-11-22
 ---
 
 # Gates and revisions (`C001-CAP-08`)
@@ -154,36 +154,54 @@ Scenario: C001-TS-805 — approval fields
   And the Gate log gains one row with the note "ok"
 ```
 
-### C001-REQ-806 — Approval hash algorithm
-- **Source:** CHG-001, archived 2026-11-16
+### C005-REQ-121 — Report fields of lite task sections outside the approval hash
+- **Source:** CHG-005, archived 2026-11-22
 - **Pattern:** ubiquitous
-- **Statement:** THE sdd CLI SHALL compute a phase approval hash with the algorithm of C001-IF-13 §2, which normalises each file (YAML frontmatter removed, line endings LF, trailing whitespace stripped), excludes generated files, and for a phase consisting of a single file yields the SHA-256 of that normalised file.
-- **Rationale:** stable hashes (IDEA-RK-11); compatibility with the G1 hash recorded for CHG-001
-- **Stories:** C001-US-802
+- **Statement:** THE sdd CLI SHALL compute a phase approval hash with the algorithm of C001-IF-13 §2, which normalises each file (YAML frontmatter removed; in the `20-plan/plan.md` of a lite change, the report-field lines of every task section removed; line endings LF; trailing whitespace stripped), excludes generated files, and for a phase consisting of a single file yields the SHA-256 of that normalised file.
+- **Rationale:** Q-litehash-01 ("Exclude report fields", `questions-log.md` of this phase); critic CR-10. Only the normalisation changes. In a full change, a task's status and report are task-file frontmatter, which the hash already removes. In a lite change, `sdd task set` writes the report fields (glossary delta) into the body of `plan.md`, which the hash covers. The first lite task report after G3 therefore changes the 20-plan hash; `sdd stale check`, which the auditor runs routinely, then sets 20-plan `stale` (C001-REQ-810), and `sdd archive` refuses with "G3 not approved (20-plan stale)" (C001-REQ-913 as modified by C005-REQ-112). C005-REQ-113 makes this hit every lite archive. The rest of `plan.md`, the archive-task marker field included (C005-IF-002), stays inside the hash. Files of the other phases and of full changes hash as at 0.1.0, so the G1 bootstrap hash of C001-AC-806.1 does not change. Plans approved with the sdd CLI 0.1.0: C005-REQ-122.
+- **Stories:** C005-US-104
 - **Priority:** Must
-- **Acceptance:** C001-AC-806.1, C001-AC-806.2
+- **Acceptance:** C005-AC-121.1
+- **Evidence:** `.sdd/_living/CAP-gates.md:157-164` › `C001-REQ-806` (live statement: only YAML frontmatter removed; layer: grep); `evidence/spec-addendum.md` Topic 5: E-97 (normalisation), E-95 (file and phase hash), E-99 (lite report fields written into `plan.md`), E-98 (a changed hash sets the phase stale), E-100 (a stale 20-plan blocks the archive), E-96 (approval record and per-ID hashes), E-101 (tests that pin the hash), E-102 (archive line that applies this MODIFIED delta), E-103 (the `sdd hash` command)
+- **Open items:** the per-ID content hashes of C001-REQ-814 (E-96), which the revision impact list of C001-REQ-813 compares, are outside this requirement.
 
-#### C001-AC-806.1 — Compatible with the G1 bootstrap hash
+#### C005-AC-121.1 — Lite task reports leave the approval hash unchanged; other hashes as at 0.1.0
 ```gherkin
-Scenario: C001-TS-806 — single-file phase hash
-  Given "fx-bootstrap" (this repository at G1)
-  When the sdd CLI computes the hash of phase "00-ideation" of CHG-001
-  Then it equals "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401"
+Scenario: C005-TS-167 — task reported in a lite plan after G3 leaves the plan approved
+  Given an active lite change 004 whose phase "20-plan" was approved with the sdd CLI 0.1.1, with the task section "C004-T-001" of "20-plan/plan.md" at Status "in-progress"
+  When "sdd task set C004-T-001 --status done --commit a1b2c3d --note "CSV export done"" runs
+  Then the task section "C004-T-001" gives Status "done", Commit "a1b2c3d", Notes "CSV export done" and a Completed at date
+  And "sdd hash 004 20-plan" prints the hash that "approvals.json" records for "20-plan"
+  And "sdd stale check 004" reports no stale phase
+  And "change.md" gives phase "20-plan" the status "approved"
 ```
 
-#### C001-AC-806.2 — Normalisation makes hashes stable
 ```gherkin
-Scenario Outline: C001-TS-807 — hash invariance
-  Given an approved phase
+Scenario Outline: C005-TS-168 — hash invariance
+  Given an approved phase "<phase>" of a <profile> change
   When "<edit>" is applied to one of its files
   Then the recomputed hash is "<same>" as the approved hash
   Examples:
-    | edit                                          | same      |
-    | convert LF to CRLF                            | identical |
-    | add trailing spaces to 3 lines                | identical |
-    | change frontmatter "status" field             | identical |
-    | regenerate 80-traceability.md                 | identical |
-    | change one word in a requirement statement    | different |
+    | profile | phase   | edit                                                                                   | same      |
+    | full    | 10-spec | convert LF to CRLF                                                                     | identical |
+    | full    | 10-spec | add trailing spaces to 3 lines                                                         | identical |
+    | full    | 10-spec | change frontmatter "status" field                                                      | identical |
+    | full    | 10-spec | regenerate 80-traceability.md                                                          | identical |
+    | full    | 10-spec | change one word in a requirement statement                                             | different |
+    | full    | 20-plan | change the "status" key and add the "report" key in the frontmatter of a task file     | identical |
+    | lite    | 20-plan | change the Status field of a task section of "plan.md" from "todo" to "done"           | identical |
+    | lite    | 20-plan | add the Commit, Notes and Completed at fields to a task section of "plan.md"           | identical |
+    | lite    | 20-plan | change one word in the steps of a task section of "plan.md"                            | different |
+    | lite    | 20-plan | change the Archive task field of a task section of "plan.md" from "true" to "false"    | different |
+    | lite    | 20-plan | change a "- **Status:**" bullet in a section of "plan.md" that is no task section      | different |
+    | lite    | 10-spec | add the line "- **Status:** done" under a requirement of "spec.md"                     | different |
+```
+
+```gherkin
+Scenario: C005-TS-169 — single-file phase hash
+  Given "fx-bootstrap" (this repository at G1)
+  When the sdd CLI computes the hash of phase "00-ideation" of CHG-001
+  Then it equals "sha256:c9c7849fb7b87d1bbaca40bbdb5bc3be569788948de38b879c650621b0187401"
 ```
 
 ### C001-REQ-807 — Lint errors block approval
@@ -401,3 +419,4 @@ Scenario Outline: C001-TS-819 — commit refused
 | ID | Event | Change | Date | Note |
 |---|---|---|---|---|
 | C001-REQ-802 | superseded by C002-REQ-212 | CHG-002 | 2026-11-16 |  |
+| C001-REQ-806 | superseded by C005-REQ-121 | CHG-005 | 2026-11-22 |  |

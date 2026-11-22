@@ -1,7 +1,7 @@
 ---
 capability: workspace
 inventory_only: false
-updated: 2026-11-16
+updated: 2026-11-22
 ---
 
 # Workspace, registry, identifiers (`C001-CAP-01`)
@@ -372,37 +372,85 @@ Scenario: C001-TS-120 — constitution interview length
 - **Acceptance:** C002-AC-507.1
 - **Evidence:** current-state E-19 — `plugins/architect/commands/doctor.md:11` › `Probe` (cartographer writes `toolchain.md`, eight rows; layer: grep); current-state E-20 — `plugins/architect/commands/init.md:13` › `step 3` (toolchain record always written; layer: grep); current-state E-21 — `plugins/architect/skills/code-discovery/SKILL.md:94` › `Toolchain record` (row set and columns; Context7 and DeepWiki "detected when their tools load"; layer: grep); `plugins/architect/agents/sdd-cartographer.md:8` › `tools` (no Context7 or DeepWiki tool; layer: grep); `.sdd/_constitution/toolchain.md:22-23` › `Context7`, `DeepWiki` (detected "no (this session)"; layer: read)
 
-### C002-REQ-213 — Profile confirmation on the host's question tool
-- **Source:** CHG-002, archived 2026-11-16
+### C005-REQ-101 — Profile round on every create-change request
+- **Source:** CHG-005, archived 2026-11-22
 - **Pattern:** event-driven
-- **Statement:** WHEN the new-change command runs (`/architect:new` on Claude Code), THE conductor SHALL propose a profile (`lite` or `full`) with its size estimate (expected user stories, requirements and touched modules, compared with the constitution's profile thresholds) and obtain P-01's confirmation through the question tool of its host before creating the change.
-- **Rationale:** C002-GOAL-03; unchanged on Claude Code
-- **Stories:** C002-US-204, C002-US-304
+- **Statement:** WHEN P-01 makes a create-change request, THE conductor SHALL propose a profile (`lite` or `full`) with its size estimate (expected user stories, requirements and touched modules, compared with the constitution's profile thresholds) and obtain P-01's confirmation through the question tool of its host before creating the change.
+- **Rationale:** Q-newchange-01 ("Always run new procedure"); ideation §4.1 G-1. Only the trigger changes: C002-REQ-213 binds when the new-change command runs (E-15), so a request in plain words reached `sdd change new` with its defaults (D-032; E-13, E-16). A create-change request covers the new-change command and a request in plain words (Domain notes). The sdd CLI and its defaults stay unchanged (ideation §4.2 item 1). The conductor text is shared plugin text and reaches both hosts with no mapping change (E-8).
+- **Stories:** C005-US-101
 - **Priority:** Must
-- **Acceptance:** C002-AC-213.1
-- **Evidence:** current-state E-28 — `plugins/architect/commands/new.md:14` › `step 3` (one profile round, recommended profile first, no change folder before the answer; layer: grep); current-state E-24 — `plugins/architect/agents/sdd-conductor.md:7` › `tools` (AskUserQuestion; layer: grep)
+- **Acceptance:** C005-AC-101.1
+- **Evidence:** E-10 — `plugins/architect/commands/new.md:6-21` › `steps 2-4` (the procedure exists only in the command file; layer: grep); E-11 — `plugins/architect/agents/sdd-conductor.md:21-42` › `Operating loop` (no create-change step in the conductor; layer: grep); E-13 — `src/cli/commands.ts:368` › `changeNew()` (defaults `full` and `greenfield`; layer: serena); E-15 — `.sdd/_living/CAP-workspace.md:375-383` › `C002-REQ-213` (live statement, trigger "the new-change command runs"; layer: grep)
 
-#### C002-AC-213.1 — Profile confirmed through the host's tool before the change exists
+#### C005-AC-101.1 — Profile round before the change exists, on every create-change request
 ```gherkin
 @eval
-Scenario Outline: C002-TS-219 — profile round on Claude Code and OpenCode
-  Given "fx-bootstrap" with 1 change on <host>
-  When P-01 runs the new-change command with the title "Export to CSV"
-  Then one "<tool>" call offers a profile first, labelled "(Recommended)", with the expected user stories, requirements and touched modules compared with the constitution's thresholds
-  And no folder ".sdd/002-*" exists before the answer
-  Examples:
-    | host        | tool            |
-    | Claude Code | AskUserQuestion |
-    | OpenCode    | question        |
+Scenario: C005-TS-101 — plain-words create request on Claude Code
+  Given a case workspace with an initialised ".sdd/" holding 1 archived change and no active change, on Claude Code
+  When P-01 writes to the conductor "I need a new change: export the order list to CSV"
+  Then the transcript shows one "AskUserQuestion" call that proposes "lite" or "full" with the expected user stories, requirements and touched modules compared with the constitution's profile thresholds
+  And that call comes before any "sdd change new" call in the transcript
+  And no folder ".sdd/002-*" exists before P-01 answers that call
 ```
 
 ```gherkin
 @manual-vscode
-Scenario: C002-TS-220 — profile round in VS Code
-  Given a fresh repository with an initialised ".sdd/" in VS Code
-  When P-01 runs the new-change prompt with the title "Toy change"
+Scenario Outline: C005-TS-155 — create request in Copilot VS Code
+  Given a fresh repository with an initialised ".sdd/" and no change, open in VS Code with the Copilot target package 0.1.1 installed
+  When P-01 sends the conductor <request>
   Then an "askQuestions" dialog proposes "lite" or "full" with its size estimate
-  And no change folder exists until P-01 answers
+  And no change folder exists until P-01 answers that dialog
+  Examples:
+    | request                                                           |
+    | the message "I need a new change: export the order list to CSV"   |
+    | the new-change prompt with the title "Toy change"                 |
+```
+
+```gherkin
+@eval
+Scenario: C005-TS-102 — new-change command keeps the profile round after the procedure moves
+  Given the case workspace of C005-TS-101 on Claude Code
+  When P-01 runs "/architect:new Export the order list to CSV"
+  Then the transcript shows one "AskUserQuestion" call that offers a profile first, labelled "(Recommended)", with its size estimate, before any "sdd change new" call
+  And no folder ".sdd/002-*" exists before P-01 answers that call
+```
+
+```gherkin
+@eval
+Scenario: C005-TS-156 — new-change command on OpenCode
+  Given "fx-bootstrap" with 1 change on OpenCode
+  When P-01 runs the new-change command with the title "Export to CSV"
+  Then one "question" call offers a profile first, labelled "(Recommended)", with the expected user stories, requirements and touched modules compared with the constitution's thresholds
+  And no folder ".sdd/002-*" exists before the answer
+```
+
+```gherkin
+@eval
+Scenario: C005-TS-103 — a request that creates no change starts no profile round
+  Given the case workspace of C005-TS-101 on Claude Code
+  When P-01 writes to the conductor "What is the status of change 001?"
+  Then the transcript shows no question call that proposes a profile
+  And the transcript shows no "sdd change new" call
+  And no folder ".sdd/002-*" exists after the turn
+```
+
+```gherkin
+@eval
+Scenario: C005-TS-104 — profile round declined, no change created
+  Given the case workspace of C005-TS-101 on Claude Code
+  And P-01 has written "I need a new change: export the order list to CSV"
+  When P-01 answers the profile question with the free text "Stop, do not create it"
+  Then the transcript shows no "sdd change new" call
+  And no folder ".sdd/002-*" exists after the turn
+```
+
+```gherkin
+@eval
+Scenario: C005-TS-105 — request to skip the questions still gets the profile round
+  Given the case workspace of C005-TS-101 on Claude Code
+  When P-01 writes to the conductor "Create a change for CSV export of the order list with the default settings, do not ask me anything"
+  Then the transcript shows one "AskUserQuestion" call that proposes "lite" or "full" with its size estimate before any "sdd change new" call
+  And no folder ".sdd/002-*" exists before P-01 answers that call
 ```
 
 ### C001-REQ-117 — Lite file set
@@ -614,3 +662,4 @@ Scenario: C001-TS-133 — G0 enforcement
 |---|---|---|---|---|
 | C001-REQ-116 | superseded by C002-REQ-213 | CHG-002 | 2026-11-16 |  |
 | C001-REQ-115 | superseded by C002-REQ-507 | CHG-002 | 2026-11-16 |  |
+| C002-REQ-213 | superseded by C005-REQ-101 | CHG-005 | 2026-11-22 |  |
